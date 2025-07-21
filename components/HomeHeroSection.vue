@@ -22,7 +22,7 @@
 						<strong>only</strong> from your business documents
 						(FAQs, product info, policies). Provide instant,
 						reliable answers to visitor questions, with links back
-						to your source info.
+						to your source documents.
 					</p>
 				</div>
 				<div class="form-container">
