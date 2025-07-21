@@ -10,17 +10,17 @@
         </div>
       </template>
       <div v-if="ai_db_status">
-        <p>Check this box to replace the existing AI Database with the latest documents, leave it unchecked to simply update your existing AI Database.</p>
+        <p>Check this box to replace the existing AI Database, leave it unchecked to simply update your existing AI Database, with any new documents added.</p>
         <UCheckbox
           v-model="replace"
-          label="Replace or Update?"
+          label="Replace existing AI Database"
           class="m-4"
         />
       </div>
 
       <div class="p-4">
-        <p>Are you sure you want to update the AI Database with the latest documents?</p>
-        <p class="text-sm text-gray-500 dark:text-gray-400">This action may take some time and cannot be undone easily.</p>
+        <p>Are you sure you want to update the AI Database?</p>
+        <p class="text-sm text-red-500 dark:text-gray-400">This action may take some time and cannot be undone easily.</p>
       </div>
 
       <template #footer>
