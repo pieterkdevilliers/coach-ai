@@ -7,7 +7,9 @@
 	>
 		<template #header>
 			<div class="flex items-center justify-between">
-				<h3 class="heading heading--h3">Embed Chat Widget</h3>
+				<h3 class="heading heading--h3 text-gradient">
+					Embed Chat Widget
+				</h3>
 				<UButton
 					color="gray"
 					variant="ghost"
@@ -19,7 +21,7 @@
 		</template>
 
 		<div class="p-4">
-			<p class="text-sm text-gray-600 dark:text-gray-300 mb-1">
+			<p>
 				Copy the snippet below and paste it into your website's HTML,
 				just before the closing body tag.
 			</p>

@@ -27,7 +27,7 @@
 						@click="emitEditWidget"
 					/>
 				</UTooltip>
-				<UTooltip text="Delete widget">
+				<UTooltip text="Delete widget" class="ms-auto">
 					<UButton
 						icon="i-heroicons:trash"
 						@click="openConfirmDeleteModal"

@@ -269,6 +269,14 @@
 		@apply mx-auto;
 	}
 
+	/* Modal Forms */
+	.modal__form .form__label-fields {
+		@apply block;
+	}
+	.modal__form label {
+		@apply font-roboto-condensed text-purple-800 text-base;
+	}
+
 	/* In-App Styles */
 	.layout--user_access {
 		@apply pt-[80px];

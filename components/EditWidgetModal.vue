@@ -9,7 +9,7 @@
 		>
 			<template #header>
 				<div class="flex items-center justify-between">
-					<h3 class="heading heading--h3">
+					<h3 class="heading heading--h3 text-gradient">
 						<span class="heading__span--block"
 							>Update Allowed Origins for Widget:</span
 						>
@@ -30,13 +30,14 @@
 			<UForm
 				:schema="schema"
 				:state="state"
-				class="space-y-4 p-4"
+				class="space-y-4 p-4 modal__form"
 				@submit="submitForm"
 			>
 				<UFormGroup
 					label="Add allowed origins as a comma-separated list"
 					name="allowed_origins"
 					required
+					class="form__label-fields"
 				>
 					<UTextarea v-model="state.allowed_origins" />
 				</UFormGroup>

@@ -11,7 +11,9 @@
 		>
 			<template #header>
 				<div class="flex items-center justify-between">
-					<h3 class="heading heading--h3">Confirm Deletion</h3>
+					<h3 class="heading heading--h3 text-gradient">
+						Confirm Deletion
+					</h3>
 					<UButton
 						color="gray"
 						variant="ghost"
@@ -38,7 +40,7 @@
 					>
 						Cancel
 					</UButton>
-					<UButton color="red" @click="$emit('confirm')">
+					<UButton class="bg-red-600" @click="$emit('confirm')">
 						Delete
 					</UButton>
 				</div>
