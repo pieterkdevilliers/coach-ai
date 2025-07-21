@@ -26,7 +26,7 @@
 					Visitors ask questions, and your AI chat provides instant
 					answers, extracted <strong><em>only</em></strong
 					>&nbsp; from your information, even linking them to the
-					relevant page or document on your site for more detail.
+					relevant document for more detail.
 				</p>
 			</div>
 		</div>

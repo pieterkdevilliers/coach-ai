@@ -61,7 +61,7 @@ const steps = ref<Step[]>([
 		icon: shallowRef(ArchiveBoxXMarkIcon),
 		title: 'Cancel anytime',
 		description:
-			'No <strong>lock in.</strong> If it doesn not work for your business, cancel without any hassle. <strong><em>your</em></strong>&nbsp;content, anytime.',
+			'No <strong>lock in.</strong> If it doesn not work for your business, cancel without any hassle.',
 	},
 ]);
 </script>
