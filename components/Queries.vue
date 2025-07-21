@@ -55,7 +55,15 @@
 							<h3 class="text-lg font-semibold mb-2">
 								Response:
 							</h3>
-							<p class="mb-2">{{ queryResponseText }}</p>
+							<div>
+								<p
+									v-for="(sentence, index) in responseSentences"
+									:key="index"
+									class="mb-3"
+								>
+									{{ sentence }}
+								</p>
+							</div>
 							<h3 class="text-lg font-semibold mb-2">
 								Key Source Documents:
 							</h3>
@@ -65,8 +73,6 @@
 									:key="source.fileIdentifier"
 									class="mb-1"
 								>
-									<!-- This link will eventually open the modal. For now, it's a placeholder link -->
-									<!-- We'll use UButton with 'to' prop to make it look like a link but handle click later -->
 									<UButton
 										variant="link"
 										:label="source.displayName"
@@ -77,8 +83,6 @@
 										"
 										class="p-0 text-left"
 									/>
-									<!-- For debugging, you can show the fileIdentifier or viewUrl -->
-									<!-- <span class="text-xs text-gray-400 ml-2"> (Debug: {{ source.fileIdentifier }})</span> -->
 								</li>
 							</ul>
 							<p v-else>No specific sources cited.</p>
@@ -162,6 +166,22 @@ const processedSources = computed(() => {
 			viewUrl: viewUrl, // This will be used by the modal
 		};
 	});
+});
+
+// NEW: Add this computed property
+const responseSentences = computed(() => {
+	if (!queryResponseText.value) {
+		return []; // Return an empty array if there's no response text
+	}
+
+	// This regex splits the text after a sentence-ending punctuation mark (. ? !)
+	// followed by a space. The lookbehind `(?<=[.?!])` ensures the punctuation
+	// is kept with the sentence.
+	const sentences = queryResponseText.value
+		.split(/(?<=[.?!])\s+/)
+		.filter((s) => s.trim().length > 0); // Filter out any empty strings
+
+	return sentences;
 });
 
 const handleQuery = async () => {
