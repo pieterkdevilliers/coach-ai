@@ -3,14 +3,17 @@
 	<UCard>
 		<template #header>
 			<!-- Use props.subscription instead of just subscription -->
-			<h3 class="heading heading--h3 text-pretty card__title">
+			<h3 class="heading heading--h3 card__title text-pretty card__title">
 				{{ props.subscription.related_product_title }}
 			</h3>
 		</template>
 		<div class="subscription-card__details">
 			<!-- Update all references to use props.subscription -->
-			<p><strong>Type:</strong> {{ displayType }}</p>
-			<p class="paragraph-label-text block">
+			<p class="col-span-2">
+				<strong class="paragraph-label-text__label">Type:</strong>
+				{{ displayType }}
+			</p>
+			<p class="paragraph-label-text paragraph-label-text--block">
 				<strong class="paragraph-label-text__label"
 					>Subscription Reference:</strong
 				>
@@ -23,7 +26,7 @@
 					</span>
 				</UTooltip>
 			</p>
-			<p class="paragraph-label-text block">
+			<p class="paragraph-label-text paragraph-label-text--block">
 				<strong class="paragraph-label-text__label"
 					>Customer Reference:</strong
 				>
@@ -36,25 +39,45 @@
 					</span>
 				</UTooltip>
 			</p>
-			<p>
-				<strong>Trial Start:</strong>
-				{{ formatDateTime(props.subscription.trial_start) }}
+			<p class="paragraph-label-text paragraph-label-text--block">
+				<strong class="paragraph-label-text__label"
+					>Trial Start:</strong
+				>
+				<span>{{
+					formatDateTime(props.subscription.trial_start)
+				}}</span>
 			</p>
-			<p>
-				<strong>Trial End:</strong>
-				{{ formatDateTime(props.subscription.trial_end) }}
+			<p class="paragraph-label-text paragraph-label-text--block">
+				<strong class="paragraph-label-text__label">Trial End:</strong>
+				<span>{{ formatDateTime(props.subscription.trial_end) }}</span>
 			</p>
-			<p>
-				<strong>Subscription Start:</strong>
-				{{ formatDateTime(props.subscription.subscription_start) }}
+			<p class="paragraph-label-text paragraph-label-text--block">
+				<strong class="paragraph-label-text__label"
+					>Subscription Start:</strong
+				>
+				<span>{{
+					formatDateTime(props.subscription.subscription_start)
+				}}</span>
 			</p>
-			<p v-if="props.subscription.status === 'active'">
-				<strong>Current Period End:</strong>
-				{{ formatDateTime(props.subscription.current_period_end) }}
+			<p
+				v-if="props.subscription.status === 'active'"
+				class="paragraph-label-text paragraph-label-text--block"
+			>
+				<strong class="paragraph-label-text__label"
+					>Current Period End:</strong
+				>
+				<span>{{
+					formatDateTime(props.subscription.current_period_end)
+				}}</span>
 			</p>
-			<p v-if="props.subscription.status === 'canceled'">
+			<p
+				v-if="props.subscription.status === 'canceled'"
+				class="paragraph-label-text paragraph-label-text--block"
+			>
 				<strong>Date Canceled:</strong>
-				{{ formatDateTime(props.subscription.current_period_end) }}
+				<span>{{
+					formatDateTime(props.subscription.current_period_end)
+				}}</span>
 			</p>
 		</div>
 
@@ -64,16 +87,17 @@
 				<p class="subscription-status">
 					<strong>Status:</strong> {{ props.subscription.status }}
 				</p>
-			</div>
-			<div v-if="props.subscription.status === 'active'">
-				<UTooltip text="Cancel Subscription">
-					<UButton
-						icon="i-heroicons:x-mark"
-						label="Cancel Subscription"
-						@click="openConfirmCancelModal"
-						:loading="isCancelling"
-					/>
-				</UTooltip>
+				<div v-if="props.subscription.status === 'active'">
+					<UTooltip text="Cancel Subscription">
+						<UButton
+							icon="i-heroicons:x-mark"
+							label="Cancel Subscription"
+							@click="openConfirmCancelModal"
+							:loading="isCancelling"
+							variant="outline"
+						/>
+					</UTooltip>
+				</div>
 			</div>
 		</template>
 	</UCard>

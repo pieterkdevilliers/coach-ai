@@ -361,7 +361,7 @@
 
 	/* Layout - user_access */
 	.layout--user_access {
-		@apply font-normal text-slate-500;
+		@apply font-light text-slate-800;
 	}
 
 	/* Page Headers */
@@ -381,7 +381,10 @@
 		@apply ring-purple-500;
 	}
 	.search-pagination-container {
-		@apply flex flex-col lg:flex-row justify-between items-start lg:items-center mt-3 md:min-h-12;
+		@apply flex flex-col lg:flex-row justify-between items-start lg:items-center mt-3;
+	}
+	.search-pagination-container:not(:empty) {
+		@apply md:min-h-12;
 	}
 
 	/* Cards */
@@ -401,15 +404,32 @@
 		@apply bg-white text-primary-500 hover:bg-primary-500/10 text-base font-medium font-roboto-condensed rounded-md px-2 py-1 shadow-none;
 	}
 
-	/* Card Content */
-	.card-grid__card .card__body .paragraph-label-text:not(:first-of-type) {
-		@apply mt-3;
+	/* Subscription Cards */
+	.subscription-grid.card-grid {
+		@apply grid grid-cols-1 gap-8 lg:gap-6 md:grid-cols-2 mt-6;
 	}
+	.subscription-grid .card__title {
+		@apply text-center;
+	}
+	.subscription-card__details {
+		@apply md:grid md:grid-cols-2 gap-x-12 gap-y-2;
+	}
+	.subscription-card__footer {
+		@apply flex justify-between items-center px-3;
+	}
+
+	/* Card Content */
 	.paragraph-label-text {
-		@apply grid grid-cols-[auto_1fr] gap-1 w-full;
+		@apply flex w-full;
+	}
+	.paragraph-label-text__label {
+		@apply font-roboto-condensed;
 	}
 	.paragraph-label-text__text {
 		@apply whitespace-nowrap overflow-hidden text-ellipsis min-w-0;
+	}
+	.paragraph-label-text--block {
+		@apply flex flex-col;
 	}
 
 	/* Pagination */
@@ -698,8 +718,11 @@ to-purple-800;
 	.layout:is(.layout--default, .layout--user_access) {
 		@apply mt-0 flex flex-col justify-start items-center min-h-screen;
 	}
-	:is(.layout--default, .layout--text_page) .main-header {
+	.main-header {
 		@apply bg-purple-950/75;
+	}
+	.layout--user_access .main-header {
+		@apply bg-purple-950/80;
 	}
 	.mobile-navbar__container {
 		@apply relative;
@@ -737,10 +760,10 @@ to-purple-800;
 		@apply bg-slate-50;
 	}
 	.nav--horizontal .nav-link.nav-active {
-		@apply text-primary-500 font-medium;
+		@apply text-primary-100 font-medium;
 	}
 	.nav--horizontal .nav-active ::after {
-		@apply bg-primary-500;
+		@apply bg-primary-300;
 	}
 
 	.nav--horizontal *,
@@ -783,14 +806,14 @@ to-purple-800;
 		.main-header
 		.navbar
 		:is(.nav-link.nav-active, .nav-link.nav-active:hover) {
-		@apply text-primary-500;
+		@apply text-primary-200;
 	}
 	:is(.layout--default, .layout--text_page)
 		.main-header
 		.navbar
 		.nav-link.nav-active:hover
 		::after {
-		@apply bg-primary-500;
+		@apply bg-pink-200;
 	}
 	:is(.layout--default, .layout--text_page) :is(:hover ::after) {
 		@apply bg-transparent;
