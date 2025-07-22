@@ -273,7 +273,7 @@
 	.modal__form .form__label-fields {
 		@apply block;
 	}
-	.modal__form label {
+	.modal__form :is(label, .form__label) {
 		@apply font-roboto-condensed text-purple-800 text-base;
 	}
 
@@ -445,7 +445,10 @@
 		@apply flex lg:justify-end pt-3.5;
 	}
 	.pagination button {
-		@apply font-light;
+		@apply font-normal text-purple-700 ring-1 ring-purple-500;
+	}
+	.pagination button[class*='bg-primary-'] {
+		@apply bg-purple-200;
 	}
 	.pagination--bottom {
 		@apply pt-3 border-t border-slate-200;
@@ -455,8 +458,25 @@
 	.content-table {
 		@apply lg:mt-6;
 	}
-	.content-table th {
-		@apply text-accent font-roboto-condensed;
+	.content-table th:last-child > span::before {
+		content: 'Actions';
+		@apply text-end block;
+	}
+	.content-table td {
+		@apply text-base text-slate-700;
+	}
+	.content-table td:last-child {
+		@apply flex justify-end;
+	}
+	.content-table .action-button {
+		@apply me-3;
+	}
+	.content-table .action-button > .iconify {
+		@apply size-6;
+	}
+	.content-table .action-item--delete,
+	.content-table .action-item--delete .iconify {
+		@apply text-accent font-medium text-sm;
 	}
 
 	/* Hero Section */

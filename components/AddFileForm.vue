@@ -1,9 +1,11 @@
 <template>
 	<div class="max-w-md mx-auto p-4">
-		<UForm :state="state" @submit="handleAddFiles">
-			<h2 class="text-2xl mb-6 text-center">Add New Files</h2>
-
-			<UFormGroup label="Select Files" name="files" class="mb-6">
+		<h2 class="heading heading--h3 text-gradient">Add New Files</h2>
+		<p id="file_input_help" class="text-base">
+			Select one or more files to upload.
+		</p>
+		<UForm :state="state" @submit="handleAddFiles" class="modal__from">
+			<UFormGroup label="Select Files" name="files" class="mt-3 mb-6">
 				<!-- Standard HTML file input for multiple files -->
 				<input
 					type="file"
@@ -11,31 +13,23 @@
 					@change="handleFileSelection"
 					ref="fileInputRef"
 					accept=".pdf,.docx,.doc,.md,.txt,.xls,.xlsx"
-					class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+					class="block w-full text-sm text-gray-900 cursor-pointer focus:outline-none"
 					aria-describedby="file_input_help"
 				/>
-				<p
-					class="mt-1 text-sm text-gray-500 dark:text-gray-300"
-					id="file_input_help"
-				>
-					Select one or more files to upload.
-				</p>
-				<p
-					class="mt-1 text-sm text-gray-500 dark:text-gray-300"
-					id="file_input_help"
-				>
-					Supported File Types: .pdf, .docx, .doc, .md, .txt, .xls, .xlsx
+				<p class="mt-1 text-sm text-slate-700" id="file_input_help">
+					<strong>File Types:</strong> .pdf, .docx, .doc, .md, .txt,
+					.xls, .xlsx
 				</p>
 			</UFormGroup>
 
 			<!-- Display selected file names (optional) -->
 			<div v-if="state.selectedFiles.length > 0" class="mb-4">
-				<p class="text-sm font-medium text-gray-700 dark:text-gray-300">
+				<p
+					class="text-sm font-medium text-purple-800 font-roboto-condensed"
+				>
 					Selected files:
 				</p>
-				<ul
-					class="list-disc list-inside text-sm text-gray-600 dark:text-gray-400"
-				>
+				<ul class="list-disc list-inside text-sm text-slate-700">
 					<li v-for="file in state.selectedFiles" :key="file.name">
 						{{ file.name }}
 					</li>
@@ -62,8 +56,15 @@
 </template>
 
 <script setup lang="ts">
-
-const ALLOWED_EXTENSIONS = ['.pdf', '.docx', '.doc', '.md', '.txt', '.xls', '.xlsx'];
+const ALLOWED_EXTENSIONS = [
+	'.pdf',
+	'.docx',
+	'.doc',
+	'.md',
+	'.txt',
+	'.xls',
+	'.xlsx',
+];
 
 const config = useRuntimeConfig();
 import { ref, reactive, computed } from 'vue';
@@ -118,7 +119,9 @@ const handleFileSelection = (event: Event) => {
 	const invalidFiles: File[] = [];
 
 	for (const file of allSelectedFiles) {
-		const extension = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
+		const extension = file.name
+			.slice(file.name.lastIndexOf('.'))
+			.toLowerCase();
 		if (ALLOWED_EXTENSIONS.includes(extension)) {
 			validFiles.push(file);
 		} else {
@@ -131,7 +134,9 @@ const handleFileSelection = (event: Event) => {
 
 	// If there were any invalid files, show a specific error message
 	if (invalidFiles.length > 0) {
-		const invalidFileNames = invalidFiles.map((file) => file.name).join(', ');
+		const invalidFileNames = invalidFiles
+			.map((file) => file.name)
+			.join(', ');
 		errorMessage.value = `Unsupported file type(s) were ignored: ${invalidFileNames}.`;
 		toast.add({
 			title: 'Unsupported Files',
@@ -169,21 +174,18 @@ const handleAddFiles = async () => {
 			response: string;
 			uploaded_files: any[];
 			new_docs_count: number;
-		}>(
-			`${config.public.apiBase}/files/${uniqueAccountId}/${folder_id}`,
-			{
-				method: 'POST',
-				headers: {
-					// 'Content-Type': 'multipart/form-data' is set automatically by the browser when using FormData
-					// Do NOT set 'Content-Type': 'application/json' or 'application/x-www-form-urlencoded'
-					accept: 'application/json',
-					Authorization: `Bearer ${apiAuthorizationToken}`,
-				},
-				body: formData,
-			}
-		);
+		}>(`${config.public.apiBase}/files/${uniqueAccountId}/${folder_id}`, {
+			method: 'POST',
+			headers: {
+				// 'Content-Type': 'multipart/form-data' is set automatically by the browser when using FormData
+				// Do NOT set 'Content-Type': 'application/json' or 'application/x-www-form-urlencoded'
+				accept: 'application/json',
+				Authorization: `Bearer ${apiAuthorizationToken}`,
+			},
+			body: formData,
+		});
 
-		authStore.setDocsCount(responseData.new_docs_count)
+		authStore.setDocsCount(responseData.new_docs_count);
 		successMessage.value = `${responseData.uploaded_files.length} file(s) accepted for processing!`;
 
 		// Clear selected files and reset file input

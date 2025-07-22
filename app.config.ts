@@ -53,6 +53,27 @@ export default defineAppConfig({
 		},
 		button: {
 			rounded: 'rounded-md',
+			variant: {
+				outline: 'max-h-8',
+			},
+		},
+		table: {
+			th: {
+				base: 'pb-1 text-purple-800 font-roboto-condensed uppercase',
+				size: 'text-base',
+				font: 'font-medium',
+			},
+			td: {
+				base: 'text-slate-700',
+			},
+		},
+		pagination: {
+			base: 'shadow-none pagination-button',
+		},
+		formGroup: {
+			label: {
+				base: 'form__label text-purple-800 font-normal text-lg font-roboto-condensed',
+			},
 		},
 		accent: 'pink',
 		primary: 'pink',

@@ -1,13 +1,13 @@
 <template>
 	<section class="folder-content container--default mx-auto">
 		<div class="page-header">
-			<h2 class="heading heading--h2">Documents</h2>
+			<h2 class="heading heading--h2 page__title">Documents</h2>
 			<div class="flex justify-start sm:justify-end gap-6 my-2">
 				<UTooltip text="Add new files to AI database">
 					<UButton
 						icon="i-heroicons-arrow-path-20-solid"
 						label="Update AI Database"
-						variant="solid"
+						variant="outline"
 						@click="openRefreshDBModal"
 					/>
 				</UTooltip>
@@ -23,7 +23,7 @@
 						<UButton
 							icon="i-heroicons:plus-circle-16-solid"
 							label="Upload file"
-							variant="outline"
+							variant="solid"
 							@click="openAddFileModal"
 						/>
 					</UTooltip>
@@ -65,9 +65,11 @@
 				<template #actions-data="{ row }">
 					<UDropdown :items="actionItems(row)">
 						<UButton
-							color="gray"
+							color="pink"
 							variant="ghost"
-							icon="i-heroicons-ellipsis-horizontal-20-solid"
+							icon="i-heroicons-ellipsis-vertical-20-solid"
+							class="action-button"
+							aria-label="Actions"
 						/>
 					</UDropdown>
 				</template>
@@ -398,7 +400,8 @@ const actionItems = (row: FileType) => [
 	[
 		{
 			label: 'Delete',
-			icon: 'i-heroicons-trash-20-solid',
+			icon: 'i-heroicons-outline-trash',
+			class: 'action-item--delete',
 			click: () => openDeleteConfirmation(row),
 		},
 	],
