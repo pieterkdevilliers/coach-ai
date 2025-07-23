@@ -1,7 +1,7 @@
 <template>
 	<section class="folders container--default mx-auto">
 		<div class="page-header">
-			<h2 class="heading heading--h2">Chat Sessions</h2>
+			<h2 class="heading heading--h2 text-gradient">Chat Sessions</h2>
 		</div>
 		<div class="search-pagination-container">
 			<!-- Search Input -->
