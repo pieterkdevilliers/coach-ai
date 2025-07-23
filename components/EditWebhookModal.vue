@@ -8,7 +8,9 @@
 		>
 			<template #header>
 				<div class="flex items-center justify-between">
-					<h3 class="heading heading--h3">Edit Webhook Destination URL</h3>
+					<h3 class="heading heading--h3 text-gradient">
+						Edit Webhook Destination URL
+					</h3>
 					<UButton
 						color="gray"
 						variant="ghost"
@@ -30,7 +32,11 @@
 				</UFormGroup>
 
 				<div class="flex justify-end gap-2 pt-4">
-					<UButton color="gray" variant="ghost" @click="handleClose">
+					<UButton
+						variant="outline"
+						@click="handleClose"
+						class="modal__cancel-button"
+					>
 						Cancel
 					</UButton>
 					<UButton type="submit" :loading="isLoading">
@@ -82,15 +88,18 @@ const state = reactive<Schema>({
 	webhook_url: '',
 });
 
-watch(() => props.webhook, (newWebhook) => {
-  if (newWebhook && newWebhook.account) {
-    // Update the form state with the current value
-    state.webhook_url = newWebhook.account.webhook_url;
-  } else {
-    // Reset the form when the modal is closed
-    state.webhook_url = '';
-  }
-});
+watch(
+	() => props.webhook,
+	(newWebhook) => {
+		if (newWebhook && newWebhook.account) {
+			// Update the form state with the current value
+			state.webhook_url = newWebhook.account.webhook_url;
+		} else {
+			// Reset the form when the modal is closed
+			state.webhook_url = '';
+		}
+	}
+);
 
 const submitForm = async (event: FormSubmitEvent<Schema>) => {
 	if (!props.webhook) return; // Should not happen if modal is open with a webhook

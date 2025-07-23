@@ -1,39 +1,51 @@
 <template>
-  <UCard>
-    <template #header>
-      <!-- Use a prop for the title -->
-      <p class="font-bold">{{ title }}</p>
-    </template>
+	<UCard>
+		<template #header>
+			<h3 class="heading heading--h3 card__title">
+				<slot name="title">{{ title }}</slot>
+			</h3>
+			<h3
+				v-if="slots.subtitle || subtitle"
+				class="heading heading--h3 card__subtitle"
+			>
+				<slot name="subtitle">{{ subtitle }}</slot>
+			</h3>
+		</template>
 
-    <!-- Show a skeleton while the value is loading -->
-    <div v-if="loading" class="flex justify-center py-4">
-      <USkeleton class="h-24 w-24" :ui="{ rounded: 'rounded-full' }" />
-    </div>
+		<!-- Show a skeleton while the value is loading -->
+		<div v-if="loading" class="flex justify-center py-4">
+			<USkeleton class="h-24 w-24" :ui="{ rounded: 'rounded-full' }" />
+		</div>
 
-    <!-- Show the data once loaded -->
-    <div v-else class="flex justify-center py-4">
-      <div class="flex items-center justify-center w-24 h-24 bg-primary-100 dark:bg-primary-900 rounded-full">
-        <!-- Use a prop for the value -->
-        <span class="text-3xl font-bold text-primary-800 dark:text-primary-200">{{ value }}</span>
-      </div>
-    </div>
-  </UCard>
+		<!-- Show the data once loaded -->
+		<div v-else class="card__body">
+			<div class="stat-count__container">
+				<!-- Use a prop for the value -->
+				<span class="stat-count__value">{{ value }}</span>
+			</div>
+		</div>
+	</UCard>
 </template>
 
 <script setup lang="ts">
-// Define props that this component will accept
+import { useSlots } from 'vue';
+const slots = useSlots();
 defineProps({
-  title: {
-    type: String,
-    required: true,
-  },
-  value: {
-    type: Number,
-    required: true,
-  },
-  loading: {
-    type: Boolean,
-    default: false,
-  },
+	title: {
+		type: String,
+		required: true,
+	},
+	subtitle: {
+		type: String,
+		required: false,
+	},
+	value: {
+		type: Number,
+		required: true,
+	},
+	loading: {
+		type: Boolean,
+		default: false,
+	},
 });
 </script>
