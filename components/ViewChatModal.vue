@@ -1,8 +1,8 @@
 <template>
 	<div>
-		<h3 class="heading heading--h3">
-			Chat Transcript for Session
-			<span class="text-accent">#{{ sessionId }}</span>
+		<h3 class="heading heading--h3 text-gradient flex justify-between mb-6">
+			Chat Transcript
+			<span class="text-accent">Session #{{ sessionId }}</span>
 		</h3>
 
 		<!-- 1. Handle Loading State -->
@@ -73,14 +73,25 @@
 						<p class="chat-item__message">
 							{{ message.message_text }}
 						</p>
-						<div 
-							v-if="message.sender_type === 'bot' && message.source_files.length > 0" 
+						<div
+							v-if="
+								message.sender_type === 'bot' &&
+								message.source_files.length > 0
+							"
 							class="mt-2 pt-2 border-t border-gray-200 dark:border-gray-600"
 						>
-							<span class="text-xs font-semibold text-gray-600 dark:text-gray-400">Sources:</span>
-							<ul class="text-sm list-disc list-inside mt-1 space-y-1">
+							<span
+								class="text-xs font-semibold text-gray-600 dark:text-gray-400"
+								>Sources:</span
+							>
+							<ul
+								class="text-sm list-disc list-inside mt-1 space-y-1"
+							>
 								<!-- Loop through the processed source objects -->
-								<li v-for="source in message.source_files" :key="source.fileIdentifier">
+								<li
+									v-for="source in message.source_files"
+									:key="source.fileIdentifier"
+								>
 									<a
 										:href="source.viewUrl"
 										target="_blank"
@@ -118,9 +129,9 @@ const config = useRuntimeConfig();
 
 // Define the structure for a processed source file
 interface ProcessedSource {
-  displayName: string;
-  fileIdentifier: string;
-  viewUrl: string;
+	displayName: string;
+	fileIdentifier: string;
+	viewUrl: string;
 }
 
 // Update ChatMessage to use the new ProcessedSource interface
@@ -165,42 +176,69 @@ const { data, status, error } = await useFetch(
 
 			// Map over each raw message to transform it
 			return rawMessages.map((message) => {
-				
-                // Use your existing logic to process the source_files for this message
-				const processedSources = (message.source_files || []).map((sourceString: string) => {
-                    // This is your logic, adapted for this context
-					const originalFileIdentifier = sourceString.split('/').pop() || sourceString;
-					let displayNameWithoutId = originalFileIdentifier;
-					const lastUnderscoreIndex = originalFileIdentifier.lastIndexOf('_');
+				// Use your existing logic to process the source_files for this message
+				const processedSources = (message.source_files || []).map(
+					(sourceString: string) => {
+						// This is your logic, adapted for this context
+						const originalFileIdentifier =
+							sourceString.split('/').pop() || sourceString;
+						let displayNameWithoutId = originalFileIdentifier;
+						const lastUnderscoreIndex =
+							originalFileIdentifier.lastIndexOf('_');
 
-					if (lastUnderscoreIndex !== -1) {
-						const partAfterUnderscore = originalFileIdentifier.substring(lastUnderscoreIndex + 1);
-						if (/[a-f0-9]+\.(pdf|txt|docx|md)$/i.test(partAfterUnderscore)) {
-							displayNameWithoutId = originalFileIdentifier.substring(0, lastUnderscoreIndex);
+						if (lastUnderscoreIndex !== -1) {
+							const partAfterUnderscore =
+								originalFileIdentifier.substring(
+									lastUnderscoreIndex + 1
+								);
+							if (
+								/[a-f0-9]+\.(pdf|txt|docx|md)$/i.test(
+									partAfterUnderscore
+								)
+							) {
+								displayNameWithoutId =
+									originalFileIdentifier.substring(
+										0,
+										lastUnderscoreIndex
+									);
+							}
 						}
+
+						displayNameWithoutId = displayNameWithoutId.replace(
+							/\.(pdf|txt|docx|md)$/i,
+							''
+						);
+
+						// New capitalization logic:
+						const cleanedName = displayNameWithoutId
+							.replace(/_/g, ' ')
+							.replace(/-/g, ' ')
+							.trim();
+						const displayName = cleanedName
+							.split(' ') // 1. Split into an array of words: "my file name" -> ["my", "file", "name"]
+							.map(
+								(word) =>
+									word.charAt(0).toUpperCase() + word.slice(1)
+							) // 2. Capitalize first letter of each word
+							.join(' '); // 3. Join them back with spaces: "My File Name"
+						// END of the change
+
+						const viewUrl = `${
+							config.public.apiBase
+						}/files/view/${account_unique_id}/${encodeURIComponent(
+							originalFileIdentifier
+						)}`;
+
+						return {
+							displayName: displayName || originalFileIdentifier,
+							fileIdentifier: originalFileIdentifier,
+							viewUrl: viewUrl,
+						};
 					}
-
-					displayNameWithoutId = displayNameWithoutId.replace(/\.(pdf|txt|docx|md)$/i, '');
-					
-                    // New capitalization logic:
-					const cleanedName = displayNameWithoutId.replace(/_/g, ' ').replace(/-/g, ' ').trim();
-					const displayName = cleanedName
-						.split(' ') // 1. Split into an array of words: "my file name" -> ["my", "file", "name"]
-						.map(word => word.charAt(0).toUpperCase() + word.slice(1)) // 2. Capitalize first letter of each word
-						.join(' '); // 3. Join them back with spaces: "My File Name"
-					// END of the change
-
-					const viewUrl = `${config.public.apiBase}/files/view/${account_unique_id}/${encodeURIComponent(originalFileIdentifier)}`;
-					
-					return {
-						displayName: displayName || originalFileIdentifier,
-						fileIdentifier: originalFileIdentifier,
-						viewUrl: viewUrl,
-					};
-				});
+				);
 
 				// Return the message object with the original properties,
-                // but with the `source_files` array replaced by our new processed array.
+				// but with the `source_files` array replaced by our new processed array.
 				return {
 					...message,
 					source_files: processedSources,

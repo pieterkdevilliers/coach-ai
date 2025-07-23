@@ -334,6 +334,12 @@
 	.chat-item__sender {
 		@apply font-roboto-condensed font-medium;
 	}
+	.chat-sessions__table th:last-child {
+		@apply text-end;
+	}
+	.chat-sessions__table td:last-child {
+		@apply me-5;
+	}
 
 	/* Query Form */
 	.query-form__container {
@@ -458,7 +464,7 @@
 	.content-table {
 		@apply lg:mt-6;
 	}
-	.content-table th:last-child > span::before {
+	.folder-content .content-table th:last-child > span::before {
 		content: 'Actions';
 		@apply text-end block;
 	}
