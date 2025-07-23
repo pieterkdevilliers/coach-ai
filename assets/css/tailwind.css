@@ -341,6 +341,29 @@
 		@apply me-5;
 	}
 
+	/* Dashboard */
+	.dashboard.container--default {
+		@apply w-full max-w-full;
+	}
+	.dashboard .card-grid {
+		@apply md:gap-6 xl:gap-8;
+	}
+	.dashboard-stats-card h3 {
+		@apply text-center text-pretty;
+	}
+	.dashboard-stats-card .card__subtitle {
+		@apply text-base text-purple-700;
+	}
+	.dashboard-stats-card .card__body {
+		@apply flex items-center justify-center;
+	}
+	.stat-count__container {
+		@apply bg-gradient-to-br from-purple-800 to-pink-500 rounded-full w-24 h-24 flex justify-center items-center p-0.5;
+	}
+	.stat-count__value {
+		@apply bg-white text-purple-800 text-3xl font-bold font-roboto-condensed w-full h-full flex justify-center items-center rounded-full;
+	}
+
 	/* Query Form */
 	.query-form__container {
 		@apply bg-gradient-to-br from-purple-800 to-pink-500 p-1 rounded-xl;
@@ -407,6 +430,9 @@
 	}
 	.layout--user_access .card__outer {
 		@apply bg-gradient-to-br from-purple-800 to-pink-500 rounded-xl p-1;
+	}
+	.layout--user_access .card__inner {
+		@apply bg-white;
 	}
 	.layout--user_access .card__title {
 		@apply text-purple-800;
