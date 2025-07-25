@@ -121,6 +121,19 @@ const account_unique_id = authStore.uniqueAccountId;
 const isDocumentModalOpen = ref(false);
 const selectedFileToView = ref<string | null>(null);
 
+// Helper function to capitalize the first letter of each word
+const toTitleCase = (str) => {
+	if (!str) {
+		return '';
+	}
+	// Split the string by spaces, map over each word to capitalize its first letter,
+	// and then join them back with spaces.
+	return str
+		.split(' ')
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+		.join(' ');
+};
+
 // Computed property to process raw sources into usable objects
 const processedSources = computed(() => {
 	return queryResponseSourcesRaw.value.map((sourceString) => {
@@ -151,8 +164,8 @@ const processedSources = computed(() => {
 		// Remove .pdf extension for display if it's still there
 		displayNameWithoutId = displayNameWithoutId.replace(/\.pdf$/i, '');
 		// Replace underscores with spaces for better readability
-		const displayName = displayNameWithoutId.replace(/_/g, ' ');
-
+		const displayNameWithSpaces = displayNameWithoutId.replace(/_/g, ' ');
+		const displayName = toTitleCase(displayNameWithSpaces);
 		// Step 3: Construct the (future) URL to your backend proxy endpoint
 		// This URL will be used by the modal later.
 		// For now, it's just for structure.
