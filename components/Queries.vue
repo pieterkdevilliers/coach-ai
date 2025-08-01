@@ -1,5 +1,5 @@
 <template>
-	<div class="query-form__container">
+	<div class="query-form__container" v-if="authStore.processed_docs_count > 0">
 		<div class="query-form__inner">
 			<h2 class="heading heading--h2">
 				Run a test query on your processed documents
@@ -120,6 +120,8 @@ const loading = ref(false);
 const account_unique_id = authStore.uniqueAccountId;
 const isDocumentModalOpen = ref(false);
 const selectedFileToView = ref<string | null>(null);
+
+console.log('processed_docs_count:', authStore.processed_docs_count);
 
 // Helper function to capitalize the first letter of each word
 const toTitleCase = (str) => {
