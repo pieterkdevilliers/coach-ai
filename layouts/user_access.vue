@@ -135,6 +135,24 @@ onMounted(() => {
 						description: 'View and manage your subscription.',
 					},
 				},
+				{
+					popover: {
+						title: 'Getting Started',
+						description: `
+							<div>
+								<p>How to add your documents and run test queries</p>
+								<iframe
+									width="560"
+									height="315"
+									src="https://www.youtube.com/embed/StrHAhf3wIY?si=LSh5j122Vg4WNZKS"
+									frameborder="0"
+									allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+									allowfullscreen>
+								</iframe>
+							</div>
+						`
+					}
+				},
 				// {
 				// 	element: '#nav-link-dashboards',
 				// 	popover: {
