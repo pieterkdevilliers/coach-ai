@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { driver } from 'driver.js';
+import { driver, type DriveStep, type PopoverDOM } from 'driver.js';
 import 'driver.js/dist/driver.css';
 import { ref, computed, watchEffect, onMounted } from 'vue';
 import Queries from '~/components/Queries.vue';
@@ -51,6 +51,10 @@ import { useAuthStore } from '~/stores/auth';
 import { useHead, useRoute } from '#imports';
 import Navbar from '~/components/Navbar.vue';
 import Footer from '~/components/Footer.vue';
+
+type TourStep = DriveStep & {
+	customWidth?: string;
+};
 
 const config = useRuntimeConfig();
 const authStore = useAuthStore();
@@ -91,12 +95,10 @@ watchEffect(async () => {
 
 // This will be used to determine if the tour should be shown
 onMounted(() => {
-	// const showTour = ref(true); // Turn on tour for testing
-	if (showTour.value) {
-		const driverObj = driver({
-			popoverClass: 'tour-popover',
-			showProgress: true,
-			steps: [
+	setTimeout(() => {
+		const showTour = ref(true);
+		if (showTour.value) {
+			const tourSteps: TourStep[] = [
 				{
 					element: '#nav-link-chats',
 					popover: {
@@ -136,6 +138,7 @@ onMounted(() => {
 					},
 				},
 				{
+					customWidth: '600px',
 					popover: {
 						title: 'Getting Started',
 						description: `
@@ -150,18 +153,45 @@ onMounted(() => {
 									allowfullscreen>
 								</iframe>
 							</div>
-						`
+						`,
+					},
+				},
+			];
+
+			const driverObj = driver({
+				popoverClass: 'tour-popover',
+				showProgress: true,
+				// --- THIS IS THE CORRECT IMPLEMENTATION ---
+				onPopoverRender: (popover: PopoverDOM, { state }) => {
+					// The correct property for the main popover element is `wrapper`
+					const popoverWrapper = popover.wrapper;
+
+					// A safety check is always a good idea
+					if (!popoverWrapper) {
+						return;
+					}
+
+					const activeStep = state.activeStep as DriveStep & {
+						customWidth?: string;
+					};
+					const customWidth = activeStep?.customWidth;
+
+					if (customWidth) {
+						// Apply styles to the wrapper element
+						popoverWrapper.style.width = customWidth;
+						popoverWrapper.style.maxWidth = 'none';
+					} else {
+						// IMPORTANT: Reset styles for all other steps
+						popoverWrapper.style.width = '';
+						popoverWrapper.style.maxWidth = '';
 					}
 				},
-				// {
-				// 	element: '#nav-link-dashboards',
-				// 	popover: {
-				// 	},
-				// },
-			],
-		});
-		driverObj.drive();
-	}
+				steps: tourSteps,
+			});
+
+			driverObj.drive();
+		}
+	}, 100);
 });
 
 // Add current page as a class to the body tag
