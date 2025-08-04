@@ -96,7 +96,7 @@ watchEffect(async () => {
 // This will be used to determine if the tour should be shown
 onMounted(() => {
 	setTimeout(() => {
-		const showTour = ref(true);
+		// const showTour = ref(true);
 		if (showTour.value) {
 			const tourSteps: TourStep[] = [
 				{
