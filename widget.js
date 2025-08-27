@@ -920,7 +920,11 @@
 				'for accountId:',
 				accountId,
 				'with apiKey:',
-				apiKey.substring(0, 8) + '...'
+				apiKey.substring(0, 8) + '...',
+				'with chat_session_id:',
+				sessionId,
+				'Visitor UUID:',
+				visitorUuid,
 			);
 			const response = await fetch(widgetApiEndpoint, {
 				method: 'POST',
@@ -930,7 +934,6 @@
 				},
 				body: JSON.stringify({
 					query: question,
-					accountId: accountId,
 					chat_session_id: sessionId,
         			visitor_uuid: visitorUuid,
 				}),
