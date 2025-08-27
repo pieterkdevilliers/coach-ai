@@ -3,30 +3,25 @@
 		<div class="container__inner">
 			<h2 class="heading">
 				<span class="heading__span--block font-extrabold"
-					>Introducing YourDocsAI:</span
+					>Introducing InfiniteYou:</span
 				>
 				<span class="heading__span--block font-normal"
-					>Your Website's Smart, Document-Powered Helper</span
+					>Your Digital Expert, Always On.</span
 				>
 			</h2>
 			<div class="text-block text-block--wide text-block--center">
 				<p>
-					<strong>YourDocsAI</strong>
-					empowers your website with an intelligent chat widget.
+					<strong>InfiniteYou</strong>
+					transforms your website into a 24/7 expert that knows your business inside out.
 				</p>
 				<p>
-					Simply upload your business documents – FAQs, product specs,
-					pricing, return policies and how-to guides.
+					Upload your FAQs, books, courses, programs, and materials — and InfiniteYou instantly learns from them.
 				</p>
 				<p>
-					YourDocsAI learns <strong><em>exclusively</em></strong
-					>&nbsp; from this content.
+					Visitors ask, and your AI expert responds with accurate, trustworthy answers — straight from your content. It can even point them to the exact document for more detail.
 				</p>
 				<p>
-					Visitors ask questions, and your AI chat provides instant
-					answers, extracted <strong><em>only</em></strong
-					>&nbsp; from your information, even linking them to the
-					relevant document for more detail.
+					The result: faster answers, fewer support requests, and more sales closed on the spot.
 				</p>
 			</div>
 		</div>

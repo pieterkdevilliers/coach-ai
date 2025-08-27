@@ -137,7 +137,7 @@ const handleSignup = async () => {
 
 		const emailPayload = {
 			to_email: email_address.value,
-			subject: 'Welcome to YourDocsAI',
+			subject: 'Welcome to InfiniteYou',
 			message: emailHtmlContent,
 			account_unique_id: authStore.uniqueAccountId,
 		};
@@ -171,7 +171,7 @@ const handleSignup = async () => {
 
 		const emailNotificationPayload = {
 			to_email: 'pieter@hey.com',
-			subject: 'New YourDocsAI Account Created',
+			subject: 'New InfiniteYou Account Created',
 			message: emailNotificationHtmlContent,
 			account_unique_id: authStore.uniqueAccountId,
 		};

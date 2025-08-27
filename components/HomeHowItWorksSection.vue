@@ -1,7 +1,11 @@
 <template>
 	<div class="how-it-works-section container--default mx-auto">
 		<div class="text-center mb-10 md:mb-12">
-			<h2 class="text-gradient heading heading--2">How It Works</h2>
+			<h2 class="text-gradient heading heading--2">How It Works
+				<span class="heading__span--block"
+							>From Your Content to Real Conversions in 3 Steps</span
+						>
+			</h2>
 		</div>
 		<div class="grid md:grid-cols-3 gap-12 lg:gap-16">
 			<div
@@ -39,21 +43,21 @@ interface Step {
 const steps = ref<Step[]>([
 	{
 		number: 1,
-		title: 'Upload Your Business Info',
+		title: 'Upload Your Expert Content',
 		description:
-			'<strong>Securely upload</strong> your FAQs, product details, policies or any helpful documents.',
+			'Share your books, programs, transcripts, blog posts—anything that defines your authority.',
 	},
 	{
 		number: 2,
-		title: 'Customize & Embed Your Widget',
+		title: 'Brand & Embed',
 		description:
-			'<strong>Easily add</strong> the YourDocsAI chat to your website.',
+			'Seamlessly match InfiniteYou to your site’s look and feel. Place it wherever prospects engage most.',
 	},
 	{
 		number: 3,
-		title: 'Delight Your Visitors',
+		title: 'Engage & Convert ',
 		description:
-			'Customers get <strong>instant, accurate answers</strong> sourced directly from <strong><em>your</em></strong>&nbsp;content, anytime.',
+			'People ask. InfiniteYou answers — always with your voice, guiding them toward what matters next.',
 	},
 ]);
 </script>

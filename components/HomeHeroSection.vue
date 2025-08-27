@@ -8,21 +8,17 @@
 				<div class="text-block text-block--left text-block--wide">
 					<h1 class="heading heading--h1">
 						<span class="heading__span--block font-extrabold"
-							>Answer Customer Questions 24/7</span
+							>InfiniteYou</span
 						>
 						<span class="heading__span--block"
-							>Instantly & Accurately</span
-						>
-						<span class="heading__span--block"
-							><strong><em>From Your Website!</em></strong></span
+							>Your expertise, amplified — 24/7.</span
 						>
 					</h1>
 					<p>
-						Add an AI chat widget to your site that learns
-						<strong>only</strong> from your business documents
-						(FAQs, product info, policies). Provide instant,
-						reliable answers to visitor questions, with links back
-						to your source documents.
+						Turn your knowledge into a 24/7 digital presence that drives sales.
+						Upload your books, courses, programs, and materials—then let
+						InfiniteYou engage visitors, answer questions,
+						and nurture leads—all with your voice and insights.
 					</p>
 				</div>
 				<div class="form-container">

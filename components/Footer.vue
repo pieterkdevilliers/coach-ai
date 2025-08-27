@@ -7,7 +7,7 @@
 			>
 		</div>
 		<p class="copyright">
-			&copy; {{ new Date().getFullYear() }} YourDocsAI. All rights
+			&copy; {{ new Date().getFullYear() }} InfiniteYou. All rights
 			reserved.
 		</p>
 	</footer>

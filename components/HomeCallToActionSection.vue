@@ -2,13 +2,12 @@
 	<!-- This outer div is the single root element -->
 	<div class="home-cta-section container--default">
 		<div class="text-center">
-			<h2 class="heading heading__h2 mb-6">
+			<h2 class="heading heading__h2 mb-6">Stop just supporting—start selling through your wisdom.
 				<span class="heading__span--block font-extrabold"
-					>Give Your Website Visitors the Answers They Need,
-					Instantly.</span
+					>With InfiniteYou, your expertise meets every visitor, every time.</span
 				>
 				<span class="heading__span--block"
-					><strong><em>Create Your Account Today!</em></strong></span
+					><strong><em>Launch InfiniteYou Today</em></strong></span
 				>
 			</h2>
 		</div>
