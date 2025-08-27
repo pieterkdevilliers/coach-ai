@@ -17,7 +17,7 @@ export function getWelcomeEmailHtml(data: WelcomeEmailData): string {
   // All styles MUST be inline for email client compatibility.
   return `
     <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd; max-width: 600px; margin: auto;">
-      <h1 style="color: #333;">Welcome to YourDocsAI for ${data.organisationName}!</h1>
+      <h1 style="color: #333;">Welcome to InfiniteYou for ${data.organisationName}!</h1>
       <p style="font-size: 16px; color: black">
         Thank you for creating an account with us. We're excited to have you on board.
       </p>
@@ -52,7 +52,7 @@ export function getWelcomeEmailHtml(data: WelcomeEmailData): string {
                             Pieter K de Villiers
                           </h2>
                           <p style="font-size: 16px; color: black">
-                            Creator of YourDocsAI
+                            Creator of InfiniteYou
                           </p>
                         </td>
                       </tr>
@@ -111,7 +111,7 @@ export function getNewAccountNotificationEmailHtml(data: NewAccountNotificationE
                             Pieter K de Villiers
                           </h2>
                           <p style="font-size: 16px; color: black">
-                            Creator of YourDocsAI
+                            Creator of InfiniteYou
                           </p>
                         </td>
                       </tr>
@@ -147,9 +147,9 @@ export function getUserWelcomeEmailHtml(data: UserWelcomeEmailData): string {
   // All styles MUST be inline for email client compatibility.
   return `
     <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd; max-width: 600px; margin: auto;">
-      <h1 style="color: #333;">You've been invited to YourDocsAI for ${data.organisationName}!</h1>
+      <h1 style="color: #333;">You've been invited to InfiniteYou for ${data.organisationName}!</h1>
       <p style="font-size: 16px; color: black">
-        Someone at ${data.organisationName} just added you to the YourDocsAI account.
+        Someone at ${data.organisationName} just added you to the InfiniteYou account.
       </p>
       <p style="font-size: 16px; color: black">
         You can now start uploading documents, interacting with the AI assistant, as well as configure the web-chat widget for the account.
@@ -181,7 +181,7 @@ export function getUserWelcomeEmailHtml(data: UserWelcomeEmailData): string {
                             Pieter K de Villiers
                           </h2>
                           <p style="font-size: 16px; color: black">
-                            Creator of YourDocsAI
+                            Creator of InfiniteYou
                           </p>
                         </td>
                       </tr>

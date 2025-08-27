@@ -2,7 +2,10 @@
 	<div class="benefits-section container--default mx-auto">
 		<div class="text-center mb-10 md:mb-12">
 			<h2 class="text-gradient heading heading__h2">
-				Delight Customers & Free Up Your Time
+				For Coaches, Consultants & Authors
+				<span class="heading__span--block"
+							>Convert curiosity into clients—without typing a word.</span
+						>
 			</h2>
 		</div>
 
@@ -61,38 +64,21 @@ interface Benefit {
 const benefits = ref<Benefit[]>([
 	{
 		icon: shallowRef(ClockIcon),
-		title: 'Instant Customer Support, 24/7',
+		title: 'Pre-Sales Assistant',
 		description:
-			'Answer visitor questions immediately, day or night, directly on your website.',
+			'Let InfiniteYou qualify leads, answer objections, and pitch your services—on autopilot.',
 	},
 	{
 		icon: shallowRef(ArrowPathIcon),
-		title: 'Reduce Repetitive Enquiries',
+		title: 'Authority at Scale',
 		description:
-			'Let your AI chat handle common questions, freeing up your team for complex issues.',
+			'Your expertise works harder—while you coach, write, or consult.',
 	},
 	{
 		icon: shallowRef(CursorArrowRaysIcon),
-		title: 'Increase Website Engagement & Conversions',
+		title: 'Closer to Clients',
 		description:
-			'Help visitors find what they need quickly, guiding them towards a purchase or inquiry.',
-	},
-	{
-		icon: shallowRef(CheckCircleIcon),
-		title: 'Answers You Can Trust',
-		description:
-			'YourDocsAI uses <strong><em>only your approved business information</em></strong>, ensuring accurate and consistent responses.',
-	},
-	{
-		icon: shallowRef(SparklesIcon),
-		title: 'Easy Setup',
-		description: 'Upload your docs, embed the widget – no coding needed!',
-	},
-	{
-		icon: shallowRef(TicketIcon),
-		title: 'Enhanced Information',
-		description:
-			"Review the visitor's question context for better answers.",
+			'Instantly give prospects the clarity they need (and deserve), when they need it.',
 	},
 ]);
 </script>

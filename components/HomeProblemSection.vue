@@ -55,21 +55,21 @@ const problems = ref<Problem[]>([
 	{
 		icon: shallowRef(DocumentMagnifyingGlassIcon),
 		description:
-			"Visitors can't find answers on your site and leave frustrated?",
+			"Prospects leave when they can’t instantly find the answers they need.",
 	},
 	{
 		icon: shallowRef(ClockIcon),
 		description:
-			'Spending too much time answering the same customer questions over and over?',
+			'You’re stuck answering the same questions again and again instead of focusing on growth.',
 	},
 	{
 		icon: shallowRef(BanknotesIcon),
 		description:
-			"Losing potential sales because prospects can't get immediate information when they need it?",
+			"Sales slip away when buyers can’t get information right when they’re ready to act.",
 	},
 	{
 		icon: shallowRef(InformationCircleIcon),
-		description: 'Want to provide 24/7 support without hiring more staff?',
+		description: 'Providing 24/7 coverage usually means hiring more staff — until now.',
 	},
 ]);
 </script>

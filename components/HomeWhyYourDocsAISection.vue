@@ -2,7 +2,10 @@
 	<div class="why-sourceproof-section container--default mx-auto">
 		<div class="text-center mb-10 md:mb-12">
 			<h2 class="text-gradient heading heading--2">
-				Why YourDocsAI Chat?
+				Why InfiniteYou?
+				<span class="heading__span--block"
+							>Scale your authority. Automate your expertise. Convert more.</span
+						>
 			</h2>
 		</div>
 		<div class="reason-grid">
@@ -49,29 +52,24 @@ interface Reason {
 const reasons = ref<Reason[]>([
 	{
 		icon: shallowRef(FolderIcon),
-		title: 'Your Content, Your Answers',
+		title: 'Be Everywhere at Once',
 		description:
-			'The YourDocsAI <strong><em>only</em></strong> uses information you provide. No made-up stuff!',
+			'InfiniteYou turns your content into a living digital replica of your expertise—engaging prospects while you sleep.',
 	},
 	{
 		icon: shallowRef(DocumentCheckIcon),
-		title: 'Verifiable for Visitors',
-		description: 'Links to source pages build trust.',
+		title: 'Sell Through Conversation',
+		description: 'Transform static documents into dynamic, personalized sales conversations, not just FAQ responses.',
 	},
 	{
 		icon: shallowRef(SparklesIcon),
-		title: 'Incredibly Easy',
-		description: 'Designed for busy small business owners.',
+		title: 'Always on Brand, Always Accurate',
+		description: 'Powered exclusively by your books, courses, and IP. No fluff, no hallucinations—just your knowledge.',
 	},
 	{
 		icon: shallowRef(ClockIcon),
-		title: 'Affordable 24/7 Support',
-		description: 'Get an AI helper that works tirelessly for you.',
-	},
-	{
-		icon: shallowRef(CheckBadgeIcon),
-		title: 'Boosts Your Credibility',
-		description: 'Provide professional, instant support.',
+		title: 'Effortless Setup',
+		description: "Upload, embed, and you're live—no coding or developers needed.",
 	},
 ]);
 
