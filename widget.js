@@ -931,6 +931,8 @@
 				body: JSON.stringify({
 					query: question,
 					accountId: accountId,
+					chat_session_id: sessionId,
+        			visitor_uuid: visitorUuid,
 				}),
 			});
 			messagesContainer.removeChild(loadingElement);
