@@ -6,7 +6,7 @@
 			>
 				<div class="logo">
 					<img src="../assets/images/logo-w100.png" alt="" />
-					<span><strong>YourDocs</strong>AI</span>
+					<span><strong>Expert</strong>Echo</span>
 				</div>
 				<Navbar />
 			</div>

@@ -16,7 +16,7 @@
 								src="../assets/images/logo-w50-inverse-purple.png"
 								alt=""
 							/>
-							<span><strong>YourDocs</strong>AI</span>
+							<span><strong>Expert</strong>Echo</span>
 						</div>
 					</h1>
 					<template #fallback>
