@@ -51,7 +51,7 @@ onMounted(() => {
 	// 2. Create the script element
 	scriptElement = document.createElement('script');
 	scriptElement.src =
-		'https://d31env5c5sjhq3.cloudfront.net/static/widget.js';
+		'https://d31env5c5sjhq3.cloudfront.net/static/expertecho/widget.js';
 	scriptElement.async = true;
 	scriptElement.defer = true;
 
