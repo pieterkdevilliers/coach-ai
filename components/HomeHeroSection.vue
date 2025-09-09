@@ -8,7 +8,7 @@
 				<div class="text-block text-block--left text-block--wide">
 					<h1 class="heading heading--h1">
 						<span class="heading__span--block font-extrabold"
-							>InfiniteYou</span
+							>ExpertEcho</span
 						>
 						<span class="heading__span--block"
 							>Your expertise, amplified — 24/7.</span
@@ -17,7 +17,7 @@
 					<p>
 						Turn your knowledge into a 24/7 digital presence that drives sales.
 						Upload your books, courses, programs, and materials—then let
-						InfiniteYou engage visitors, answer questions,
+						ExpertEcho engage visitors, answer questions,
 						and nurture leads—all with your voice and insights.
 					</p>
 				</div>

@@ -4,10 +4,10 @@
 		<div class="text-center">
 			<h2 class="heading heading__h2 mb-6">Stop just supporting—start selling through your wisdom.
 				<span class="heading__span--block font-extrabold"
-					>With InfiniteYou, your expertise meets every visitor, every time.</span
+					>With ExpertEcho, your expertise meets every visitor, every time.</span
 				>
 				<span class="heading__span--block"
-					><strong><em>Launch InfiniteYou Today</em></strong></span
+					><strong><em>Launch ExpertEcho Today</em></strong></span
 				>
 			</h2>
 		</div>

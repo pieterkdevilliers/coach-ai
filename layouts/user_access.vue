@@ -22,7 +22,7 @@
 					<template #fallback>
 						<!-- Optional: A placeholder that shows while waiting for client render -->
 						<h1 class="font-bold text-xl text-primary">
-							<span>InfiniteYou</span>
+							<span>ExpertEcho</span>
 						</h1>
 					</template>
 				</ClientOnly>

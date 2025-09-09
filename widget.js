@@ -552,11 +552,11 @@
 		chatWindow.appendChild(inputArea);
 
 		const poweredByLink = document.createElement('a');
-		poweredByLink.href = 'https://yourdocsai.app';
+		poweredByLink.href = 'https://expertecho.ai';
 		poweredByLink.target = '_blank';
 		poweredByLink.rel = 'noopener noreferrer';
 		poweredByLink.className = 'ai-chat-footer-branding';
-		poweredByLink.textContent = 'Powered By InfiniteYou';
+		poweredByLink.textContent = 'Powered By ExpertEcho';
 		chatFooter = document.createElement('div');
 		chatFooter.className = 'ai-chat-footer';
 		showEmailFormButton = document.createElement('button');
@@ -1135,7 +1135,7 @@
 	}
 
 	function destroyWidget() {
-		console.log('Destroying YourDocsAI Widget...');
+		console.log('Destroying ExpertEcho Widget...');
 
 		// 1. Remove the main UI elements from the body
 		if (chatToggleButton) chatToggleButton.remove();

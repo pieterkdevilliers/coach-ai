@@ -51,13 +51,13 @@ const steps = ref<Step[]>([
 		number: 2,
 		title: 'Brand & Embed',
 		description:
-			'Seamlessly match InfiniteYou to your site’s look and feel. Place it wherever prospects engage most.',
+			'Seamlessly match ExpertEcho to your site’s look and feel. Place it wherever prospects engage most.',
 	},
 	{
 		number: 3,
 		title: 'Engage & Convert ',
 		description:
-			'People ask. InfiniteYou answers — always with your voice, guiding them toward what matters next.',
+			'People ask. ExpertEcho answers — always with your voice, guiding them toward what matters next.',
 	},
 ]);
 </script>

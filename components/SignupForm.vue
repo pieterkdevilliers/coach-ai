@@ -137,7 +137,7 @@ const handleSignup = async () => {
 
 		const emailPayload = {
 			to_email: email_address.value,
-			subject: 'Welcome to InfiniteYou',
+			subject: 'Welcome to ExpertEcho',
 			message: emailHtmlContent,
 			account_unique_id: authStore.uniqueAccountId,
 		};
@@ -171,7 +171,7 @@ const handleSignup = async () => {
 
 		const emailNotificationPayload = {
 			to_email: 'pieter@hey.com',
-			subject: 'New InfiniteYou Account Created',
+			subject: 'New ExpertEcho Account Created',
 			message: emailNotificationHtmlContent,
 			account_unique_id: authStore.uniqueAccountId,
 		};

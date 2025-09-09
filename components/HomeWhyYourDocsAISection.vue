@@ -2,7 +2,7 @@
 	<div class="why-sourceproof-section container--default mx-auto">
 		<div class="text-center mb-10 md:mb-12">
 			<h2 class="text-gradient heading heading--2">
-				Why InfiniteYou?
+				Why ExpertEcho?
 				<span class="heading__span--block"
 							>Scale your authority. Automate your expertise. Convert more.</span
 						>
@@ -54,7 +54,7 @@ const reasons = ref<Reason[]>([
 		icon: shallowRef(FolderIcon),
 		title: 'Be Everywhere at Once',
 		description:
-			'InfiniteYou turns your content into a living digital replica of your expertise—engaging prospects while you sleep.',
+			'ExpertEcho turns your content into a living digital replica of your expertise—engaging prospects while you sleep.',
 	},
 	{
 		icon: shallowRef(DocumentCheckIcon),
