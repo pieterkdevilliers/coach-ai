@@ -21,12 +21,12 @@ export default defineNuxtConfig({
 	},
 	app: {
 		head: {
-			title: 'Your Docs AI',
+			title: 'ExpertEcho',
 			meta: [
 				{
 					name: 'description',
 					content:
-						'Allow your team or your customers to get the answers direct from your documents',
+						'For Coaches, Consultants & Authors - Convert curiosity into clients—without typing a word.',
 				},
 			],
 			link: [{}],
