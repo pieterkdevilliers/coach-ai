@@ -136,10 +136,10 @@
         position: fixed;
         bottom: 90px;
         right: 20px;
-        width: 350px;
+        width: 1200px;
         max-width: 90vw;
-        height: 500px;
-        max-height: 70vh;
+        height: 150px;
+        max-height: 40vh;
         background-color: white;
         border: 1px solid #ccc;
         border-radius: 10px;
@@ -269,6 +269,7 @@
         border-radius: 20px;
         margin-right: 8px;
         font-size: 16px;
+		max-width: 600px;
       }
       .ai-chat-input-area button {
         padding: 0 12px;
@@ -555,7 +556,7 @@
 		poweredByLink.target = '_blank';
 		poweredByLink.rel = 'noopener noreferrer';
 		poweredByLink.className = 'ai-chat-footer-branding';
-		poweredByLink.textContent = 'Powered By YourDocsAI';
+		poweredByLink.textContent = 'Powered By InfiniteYou';
 		chatFooter = document.createElement('div');
 		chatFooter.className = 'ai-chat-footer';
 		showEmailFormButton = document.createElement('button');
