@@ -1,11 +1,11 @@
 <template>
 	<div class="container--default">
-		<h1 class="page__title">Privacy Policy for YourDocsAI</h1>
+		<h1 class="page__title">Privacy Policy for InfiniteYou</h1>
 		<div class="page__content">
 			<section>
 				<p><strong>Effective Date:</strong> 7 July 2025</p>
 				<p>
-					Welcome to YourDocsAI ("we," "us," or "our"). We provide a
+					Welcome to InfiniteYou ("we," "us," or "our"). We provide a
 					Software-as-a-Service (SaaS) application that allows our
 					customers ("Customers") to add a web widget to their
 					websites. This widget enables their visitors and customers
@@ -15,7 +15,7 @@
 				<p>
 					This Privacy Policy explains how we collect, use, and
 					protect information in relation to our services. It applies
-					to our website, www.yourdocsai.app, and the services we
+					to our website, www.infiniteyou.app, and the services we
 					provide, including the web widget.
 				</p>
 			</section>
@@ -221,7 +221,7 @@
 				</ul>
 				<p>
 					To exercise these rights, please contact us at
-					<strong>info@yourdocsai.app</strong>
+					<strong>info@infiniteyou.app</strong>
 				</p>
 			</section>
 
@@ -254,8 +254,8 @@
 					contact us at:
 				</p>
 				<p>
-					YourDocsAI<br />
-					Email: <strong>info@yourdocsai.app</strong>
+					InfiniteYou<br />
+					Email: <strong>info@infiniteyou.app</strong>
 				</p>
 			</section>
 		</div>
