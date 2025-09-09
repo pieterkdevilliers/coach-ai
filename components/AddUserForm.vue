@@ -101,7 +101,7 @@ const handleAddUser = async () => {
 
 		const emailPayload = {
 			to_email: username.value,
-			subject: 'Welcome to InfiniteYou',
+			subject: 'Welcome to ExpertEcho',
 			message: emailHtmlContent,
 			account_unique_id: authStore.uniqueAccountId,
 		};

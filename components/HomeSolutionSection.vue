@@ -3,7 +3,7 @@
 		<div class="container__inner">
 			<h2 class="heading">
 				<span class="heading__span--block font-extrabold"
-					>Introducing InfiniteYou:</span
+					>Introducing ExpertEcho:</span
 				>
 				<span class="heading__span--block font-normal"
 					>Your Digital Expert, Always On.</span
@@ -11,11 +11,11 @@
 			</h2>
 			<div class="text-block text-block--wide text-block--center">
 				<p>
-					<strong>InfiniteYou</strong>
+					<strong>ExpertEcho</strong>
 					transforms your website into a 24/7 expert that knows your business inside out.
 				</p>
 				<p>
-					Upload your FAQs, books, courses, programs, and materials — and InfiniteYou instantly learns from them.
+					Upload your FAQs, books, courses, programs, and materials — and ExpertEcho instantly learns from them.
 				</p>
 				<p>
 					Visitors ask, and your AI expert responds with accurate, trustworthy answers — straight from your content. It can even point them to the exact document for more detail.

@@ -17,7 +17,7 @@ export function getWelcomeEmailHtml(data: WelcomeEmailData): string {
   // All styles MUST be inline for email client compatibility.
   return `
     <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd; max-width: 600px; margin: auto;">
-      <h1 style="color: #333;">Welcome to InfiniteYou for ${data.organisationName}!</h1>
+      <h1 style="color: #333;">Welcome to ExpertEcho for ${data.organisationName}!</h1>
       <p style="font-size: 16px; color: black">
         Thank you for creating an account with us. We're excited to have you on board.
       </p>
@@ -26,7 +26,7 @@ export function getWelcomeEmailHtml(data: WelcomeEmailData): string {
         Then simply add the web-widget to your website in order to prove support to your visitors.
       </p>
       <a 
-        href="https://yourdocsai.app/login" 
+        href="https://expertecho.ai/login" 
         style="display: inline-block; margin-top: 15px; padding: 12px 24px; background-color: #ec4899; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;"
       >
         Your Account Login
@@ -52,7 +52,7 @@ export function getWelcomeEmailHtml(data: WelcomeEmailData): string {
                             Pieter K de Villiers
                           </h2>
                           <p style="font-size: 16px; color: black">
-                            Creator of InfiniteYou
+                            Creator of ExpertEcho
                           </p>
                         </td>
                       </tr>
@@ -111,7 +111,7 @@ export function getNewAccountNotificationEmailHtml(data: NewAccountNotificationE
                             Pieter K de Villiers
                           </h2>
                           <p style="font-size: 16px; color: black">
-                            Creator of InfiniteYou
+                            Creator of ExpertEcho
                           </p>
                         </td>
                       </tr>
@@ -147,15 +147,15 @@ export function getUserWelcomeEmailHtml(data: UserWelcomeEmailData): string {
   // All styles MUST be inline for email client compatibility.
   return `
     <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd; max-width: 600px; margin: auto;">
-      <h1 style="color: #333;">You've been invited to InfiniteYou for ${data.organisationName}!</h1>
+      <h1 style="color: #333;">You've been invited to ExpertEcho for ${data.organisationName}!</h1>
       <p style="font-size: 16px; color: black">
-        Someone at ${data.organisationName} just added you to the InfiniteYou account.
+        Someone at ${data.organisationName} just added you to the ExpertEcho account.
       </p>
       <p style="font-size: 16px; color: black">
         You can now start uploading documents, interacting with the AI assistant, as well as configure the web-chat widget for the account.
       </p>
       <a 
-        href="https://yourdocsai.app/login" 
+        href="https://expertecho.ai/login" 
         style="display: inline-block; margin-top: 15px; padding: 12px 24px; background-color: #ec4899; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;"
       >
         Your Account Login
@@ -181,7 +181,7 @@ export function getUserWelcomeEmailHtml(data: UserWelcomeEmailData): string {
                             Pieter K de Villiers
                           </h2>
                           <p style="font-size: 16px; color: black">
-                            Creator of InfiniteYou
+                            Creator of ExpertEcho
                           </p>
                         </td>
                       </tr>

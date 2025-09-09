@@ -66,7 +66,7 @@ const benefits = ref<Benefit[]>([
 		icon: shallowRef(ClockIcon),
 		title: 'Pre-Sales Assistant',
 		description:
-			'Let InfiniteYou qualify leads, answer objections, and pitch your services—on autopilot.',
+			'Let ExpertEcho qualify leads, answer objections, and pitch your services—on autopilot.',
 	},
 	{
 		icon: shallowRef(ArrowPathIcon),
