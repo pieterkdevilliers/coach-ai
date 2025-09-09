@@ -1,6 +1,6 @@
 <template>
 	<div class="container--default">
-		<h1 class="page__title">Terms of Service for YourDocsAI</h1>
+		<h1 class="page__title">Terms of Service for InfiniteYou</h1>
 		<div class="page__content">
 			<section>
 				<h2 class="heading heading--h2">
@@ -9,7 +9,7 @@
 				<p>
 					These Terms of Service ("Terms") govern your use of the
 					services, website, and software applications (collectively,
-					the "Service") provided by YourDocsAI ("we," "us," or
+					the "Service") provided by InfiniteYou ("we," "us," or
 					"our").
 				</p>
 				<p>
@@ -228,7 +228,7 @@
 			<section>
 				<h2 class="heading heading--h2">10. Indemnification</h2>
 				<p>
-					You agree to defend, indemnify, and hold harmless YourDocsAI
+					You agree to defend, indemnify, and hold harmless InfiniteYou
 					and its affiliates from and against any claims, liabilities,
 					damages, losses, and expenses, including reasonable
 					attorney's fees, arising out of or in any way connected with
@@ -262,12 +262,12 @@
 				<p>
 					<strong>Entire Agreement:</strong> These Terms and our
 					Privacy Policy constitute the entire agreement between you
-					and YourDocsAI regarding the Service.
+					and InfiniteYou regarding the Service.
 				</p>
 				<p>
 					<strong>Contact Information:</strong> If you have any
 					questions about these Terms, please contact us at
-					info@yourdocsai.com.
+					info@infiniteyou.com.
 				</p>
 			</section>
 		</div>
