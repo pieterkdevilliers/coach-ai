@@ -1,4 +1,28 @@
 <template>
+	<section class="my-prompts container--default mx-auto">
+	<h2 class="heading heading--h2 page__title">Account Prompts</h2>
+		<div>
+			<div v-if="account_prompt" class="card__outer">
+				<AccountPromptCard
+					:prompt="account_prompt"
+					@edit-prompt-clicked="openEditPromptModal"
+					@add-prompt-clicked="openAddPromptModal"
+					@revert-prompt-clicked="openRevertPromptModal"
+					/>
+			</div>
+		</div>
+	</section>
+	<section class="my-subscriptions container--default mx-auto">
+		<h2 class="heading heading--h2 page__title">Notification Webhook</h2>
+		<div class="card-grid">
+			<div class="card__outer">
+				<WebhookCard
+					:webhook="webhook"
+					@edit-webhook-clicked="openEditWebhookModal"
+				/>
+			</div>
+		</div>
+	</section>
 	<section class="my-subscriptions container--default mx-auto">
 		<div class="page-header">
 			<h2 class="heading heading--h2 page__title">My Subscriptions</h2>
@@ -27,17 +51,6 @@
 			</div>
 		</div>
 	</section>
-	<section class="my-subscriptions container--default mx-auto">
-		<h2 class="heading heading--h2 page__title">Notification Webhook</h2>
-		<div class="card-grid">
-			<div class="card__outer">
-				<WebhookCard
-					:webhook="webhook"
-					@edit-webhook-clicked="openEditWebhookModal"
-				/>
-			</div>
-		</div>
-	</section>
 
 	<SubscriptionModal v-model="isSubscriptionModalOpen" />
 
@@ -49,6 +62,30 @@
 		@webhook-updated="handleWebhookUpdated"
 	/>
 
+	<!-- Edit Prompt Modal -->
+	<EditPromptModal
+		:is-open="isEditPromptModalOpen"
+		:prompt="promptToEdit"
+		@close="closeEditPromptModal"
+		@prompt-updated="handlePromptUpdated"
+	/>
+
+	<!-- Add Prompt Modal -->
+	<AddPromptModal
+		:is-open="isAddPromptModalOpen"
+		:prompt="promptToAdd"
+		@close="closeAddPromptModal"
+		@prompt-added="handlePromptAdded"
+	/>
+
+
+	<!-- Add Prompt Modal -->
+	<RevertPromptModal
+		:is-open="isRevertPromptModalOpen"
+		:prompt="promptToRevert"
+		@close="closeRevertPromptModal"
+		@prompt-reverted="handlePromptReverted"
+	/>
 	<UNotifications />
 </template>
 
@@ -57,7 +94,11 @@ const config = useRuntimeConfig();
 import SubscriptionCard from '~/components/SubscriptionCard.vue';
 import SubscriptionModal from '~/components/SubscriptionModal.vue';
 import WebhookCard from '~/components/WebhookCard.vue';
+import AccountPromptCard from '~/components/AccountPromptCard.vue';
 import EditWebhookModal from '~/components/EditWebhookModal.vue';
+import EditPromptModal from '~/components/EditPromptModal.vue';
+import AddPromptModal from '~/components/AddPromptModal.vue';
+import RevertPromptModal from '~/components/RevertPromptModal.vue';
 import { ref, watch } from 'vue';
 import { useAuthStore } from '~/stores/auth';
 
@@ -72,7 +113,6 @@ const toast = useToast(); // For notifications
 const apiAuthorizationToken = authStore.access_token;
 const uniqueAccountId = authStore.uniqueAccountId;
 const activeSubscription = computed(() => authStore.subs_status);
-console.log('activeSubscription: ', activeSubscription);
 const accountOrganisation = ref('');
 
 const isSubscriptionModalOpen = ref(false);
@@ -171,10 +211,9 @@ const {
 		Authorization: `Bearer ${apiAuthorizationToken}`,
 	},
 });
-console.log('Webhooks Data: ', webhook.value.account.webhook_url);
 
 if (error.value) {
-	console.error('Error fetching users:', error.value);
+	console.error('Error fetching users:', webhookError.value);
 } else {
 	console.log('Stored Unique Account ID:', authStore.uniqueAccountId);
 }
@@ -200,5 +239,91 @@ const closeEditWebhookModal = () => {
 
 const handleWebhookUpdated = async (updatedWebhook: Webhook) => {
 	await refreshWebhook();
+};
+
+const {
+	data: account_prompt,
+	error: accountPromptError,
+	refresh: refreshAccountPrompt,
+} = await useFetch(
+	`${config.public.apiBase}/most-recent-prompt/${uniqueAccountId}`,
+	{
+		method: 'GET',
+		headers: {
+			accept: 'application/json',
+			Authorization: `Bearer ${apiAuthorizationToken}`,
+		},
+		cache: 'no-cache',
+	}
+);
+
+if (error.value) {
+	console.error('Error fetching account prompts:', accountPromptError.value);
+} else {
+	console.log('Account Prompts:', account_prompt.value);
+}
+
+interface Prompt {
+	id: number;
+	prompt_key: string;
+	prompt_text: string;
+	created_at: string;
+}
+
+// --- State for Edit Prompt Modal ---
+const isEditPromptModalOpen = ref(false);
+const promptToEdit = ref<Prompt | null>(null);
+
+const openEditPromptModal = (prompt: Prompt) => {
+	promptToEdit.value = prompt;
+	isEditPromptModalOpen.value = true;
+	console.log('Opening edit modal with prompt:', prompt);
+};
+
+const closeEditPromptModal = () => {
+	isEditPromptModalOpen.value = false;
+	promptToEdit.value = null; 
+};
+
+const handlePromptUpdated = async (updatedPrompt: Prompt) => {
+	await refreshAccountPrompt();
+};
+
+// --- State for Add Prompt Modal ---
+const isAddPromptModalOpen = ref(false);
+const promptToAdd = ref<Prompt | null>(null);
+
+const openAddPromptModal = (prompt: Prompt) => {
+	promptToAdd.value = prompt;
+	isAddPromptModalOpen.value = true;
+	console.log('Openingadd modal with prompt:', prompt);
+};
+
+const closeAddPromptModal = () => {
+	isAddPromptModalOpen.value = false;
+	promptToAdd.value = null; 
+};
+
+const handlePromptAdded = async (addedPrompt: Prompt) => {
+	await refreshAccountPrompt();
+};
+
+// --- State for Revert Prompt Modal ---
+const isRevertPromptModalOpen = ref(false);
+const promptToRevert = ref<Prompt | null>(null);
+
+const openRevertPromptModal = (prompt: Prompt) => {
+	promptToRevert.value = prompt;
+	isRevertPromptModalOpen.value = true;
+	console.log('Opening Revert modal with prompt:', prompt);
+};
+
+const closeRevertPromptModal = () => {
+	isRevertPromptModalOpen.value = false;
+	promptToRevert.value = null; 
+};
+
+const handlePromptReverted = async (revertedPrompt: Prompt) => {
+	await refreshAccountPrompt();
 };
 </script>
