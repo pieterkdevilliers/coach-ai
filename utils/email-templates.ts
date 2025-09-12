@@ -23,7 +23,7 @@ export function getWelcomeEmailHtml(data: WelcomeEmailData): string {
       </p>
       <p style="font-size: 16px; color: black">
         You can now start uploading your documents and interacting with your AI assistant.
-        Then simply add the web-widget to your website in order to prove support to your visitors.
+        Then simply add the web-widget to your website in order to provide support to your visitors.
       </p>
       <a 
         href="https://expertecho.ai/login" 
