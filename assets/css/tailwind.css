@@ -152,7 +152,9 @@
 	.heading__span--block {
 		@apply block;
 	}
-	.heading__span--block:last-child {
+	.heading__span--block:last-child:not(
+			.container__hero-section .heading__span--block:last-child
+		) {
 		@apply mt-2 text-accent;
 	}
 	.text-block--center {
@@ -533,6 +535,9 @@
 	}
 	.page--landing #hero h1 {
 		@apply text-2xl lg:text-3xl my-2.5 mx-0 max-w-full md:my-6;
+	}
+	.page--landing #hero h1 .heading__span--block:first-child {
+		@apply text-3xl lg:text-4xl;
 	}
 	.page--landing section h2 {
 		@apply text-purple-950;
