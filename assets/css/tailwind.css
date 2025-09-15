@@ -596,7 +596,7 @@ to-purple-800;
 		@apply text-white font-roboto-condensed font-medium text-lg md:text-2xl flex items-center justify-start;
 	}
 	.main-header .logo img {
-		@apply w-12 h-12 md:w-12 md:h-12 me-2;
+		@apply w-12 h-auto md:w-12 me-2;
 	}
 	.main-header .logo span {
 		@apply font-light;
