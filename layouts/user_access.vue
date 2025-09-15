@@ -12,10 +12,7 @@
 							{{ account_organisation }}
 						</span>
 						<div v-else class="logo">
-							<img
-								src="../assets/images/logo-w50-inverse-purple.png"
-								alt=""
-							/>
+							<img src="../assets/images/logo-w100.png" alt="" />
 							<span><strong>Expert</strong>Echo</span>
 						</div>
 					</h1>
