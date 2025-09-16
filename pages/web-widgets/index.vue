@@ -83,6 +83,14 @@ interface Widget {
 	allowed_origins: string[];
 	created_at: string;
 	display_prefix: string;
+	widget_config:
+			{ theme_colour: string;
+			widget_title: string;
+			widget_id: number;
+			opt_in_required: boolean;
+			account_unique_id: string;
+			button_text: string;
+			welcome_message: string };
 }
 
 const authStore = useAuthStore();
@@ -102,10 +110,14 @@ const {
 			accept: 'application/json',
 			Authorization: `Bearer ${apiAuthorizationToken}`,
 		},
+		transform: (data) => {
+			// Convert to plain objects to avoid hydration issues
+			return JSON.parse(JSON.stringify(data))
+		}
 	}
 );
 
-console.log('Widgets fetched:', widgets.value.api_keys || []);
+console.log('Widgets fetched:', widgets.value?.api_keys || []);
 
 if (error.value) {
 	console.error('Error fetching widgets:', error.value);
