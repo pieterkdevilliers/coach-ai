@@ -11,7 +11,7 @@
 				<div class="flex items-center justify-between">
 					<h3 class="heading heading--h3 text-gradient">
 						<span class="heading__span--block"
-							>Update Allowed Origins for Widget:</span
+							>Update Details for Widget:</span
 						>
 						<span class="heading__span--block">{{
 							widget ? widget.name : 'New Widget'
@@ -41,6 +41,34 @@
 				>
 					<UTextarea v-model="state.allowed_origins" />
 				</UFormGroup>
+				<UFormGroup
+					label="Text for the button opening the widget"
+					name="button_text"
+					class="form__label-fields"
+				>
+					<UInput v-model="state.button_text" />
+				</UFormGroup>
+				<UFormGroup
+					label="Title for the widget, when the widget is open"
+					name="widget_title"
+					class="form__label-fields"
+				>
+					<UInput v-model="state.widget_title" />
+				</UFormGroup>
+				<UFormGroup
+					label="The welcome message, which the AI will send to the user on first opening the widget."
+					name="welcome_message"
+					class="form__label-fields"
+				>
+					<UTextarea v-model="state.welcome_message" />
+				</UFormGroup>
+				<UFormGroup
+					label="Require user opt-in before starting conversation?"
+					name="opt_in_required"
+					class="form__label-fields"
+				>
+					<UCheckbox v-model="state.opt_in_required" />
+				</UFormGroup>
 
 				<div class="flex justify-end gap-2 pt-4">
 					<UButton color="gray" variant="ghost" @click="handleClose">
@@ -64,10 +92,23 @@ import type { FormSubmitEvent } from '#ui/types';
 const props = defineProps<{
 	isOpen: boolean;
 	widget: {
-		// The Widget object being edited
 		id: number;
+		name: string;
+		display_prefix: string;
+		created_at: string;
+		last_used_at: string | null;
+		is_active: boolean;
 		allowed_origins: string[];
-	} | null; // Allow null for when no Widget is selected
+		widget_config: {
+			theme_colour: string | null;
+			button_text: string;
+			widget_title: string;
+			welcome_message: string;
+			opt_in_required: boolean;
+			widget_id: number;
+			account_unique_id: string;
+		} | null;
+	} | null;
 }>();
 
 const emit = defineEmits(['update:isOpen', 'widgetUpdated', 'close']);
@@ -84,6 +125,14 @@ const schema = z.object({
 		.string()
 		.min(1, 'Allowed origins are required')
 		.max(500, 'Allowed origins must be less than 500 characters'),
+	button_text: z
+		.string(),
+	widget_title: z
+		.string(),
+	welcome_message: z
+		.string(),
+	opt_in_required: z
+		.boolean(),
 });
 
 type Schema = z.output<typeof schema>;
@@ -91,16 +140,29 @@ type Schema = z.output<typeof schema>;
 const state = reactive<Schema>({
 	allowed_origins: props.widget
 		? props.widget.allowed_origins.join(', ')
-		: '', // Initialize with widget data if available
+		: '',
+	button_text: props.widget?.widget_config?.button_text ?? '',
+	widget_title: props.widget?.widget_config?.widget_title ?? '',
+	welcome_message: props.widget?.widget_config?.welcome_message ?? '',
+	opt_in_required: props.widget?.widget_config?.opt_in_required ?? false,
 });
 
 watch(
 	() => props.widget,
 	(newWidget) => {
 		if (newWidget) {
-			state.allowed_origins = newWidget.allowed_origins.join(', '); // Update state when widget changes
+			state.allowed_origins = newWidget.allowed_origins.join(', ');
+			state.button_text = newWidget.widget_config?.button_text ?? '';
+			state.widget_title = newWidget.widget_config?.widget_title ?? '';
+			state.welcome_message = newWidget.widget_config?.welcome_message ?? '';
+			state.opt_in_required = newWidget.widget_config?.opt_in_required ?? false;
 		} else {
-			state.allowed_origins = ''; // Reset if no widget is selected
+			// Reset all fields if no widget is selected
+			state.allowed_origins = '';
+			state.button_text = '';
+			state.widget_title = '';
+			state.welcome_message = '';
+			state.opt_in_required = false;
 		}
 	}
 );
@@ -127,6 +189,10 @@ const submitForm = async (event: FormSubmitEvent<Schema>) => {
 					allowed_origins: event.data.allowed_origins
 						.split(',')
 						.map((item) => item.trim()), // Convert string back to array
+					button_text: event.data.button_text,
+					widget_title: event.data.widget_title,
+					welcome_message: event.data.welcome_message,
+					opt_in_required: event.data.opt_in_required,
 				},
 			}
 		);
