@@ -67,6 +67,10 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, toRefs } from 'vue';
+import { useAuthStore } from '~/stores/auth';
+
+const authStore = useAuthStore();
+const uniqueAccountId = authStore.uniqueAccountId;
 
 const props = defineProps({
 	// isOpen: Boolean, // This will be controlled by v-model in the parent
@@ -75,6 +79,14 @@ const props = defineProps({
 			id: number;
 			name: string;
 			account_unique_id?: string /* other widget props */;
+			widget_config?:
+				{ theme_colour: string;
+				widget_title: string;
+				widget_id: number;
+				opt_in_required: boolean;
+				account_unique_id: string;
+				button_text: string;
+				welcome_message: string };
 		}, // Add account_unique_id if passed
 		required: true,
 	},
@@ -88,12 +100,12 @@ const toast = useToast();
 // These are for generating the snippet structure
 // The actual API key will be a placeholder the user needs to fill in.
 const widgetJsUrl = ref(
-	'https://d31env5c5sjhq3.cloudfront.net/static/widget.js'
+	'https://d31env5c5sjhq3.cloudfront.net/static/expertecho/widget.js'
 ); // TODO: Update this to your actual widget.js URL
 const placeholderApiKey = 'YOUR_WIDGET_API_KEY'; // Placeholder
 
 const accountIdToUse = computed(() => {
-	return props.widget.account_unique_id || 'ACCOUNT_ID_MISSING_FROM_PROP';
+	return uniqueAccountId || 'ACCOUNT_ID_MISSING_FROM_PROP';
 });
 
 const generatedSnippet = computed(() => {
@@ -106,6 +118,11 @@ const generatedSnippet = computed(() => {
   window.myAIChatWidgetConfig = {
     accountId: '${accountIdToUse.value}',
     apiKey: '${placeholderApiKey}',
+	themeColour: ${props.widget.widget_config?.theme_colour},
+	buttonText: ${props.widget.widget_config?.button_text},
+	widgetTitle: ${props.widget.widget_config?.widget_title},
+	welcomeMessage: ${props.widget.widget_config?.welcome_message},
+	optInRequired: ${props.widget.widget_config?.opt_in_required},
 
   };
 <\/script>
