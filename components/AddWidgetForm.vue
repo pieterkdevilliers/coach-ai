@@ -30,6 +30,63 @@
 					autocomplete="off"
 				/>
 			</div>
+			<div class="mb-4">
+				<label
+					class="block text-sm font-medium text-gray-700"
+					for="button_text"
+					>Button Text</label
+				>
+				<UInput
+					v-model="button_text"
+					id="button_text"
+					type="text"
+					placeholder="Enter the text for the button opening the widget"
+					autocomplete="off"
+				/>
+			</div>
+			<div class="mb-4">
+				<label
+					class="block text-sm font-medium text-gray-700"
+					for="widget_title"
+					>Widget Title</label
+				>
+				<UInput
+					v-model="widget_title"
+					id="widget_title"
+					type="text"
+					placeholder="Enter the title for the widget, when the widget is open"
+					autocomplete="off"
+				/>
+			</div>
+			<div class="mb-4">
+				<label
+					class="block text-sm font-medium text-gray-700"
+					for="welcome_message"
+					>Welcome Message</label
+				>
+				<UTextarea
+					v-model="welcome_message"
+					id="welcome_message"
+					type="text"
+					placeholder="Enter the welcome message, which the AI will send to the user on first opening the widget."
+					autocomplete="off"
+				/>
+			</div>
+			<div class="mb-4">
+				<div class="flex items-center">
+					<UCheckbox
+						v-model="opt_in_required"
+						id="opt_in_required"
+						name="opt_in_required"
+					/>
+					<label
+						class="ml-2 text-sm font-medium text-gray-700"
+						for="opt_in_required"
+					>
+						Require user opt-in before starting conversation?
+					</label>
+				</div>
+			</div>
 			<UButton
 				type="submit"
 				icon="i-heroicons:command-line"
@@ -71,11 +128,19 @@ const toast = useToast();
 
 const name = ref('');
 const allowed_origins = ref('');
+const button_text = ref('');
+const widget_title = ref('');
+const welcome_message = ref('');
+const opt_in_required = ref(false);
 const errorMessage = ref('');
 const uniqueAccountId = authStore.uniqueAccountId;
 
 const handleAddWidget = async () => {
 	const widgetName = name.value;
+	const buttonText = button_text.value;
+	const widgetTitle = widget_title.value;
+	const welcomeMessage = welcome_message.value;
+	const optInRequired = opt_in_required.value;
 
 	if (!widgetName || widgetName.trim() === '') {
 		toast.add({
@@ -96,6 +161,10 @@ const handleAddWidget = async () => {
 				.split(',')
 				.map((item) => item.trim())
 				.filter((item) => item.length > 0),
+			button_text: buttonText,
+			widget_title: widgetTitle,
+			welcome_message: welcomeMessage,
+			opt_in_required: optInRequired
 		};
 
 		// --- Make sure your API URL is correct for development/production ---
