@@ -43,9 +43,12 @@ onMounted(() => {
 	// 1. Set up the configuration on the window object
 	(window as any).myAIChatWidgetConfig = {
 		accountId: '8c53b4f906488f44',
-		apiKey: 'dd08b16e3d1da35a4e7973ef51fcd2d27422982883ee1174def4c922df503a87',
-		buttonText: 'Try ExpertEcho here',
+		apiKey: '57d7c5230a450d17dffc03ce27c32b7aec36b34e74682653ab0f6b103991508c',
+		themeColour: null,
+		buttonText: 'Try ExpertEcho Here',
 		widgetTitle: 'Ask questions about ExpertEcho',
+		welcomeMessage: "Hi there, I'm your ExpertEcho agent. I'll help answer questions you might have about ExpertEcho.",
+		optInRequired: false,
 	};
 
 	// 2. Create the script element

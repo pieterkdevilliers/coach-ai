@@ -118,11 +118,11 @@ const generatedSnippet = computed(() => {
   window.myAIChatWidgetConfig = {
     accountId: '${accountIdToUse.value}',
     apiKey: '${placeholderApiKey}',
-	themeColour: ${props.widget.widget_config?.theme_colour},
-	buttonText: ${props.widget.widget_config?.button_text},
-	widgetTitle: ${props.widget.widget_config?.widget_title},
-	welcomeMessage: ${props.widget.widget_config?.welcome_message},
-	optInRequired: ${props.widget.widget_config?.opt_in_required},
+	themeColour: "${props.widget.widget_config?.theme_colour}",
+	buttonText: "${props.widget.widget_config?.button_text}",
+	widgetTitle: "${props.widget.widget_config?.widget_title}",
+	welcomeMessage: "${props.widget.widget_config?.welcome_message}",
+	optInRequired: "${props.widget.widget_config?.opt_in_required}",
 
   };
 <\/script>
