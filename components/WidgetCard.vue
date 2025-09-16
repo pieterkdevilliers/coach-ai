@@ -11,6 +11,11 @@
 				{{ new Date(widget.created_at).toLocaleDateString() }}
 			</p>
 			<p><strong>Display Prefix:</strong> {{ widget.display_prefix }}</p>
+			<p><strong>Button Text:</strong> {{ widget.widget_config?.button_text }}</p>
+			<p><strong>Widget Title:</strong> {{ widget.widget_config?.widget_title }}</p>
+			<p><strong>Welcome Message:</strong> {{ widget.widget_config?.welcome_message }}</p>
+			<p><strong>Theme Colour:</strong> {{ widget.widget_config?.theme_colour }}</p>
+			<p><strong>Opt-in Required:</strong> {{ widget.widget_config?.opt_in_required }}</p>
 		</div>
 
 		<template #footer>
@@ -68,6 +73,14 @@ const { widget } = defineProps<{
 		created_at: string;
 		display_prefix: string;
 		account_unique_id: string;
+		widget_config:
+			{ theme_colour: string;
+			widget_title: string;
+			widget_id: number;
+			opt_in_required: boolean;
+			account_unique_id: string;
+			button_text: string;
+			welcome_message: string };
 	};
 }>();
 
