@@ -1140,8 +1140,8 @@
 
 		switchToChatView(false); // Start in chat view, don't focus input yet
 
-		if (config.initialBotMessage && !isEmailFormVisible) {
-			displayMessage(config.initialBotMessage, [], 'bot');
+		if (config.welcomeMessage && !isEmailFormVisible) {
+			displayMessage(config.welcomeMessage, [], 'bot');
 		}
 		console.log('Widget initialized.');
 	}
