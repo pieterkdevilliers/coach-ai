@@ -60,7 +60,7 @@
 					name="welcome_message"
 					class="form__label-fields"
 				>
-					<UTextarea v-model="state.welcome_message" />
+					<UInput v-model="state.welcome_message" />
 				</UFormGroup>
 				<UFormGroup
 					label="Require user opt-in before starting conversation?"
