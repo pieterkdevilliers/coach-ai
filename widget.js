@@ -17,9 +17,9 @@
 	const apiBaseUrl =
 		config.apiBaseUrl || 'https://fastapi-rag-2705cfd4c41a.herokuapp.com';
 	const widgetApiEndpoint = `${apiBaseUrl}/api/v1/widget/query`;
-	const contactApiEndpoint =
-		config.contactApiEndpoint || `${apiBaseUrl}/api/v1/widget/contact-us`;
+	const contactApiEndpoint = `${apiBaseUrl}/api/v1/widget/contact-us`;
 	const chatMessageApiEndpoint = `${apiBaseUrl}/api/v1/widget/messages`;
+	const widgetOptInApiEndpoint = `${apiBaseUrl}/api/v1/widget/opt-in`;
 	let sessionId = '';
 	let visitorUuid = '';
 
@@ -1263,7 +1263,7 @@
 				'Sending opt-in form data to API for accountId:',
 				accountId
 			);
-			const response = await fetch(contactApiEndpoint, {
+			const response = await fetch(widgetOptInApiEndpoint, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -1280,7 +1280,7 @@
 
 			if (!response.ok) {
 				const errorData = await response.json().catch(() => ({
-					detail: 'Failed to send email. Server error.',
+					detail: 'Failed to process opt-in. Server error.',
 				}));
 				throw new Error(
 					errorData.detail || `API Error: ${response.status}`
@@ -1288,9 +1288,10 @@
 			}
 
 			console.log('Opt-In form submitted successfully.');
+
 			displayOptInFormStatus(
 				config.optInFormSuccessMessage ||
-					'Thank you! Your message has been sent.',
+					'Thank you! You will be directed to the chat now.',
 				true
 			);
 			clearOptInForm();
@@ -1298,6 +1299,7 @@
 				if (isOptInFormVisible) switchToChatView();
 				messagesContainer.innerHTML = ''; // Clear existing messages
 				optInCompleted = true;
+				displayMessage(config.welcomeMessage, [], 'bot');
 			}, 3000);
 		} catch (error) {
 			console.error('Opt-In Form API Call Error:', error);
@@ -1323,7 +1325,6 @@
 	function clearOptInForm() {
 		optInFormNameInput.value = '';
 		optInFormEmailInput.value = '';
-		optInFormMessageInput.value = '';
 	}
 	function displayOptInFormStatus(message, isSuccess = true) {
 		optInFormStatusMessage.textContent = message;
@@ -1352,7 +1353,7 @@
 		} else if (optInRequired && !optInCompleted) {
 			console.log('Opt-in required, not displaying welcome message.');
 			// Opt-in form goes here
-			chatHeaderTitle.textContent = 'Please Opt-In';
+			chatHeaderTitle.textContent = 'Please enter you name and email to start the chat';
 			createOptInForm();
 			messagesContainer.appendChild(optInFormContainer);
 			isOptInFormVisible = true;
