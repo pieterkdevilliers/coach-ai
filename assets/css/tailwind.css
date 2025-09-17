@@ -921,4 +921,7 @@ to-purple-800;
 }
 
 @layer utilities {
+	[role='dialog'].modal--wide > div > div > div {
+		@apply max-w-6xl;
+	}
 }
