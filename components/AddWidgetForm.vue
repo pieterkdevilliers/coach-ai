@@ -64,7 +64,7 @@
 					for="welcome_message"
 					>Welcome Message</label
 				>
-				<UTextarea
+				<UInput
 					v-model="welcome_message"
 					id="welcome_message"
 					type="text"
