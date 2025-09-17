@@ -49,6 +49,7 @@
 	let emailFormStatusMessage;
 
 	let isEmailFormVisible = false;
+	let isOptInFormVisible = false;
 	let widgetStyleElement = null;
 
 	// --- Styles ---
@@ -58,7 +59,7 @@
 		widgetStyleElement.id = 'yourdocsai-widget-styles';
 		widgetStyleElement.textContent = `
       /* --- Base style for the Chat Toggle Button --- */
-      button.ai-chat-widget-toggle {
+    button.ai-chat-widget-toggle {
         /* Positioning */
         position: fixed;
         bottom: 20px;
@@ -87,10 +88,10 @@
         transition: width 0.4s ease-in-out, 
                     border-radius 0.4s ease-in-out,
                     padding 0.4s ease-in-out;
-      }
+    }
 
-      /* --- Style for the Text Span inside the button --- */
-      .ai-chat-widget-toggle span {
+    /* --- Style for the Text Span inside the button --- */
+    .ai-chat-widget-toggle span {
         /* Initial State: Hidden */
         max-width: 0;
         opacity: 0;
@@ -255,24 +256,24 @@
       }
       .ai-chat-message-sources li {
         margin-bottom: 2px;
-      }
-      .ai-chat-input-area {
+    }
+    .ai-chat-input-area {
         display: flex;
         padding: 10px;
         border-top: 1px solid #eee;
         background-color: #f9f9f9;
 		gap: 10px;
 		width: 100%;
-      }
-      .ai-chat-input-area input[type="text"] {
+    }
+    .ai-chat-input-area input[type="text"] {
         flex-grow: 1;
         padding: 10px;
         border: 1px solid #ddd;
         border-radius: 20px;
         margin-right: 8px;
         font-size: 16px;
-      }
-      .ai-chat-input-area button {
+    }
+    .ai-chat-input-area button {
         padding: 0 12px;
         color: white;
         border: none;
@@ -281,9 +282,9 @@
         font-size: 14px;
         font-weight: bold;
 		flex-shrink: 0;
-      }
+    }
 
-      .ai-chat-iframe-modal-overlay {
+    .ai-chat-iframe-modal-overlay {
         position: fixed;
         top: 0;
         left: 0;
@@ -297,13 +298,13 @@
         opacity: 0;
         visibility: hidden;
         transition: opacity 0.3s ease, visibility 0s linear 0.3s;
-      }
-      .ai-chat-iframe-modal-overlay.open {
+    }
+    .ai-chat-iframe-modal-overlay.open {
         opacity: 1;
         visibility: visible;
         transition: opacity 0.3s ease, visibility 0s linear 0s;
-      }
-      .ai-chat-iframe-modal-content {
+    }
+    .ai-chat-iframe-modal-content {
         background-color: white;
         padding: 10px;
         border-radius: 8px;
@@ -312,37 +313,37 @@
         height: 85vh;
         display: flex;
         flex-direction: column;
-      }
-      .ai-chat-iframe-modal-header {
+    }
+    .ai-chat-iframe-modal-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding-bottom: 10px;
         border-bottom: 1px solid #eee;
-      }
-      .ai-chat-iframe-modal-header h3 {
+    }
+    .ai-chat-iframe-modal-header h3 {
         margin: 0;
         font-size: 1.1em;
-      }
-      .ai-chat-iframe-modal-close-btn {
+    }
+    .ai-chat-iframe-modal-close-btn {
         background: none;
         border: none;
         font-size: 24px;
         cursor: pointer;
         color: #777;
-      }
-      .ai-chat-iframe-modal-body {
+}
+    .ai-chat-iframe-modal-body {
         flex-grow: 1;
         overflow: hidden;
-      }
-      .ai-chat-iframe-modal-body iframe {
+    }
+    .ai-chat-iframe-modal-body iframe {
         width: 100%;
         height: 100%;
         border: none;
-      }
+    }
 
       /* --- STYLES for Email Form --- */
-      .ai-chat-footer {
+    .ai-chat-footer {
         text-align: center;
         border-top: 1px solid #eee;
         background-color: #f9f9f9;
@@ -352,8 +353,8 @@
         gap: 8px;
         padding-inline: 8px;
 		padding-block: 0.5rem;
-      }
-      .ai-chat-show-email-form-button {
+    }
+    .ai-chat-show-email-form-button {
         padding: 4px 10px;
         background-color: transparent;
         border: 1px solid ${config.themeColor || '#db2777'};
@@ -364,51 +365,57 @@
         font-weight: normal;
         transition: background-color 0.2s, color 0.2s;
         align-self: center;
-      }
-      .ai-chat-footer .ai-chat-footer-branding {
+    }
+    .ai-chat-footer .ai-chat-footer-branding {
         font-size: 0.75rem; 
         color: #888;
         text-decoration: none;
         cursor: pointer;
 		line-height: normal;
-      }
-      .ai-chat-footer .ai-chat-footer-branding:hover {
+    }
+    .ai-chat-footer .ai-chat-footer-branding:hover {
         text-decoration: underline;
-      }
+    }
 
-      .ai-chat-email-form-container {
+	.ai-chat-email-form-container,
+	.ai-chat-opt-in-form-container {
         flex-grow: 1;
         padding: 15px;
         overflow-y: auto;
-        display: none; /* Initially hidden */
         flex-direction: column;
         gap: 12px;
-      }
-      .ai-chat-email-form-container label {
+	}
+	.ai-chat-email-form-container {
+		display: none; /* Initially hidden */
+	}
+	.ai-chat-opt-in-form-container {
+		display: flex;
+	}
+    :is(.ai-chat-email-form-container, .ai-chat-opt-in-form-container) label {
         font-size: 14px;
         color: #333;
         margin-bottom: -8px;
-      }
-      .ai-chat-email-form-container input[type="text"],
-      .ai-chat-email-form-container input[type="email"],
-      .ai-chat-email-form-container textarea {
+    }
+    :is(.ai-chat-email-form-container, .ai-chat-opt-in-form-container) input[type="text"],
+    :is(.ai-chat-email-form-container, .ai-chat-opt-in-form-container) input[type="email"],
+    .ai-chat-email-form-container textarea {
         width: 100%;
         padding: 10px;
         border: 1px solid #ddd;
         border-radius: 5px;
         font-size: 14px;
         box-sizing: border-box;
-      }
-      .ai-chat-email-form-container textarea {
+    }
+    .ai-chat-email-form-container textarea {
         min-height: 80px;
         resize: vertical;
-      }
-      .ai-chat-email-form-actions {
+    }
+    :is(.ai-chat-email-form-actions, .ai-chat-opt-in-form-actions) {
         display: flex;
         gap: 10px;
         margin-top: 10px;
-      }
-      .ai-chat-email-form-actions button {
+    }
+    :is(.ai-chat-email-form-actions, .ai-chat-opt-in-form-actions) button {
         flex-grow: 1;
         padding: 10px 15px;
         border: none;
@@ -416,35 +423,39 @@
         cursor: pointer;
         font-size: 14px;
         font-weight: bold;
-      }
-      .ai-chat-email-form-actions .send {
+    }
+		:is(.ai-chat-email-form-actions, .ai-chat-opt-in-form-actions) button:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+    :is(.ai-chat-email-form-actions, .ai-chat-opt-in-form-actions) .send {
         color: white;
-      }
-      .ai-chat-email-form-actions .cancel {
+    }
+    :is(.ai-chat-email-form-actions, .ai-chat-opt-in-form-actions) .cancel {
         background-color: #f0f0f0;
         color: #333;
         border: 1px solid #ddd;
-      }
-	.ai-chat-email-form-actions .cancel:hover {
+    }
+	:is(.ai-chat-email-form-actions, .ai-chat-opt-in-form-actions) .cancel:hover {
 		color: white;
 	}
-      .ai-chat-email-form-status {
+    :is(.ai-chat-email-form-status, .ai-chat-opt-in-form-status) {
         font-size: 13px;
         padding: 8px;
         border-radius: 4px;
         margin-top: 5px;
         text-align: center;
-      }
-      .ai-chat-email-form-status.success {
+	}
+	:is(.ai-chat-email-form-status.success, .ai-chat-opt-in-form-status.success) {
         background-color: #e6ffed;
         color: #008726;
         border: 1px solid #b3ffc6;
-      }
-      .ai-chat-email-form-status.error {
+    }
+    :is(.ai-chat-email-form-status.error, .ai-chat-opt-in-form-status.error) {
         background-color: #ffebee;
         color: #c62828;
         border: 1px solid #ef9a9a;
-      }
+    }
 		/* --- DEFAULT, HOVER and FOCUS states --- */
 		button.ai-chat-widget-toggle:hover {
 			transform: translateY(-2px);
@@ -462,7 +473,10 @@
 		button.ai-chat-show-email-form-button:hover,
 		.ai-chat-email-form-actions button.send,
 		.ai-chat-email-form-actions button.send:hover,
-		.ai-chat-email-form-actions button.cancel:hover {
+		.ai-chat-email-form-actions button.cancel:hover,
+		.ai-chat-opt-in-form-actions button.send,
+		.ai-chat-opt-in-form-actions button.send:hover,
+		.ai-chat-opt-in-form-actions button.cancel:hover {
 			background-color:${config.themeColor || '#db2777'};
 		}
 		.ai-chat-show-email-form-button:hover,
@@ -665,7 +679,7 @@
 				config.widgetCloseIcon ||
 				`
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px">
-          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+			<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
         </svg>`;
 			chatToggleButton.setAttribute('aria-label', 'Close Chat');
 		} else {
@@ -674,9 +688,9 @@
 			chatToggleButton.innerHTML =
 				config.widgetButtonIcon ||
 				`
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px">
-        <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 10H6v-2h12v2zm0-3H6V7h12v2z"/>
-      </svg>`;
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px">
+			<path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 10H6v-2h12v2zm0-3H6V7h12v2z"/>
+		</svg>`;
 			chatToggleButton.setAttribute('aria-label', 'Open Chat');
 			if (isEmailFormVisible) {
 				switchToChatView(false);
@@ -1131,6 +1145,193 @@
 		}
 	}
 
+	// --- Email Opt-In Form ---
+
+	// Build Opt-In Form UI
+
+	function createOptInForm() {
+		optInFormContainer = document.createElement('div');
+		optInFormContainer.className = 'ai-chat-opt-in-form-container';
+
+		const nameLabel = document.createElement('label');
+		nameLabel.setAttribute('for', 'ai-chat-opt-in-name');
+		nameLabel.textContent = config.optInFormNameLabel || 'Your Name:';
+		optInFormNameInput = document.createElement('input');
+		optInFormNameInput.type = 'text';
+		optInFormNameInput.id = 'ai-chat-opt-in-name';
+		optInFormNameInput.placeholder =
+			config.optInFormNamePlaceholder || 'e.g., Jane Doe';
+
+		const emailLabel = document.createElement('label');
+		emailLabel.setAttribute('for', 'ai-chat-opt-in-user-email');
+		emailLabel.textContent = config.optInFormEmailLabel || 'Your Email:';
+		optInFormEmailInput = document.createElement('input');
+		optInFormEmailInput.type = 'email';
+		optInFormEmailInput.id = 'ai-chat-opt-in-user-email';
+		optInFormEmailInput.placeholder =
+			config.optInFormEmailPlaceholder || 'e.g., jane.doe@example.com';
+
+		// const messageLabel = document.createElement('label');
+		// messageLabel.setAttribute('for', 'ai-chat-email-message');
+		// messageLabel.textContent =
+		// 	config.emailFormMessageLabel || 'Your Message:';
+		// emailFormMessageInput = document.createElement('textarea');
+		// emailFormMessageInput.id = 'ai-chat-email-message';
+		// emailFormMessageInput.placeholder =
+		// 	config.emailFormMessagePlaceholder || 'How can we help you?';
+
+		optInFormStatusMessage = document.createElement('div');
+		optInFormStatusMessage.className = 'ai-chat-opt-in-form-status';
+		optInFormStatusMessage.style.display = 'none';
+
+		const actionsDiv = document.createElement('div');
+		actionsDiv.className = 'ai-chat-opt-in-form-actions';
+
+		optInFormSendButton = document.createElement('button');
+		optInFormSendButton.className = 'send';
+		optInFormSendButton.textContent =
+			config.optInFormSendButtonText || 'Opt In';
+		optInFormSendButton.onclick = handleOptInSubmission;
+
+		optInFormCancelButton = document.createElement('button');
+		optInFormCancelButton.className = 'cancel';
+		optInFormCancelButton.textContent =
+			config.optInFormCancelButtonText || 'Cancel';
+		optInFormCancelButton.onclick = switchToChatView;
+
+		actionsDiv.appendChild(optInFormCancelButton);
+		actionsDiv.appendChild(optInFormSendButton);
+
+		optInFormContainer.appendChild(nameLabel);
+		optInFormContainer.appendChild(optInFormNameInput);
+		optInFormContainer.appendChild(emailLabel);
+		optInFormContainer.appendChild(optInFormEmailInput);
+		optInFormContainer.appendChild(optInFormStatusMessage);
+		optInFormContainer.appendChild(actionsDiv);
+	}
+
+	// Handle Opt-In Submission
+	async function handleOptInSubmission() {
+		clearOptInFormStatus();
+		const name = optInFormNameInput.value.trim();
+		const email = optInFormEmailInput.value.trim();
+
+		if (!name) {
+			displayOptInFormStatus(
+				config.optInFormErrorNameRequired || 'Please enter your name.',
+				false
+			);
+			optInFormNameInput.focus();
+			return;
+		}
+		if (!email) {
+			displayOptInFormStatus(
+				config.optInFormErrorEmailRequired ||
+					'Please enter your email address.',
+				false
+			);
+			optInFormEmailInput.focus();
+			return;
+		}
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		if (!emailRegex.test(email)) {
+			displayOptInFormStatus(
+				config.optInFormErrorEmailInvalid ||
+					'Please enter a valid email address.',
+				false
+			);
+			optInFormEmailInput.focus();
+			return;
+		}
+		// if (!message) {
+		// 	displayOptInFormStatus(
+		// 		config.optInFormErrorMessageRequired ||
+		// 			'Please enter your message.',
+		// 		false
+		// 	);
+		// 	optInFormMessageInput.focus();
+		// 	return;
+		// }
+
+		optInFormSendButton.disabled = true;
+		optInFormCancelButton.disabled = true;
+		optInFormSendButton.textContent =
+			config.optInFormSendingText || 'Sending...';
+
+		try {
+			console.log(
+				'Sending opt-in form data to API for accountId:',
+				accountId
+			);
+			const response = await fetch(contactApiEndpoint, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-API-Key': apiKey,
+				},
+				body: JSON.stringify({
+					name: name,
+					email: email,
+					// message: message,
+					sessionId: sessionId,
+					visitorUuid: visitorUuid,
+				}),
+			});
+
+			if (!response.ok) {
+				const errorData = await response.json().catch(() => ({
+					detail: 'Failed to send email. Server error.',
+				}));
+				throw new Error(
+					errorData.detail || `API Error: ${response.status}`
+				);
+			}
+
+			console.log('Opt-In form submitted successfully.');
+			displayOptInFormStatus(
+				config.optInFormSuccessMessage ||
+					'Thank you! Your message has been sent.',
+				true
+			);
+			clearOptInForm();
+			setTimeout(() => {
+				if (isOptInFormVisible) switchToChatView();
+				messagesContainer.innerHTML = ''; // Clear existing messages
+				optInCompleted = true;
+			}, 3000);
+		} catch (error) {
+			console.error('Opt-In Form API Call Error:', error);
+			displayOptInFormStatus(
+				error.message ||
+					config.optInFormGenericError ||
+					'An error occurred. Please try again.',
+				false
+			);
+		} finally {
+			optInFormSendButton.disabled = false;
+			optInFormCancelButton.disabled = false;
+			optInFormSendButton.textContent =
+				config.optInFormSendButtonText || 'Opt In';
+		}
+	}
+
+	// Opt-In Form Helpers
+	function clearOptInFormStatus() {
+		optInFormStatusMessage.style.display = 'none';
+		optInFormStatusMessage.textContent = '';
+	}
+	function clearOptInForm() {
+		optInFormNameInput.value = '';
+		optInFormEmailInput.value = '';
+		optInFormMessageInput.value = '';
+	}
+	function displayOptInFormStatus(message, isSuccess = true) {
+		optInFormStatusMessage.textContent = message;
+		optInFormStatusMessage.className =
+			'ai-chat-opt-in-form-status ' + (isSuccess ? 'success' : 'error');
+		optInFormStatusMessage.style.display = 'block';
+	}
+
 	// --- Initialization Function ---
 	function initializeWidget() {
 		console.log('Initializing widget...');
@@ -1140,9 +1341,25 @@
 
 		switchToChatView(false); // Start in chat view, don't focus input yet
 
-		if (config.welcomeMessage && !isEmailFormVisible) {
+		let optInRequired = config.optInRequired;
+		optInRequired = true;
+		const optInCompleted = false;
+		if (
+			(config.welcomeMessage && !isEmailFormVisible && !optInRequired) ||
+			(config.welcomeMessage && optInRequired && optInCompleted)
+		) {
 			displayMessage(config.welcomeMessage, [], 'bot');
+		} else if (optInRequired && !optInCompleted) {
+			console.log('Opt-in required, not displaying welcome message.');
+			// Opt-in form goes here
+			chatHeaderTitle.textContent = 'Please Opt-In';
+			createOptInForm();
+			messagesContainer.appendChild(optInFormContainer);
+			isOptInFormVisible = true;
+			// Set optInCompleted = true; upon completion
+			// Show welcome message after opt-in
 		}
+
 		console.log('Widget initialized.');
 	}
 
