@@ -261,6 +261,8 @@
         padding: 10px;
         border-top: 1px solid #eee;
         background-color: #f9f9f9;
+		gap: 10px;
+		width: 100%;
       }
       .ai-chat-input-area input[type="text"] {
         flex-grow: 1;
@@ -269,7 +271,6 @@
         border-radius: 20px;
         margin-right: 8px;
         font-size: 16px;
-		max-width: 600px;
       }
       .ai-chat-input-area button {
         padding: 0 12px;
@@ -279,6 +280,7 @@
         cursor: pointer;
         font-size: 14px;
         font-weight: bold;
+		flex-shrink: 0;
       }
 
       .ai-chat-iframe-modal-overlay {
@@ -341,17 +343,18 @@
 
       /* --- STYLES for Email Form --- */
       .ai-chat-footer {
-        flex-direction: column;
         text-align: center;
         border-top: 1px solid #eee;
         background-color: #f9f9f9;
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
+		align-items: flex-end;
         gap: 8px;
         padding-inline: 8px;
+		padding-block: 0.5rem;
       }
       .ai-chat-show-email-form-button {
-        padding: 8px 15px;
+        padding: 4px 10px;
         background-color: transparent;
         border: 1px solid ${config.themeColor || '#db2777'};
         border-radius: 20px;
@@ -361,15 +364,13 @@
         font-weight: normal;
         transition: background-color 0.2s, color 0.2s;
         align-self: center;
-        margin-top: 15px;
       }
       .ai-chat-footer .ai-chat-footer-branding {
-        align-self: flex-start; 
         font-size: 0.75rem; 
         color: #888;
         text-decoration: none;
         cursor: pointer;
-        padding: 4px;
+		line-height: normal;
       }
       .ai-chat-footer .ai-chat-footer-branding:hover {
         text-decoration: underline;
@@ -424,6 +425,9 @@
         color: #333;
         border: 1px solid #ddd;
       }
+	.ai-chat-email-form-actions .cancel:hover {
+		color: white;
+	}
       .ai-chat-email-form-status {
         font-size: 13px;
         padding: 8px;
@@ -475,6 +479,14 @@
 		button:hover {
 			opacity: 0.8;
 		}
+
+		@media (max-width: 768px) {
+			.ai-chat-widget-window {
+				top: 10px;
+				bottom: auto;
+				min-height: 430px;
+			}
+		} 
     `;
 		document.head.appendChild(widgetStyleElement);
 		console.log(config.buttonText || 'Widget styles injected.');
@@ -925,7 +937,7 @@
 				'with chat_session_id:',
 				sessionId,
 				'Visitor UUID:',
-				visitorUuid,
+				visitorUuid
 			);
 			const response = await fetch(widgetApiEndpoint, {
 				method: 'POST',
@@ -936,7 +948,7 @@
 				body: JSON.stringify({
 					query: question,
 					chat_session_id: sessionId,
-        			visitor_uuid: visitorUuid,
+					visitor_uuid: visitorUuid,
 				}),
 			});
 			messagesContainer.removeChild(loadingElement);
