@@ -9,7 +9,7 @@
 			<template #header>
 				<div class="flex items-center justify-between">
 					<h3 class="heading heading--h3 text-gradient">
-						Edit Webhook Destination URL
+						Edit Webhook Destination URLs
 					</h3>
 					<UButton
 						color="gray"
@@ -27,8 +27,11 @@
 				class="space-y-4 p-4"
 				@submit="submitForm"
 			>
-				<UFormGroup label="Destination URL" name="Destination URL">
+				<UFormGroup label="Contact Us Destination URL" name="Contact Us Destination URL">
 					<UInput v-model="state.webhook_url" />
+				</UFormGroup>
+				<UFormGroup label="Opt-in Destination URL" name="Opt-in Destination URL">
+					<UInput v-model="state.opt_in_webhook_url" />
 				</UFormGroup>
 
 				<div class="flex justify-end gap-2 pt-4">
@@ -59,6 +62,7 @@ const props = defineProps<{
 	webhook: {
 		account: {
 			webhook_url: string;
+			opt_in_webhook_url: string
 		};
 	} | null; // Allow it to be null when the modal is closed
 }>();
@@ -79,6 +83,7 @@ const handleClose = () => {
 // Zod schema for validation
 const schema = z.object({
 	webhook_url: z.string(),
+	opt_in_webhook_url: z.string(),
 });
 
 type Schema = z.output<typeof schema>;
@@ -86,6 +91,7 @@ type Schema = z.output<typeof schema>;
 // Form state
 const state = reactive<Schema>({
 	webhook_url: '',
+	opt_in_webhook_url: '',
 });
 
 watch(
@@ -94,9 +100,11 @@ watch(
 		if (newWebhook && newWebhook.account) {
 			// Update the form state with the current value
 			state.webhook_url = newWebhook.account.webhook_url;
+			state.opt_in_webhook_url = newWebhook.account.opt_in_webhook_url;
 		} else {
 			// Reset the form when the modal is closed
 			state.webhook_url = '';
+			state.opt_in_webhook_url = '';
 		}
 	}
 );
@@ -117,6 +125,7 @@ const submitForm = async (event: FormSubmitEvent<Schema>) => {
 				},
 				body: {
 					webhook_url: event.data.webhook_url,
+					opt_in_webhook_url: event.data.opt_in_webhook_url,
 				},
 			}
 		);

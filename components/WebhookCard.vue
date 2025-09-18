@@ -2,10 +2,23 @@
 	<UCard>
 		<p class="paragraph-label-text block">
 			<strong class="paragraph-label-text__label"
-				>Webhook Destination URL:</strong
+				>Contact Us Webhook Destination URL:</strong
 			>
 			<UTooltip
 				:text="webhook.account.webhook_url"
+				class="paragraph-label-text__text"
+			>
+				<span>
+					{{ webhook.account.webhook_url }}
+				</span>
+			</UTooltip>
+		</p>
+		<p class="paragraph-label-text block">
+			<strong class="paragraph-label-text__label"
+				>Opt-in Webhook Destination URL:</strong
+			>
+			<UTooltip
+				:text="webhook.account.opt_in_webhook_url"
 				class="paragraph-label-text__text"
 			>
 				<span>
@@ -33,6 +46,7 @@ const { webhook } = defineProps<{
 		// The object passed from the parent has an 'account' key
 		account: {
 			webhook_url: string;
+			opt_in_webhook_url: string
 		};
 	};
 }>();
