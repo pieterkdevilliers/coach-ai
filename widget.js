@@ -394,6 +394,8 @@
 			}
 			.ai-chat-opt-in-form-container {
 				display: flex;
+				margin-inline: auto;
+				max-width: 600px;
 			}
 			:is(.ai-chat-email-form-container, .ai-chat-opt-in-form-container)
 				label {
@@ -477,6 +479,7 @@
 			.ai-chat-opt-in-form-title {
 				color: ${config.themeColor || '#db2777'};
 				font-size: 1.5rem;
+				text-align: center;
 			}
 			/* --- DEFAULT, HOVER and FOCUS states --- */
 			button.ai-chat-widget-toggle:hover {
@@ -1207,7 +1210,7 @@
 		optInFormSendButton = document.createElement('button');
 		optInFormSendButton.className = 'send';
 		optInFormSendButton.textContent =
-			config.optInFormSendButtonText || 'Opt In';
+			config.optInFormSendButtonText || 'Start Chat';
 		optInFormSendButton.onclick = handleOptInSubmission;
 
 		optInFormCancelButton = document.createElement('button');
