@@ -1368,6 +1368,12 @@
 			isOptInFormVisible = true;
 		}
 
+		const chatInputArea = document.querySelector('.ai-chat-input-area');
+		if (optInRequired && !optInCompleted) {
+			chatInputArea.style.display = 'none';
+		} else {
+			chatInputArea.style.display = 'flex';
+		}
 		console.log('Widget initialized.');
 	}
 
