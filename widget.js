@@ -1217,7 +1217,9 @@
 		optInFormCancelButton.className = 'cancel';
 		optInFormCancelButton.textContent =
 			config.optInFormCancelButtonText || 'Cancel';
-		optInFormCancelButton.onclick = switchToChatView;
+		optInFormCancelButton.onclick = () => {
+			if (isChatOpen) toggleChatWindow();
+		};
 
 		actionsDiv.appendChild(optInFormCancelButton);
 		actionsDiv.appendChild(optInFormSendButton);
