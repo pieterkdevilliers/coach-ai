@@ -58,450 +58,468 @@
 		widgetStyleElement = document.createElement('style');
 		widgetStyleElement.id = 'yourdocsai-widget-styles';
 		widgetStyleElement.textContent = `
-      /* --- Base style for the Chat Toggle Button --- */
-    button.ai-chat-widget-toggle {
-        /* Positioning */
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        z-index: 9999;
-        
-        /* Flexbox for centering content */
-        display: flex;
-        align-items: center;
-        justify-content: center; /* Center the icon in the circle */
+			/* --- Base style for the Chat Toggle Button --- */
+			button.ai-chat-widget-toggle {
+				/* Positioning */
+				position: fixed;
+				bottom: 20px;
+				right: 20px;
+				z-index: 9999;
 
-        /* Initial State: A Circle */
-        width: 40px;
-        height: 40px;
-        border-radius: 50%; /* This makes it a circle */
-        padding: 0; /* Remove padding for the initial circle state */
-        
-        /* Appearance */
-        color: white;
-        border: none;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        cursor: pointer;
-        overflow: hidden; /* Crucial: Hides the text that's outside the button's initial width */
-        /* --- ANIMATION --- */
-        /* Smoothly transition the properties that will change */
-        transition: width 0.4s ease-in-out, 
-                    border-radius 0.4s ease-in-out,
-                    padding 0.4s ease-in-out;
-    }
+				/* Flexbox for centering content */
+				display: flex;
+				align-items: center;
+				justify-content: center; /* Center the icon in the circle */
 
-    /* --- Style for the Text Span inside the button --- */
-    .ai-chat-widget-toggle span {
-        /* Initial State: Hidden */
-        max-width: 0;
-        opacity: 0;
-        
-        /* Keep text on one line during animation */
-        white-space: nowrap; 
+				/* Initial State: A Circle */
+				width: 40px;
+				height: 40px;
+				border-radius: 50%; /* This makes it a circle */
+				padding: 0; /* Remove padding for the initial circle state */
 
-        /* Text appearance */
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        margin-left: 0; /* No margin when hidden */
-
-        /* --- ANIMATION --- */
-        /* Animate the span's properties. Delay opacity so it fades in after expanding. */
-        transition: max-width 0.4s ease-in-out, 
-                    opacity 0.2s 0.2s ease-in-out, /* opacity starts after 0.2s delay */
-                    margin-left 0.4s ease-in-out;
-      }
-
-      /* 
-      =========================================================
-        EXPANDED STATE: When the .expanded class is added 
-      =========================================================
-      */
-      .ai-chat-widget-toggle.expanded {
-        /* Final State: A Pill/Rectangle */
-        width: auto; /* Let the content determine the width */
-        border-radius: 50px; /* A "pill" shape */
-        padding: 12px 20px; /* Add padding back in */
-      }
-
-      /* The text span becomes visible inside the expanded button */
-      .ai-chat-widget-toggle.expanded span {
-        max-width: 150px; /* Set a max-width for the text to expand into */
-        opacity: 1;
-        margin-left: 8px; /* Create a gap between the icon and text */
-      }
-      .ai-chat-widget-toggle:hover {
-        transform: scale(1.1);
-      }
-      .ai-chat-widget-window {
-        position: fixed;
-        bottom: 90px;
-        right: 20px;
-        width: 1200px;
-        max-width: 90vw;
-        height: 150px;
-        max-height: 40vh;
-        background-color: white;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        z-index: 99999;
-        transform: translateY(100%) scale(0.5);
-        opacity: 0;
-        visibility: hidden;
-        transition: transform 0.3s ease-out, opacity 0.3s ease-out, visibility 0s linear 0.3s;
-      }
-      
-      /* =======================================================
-         START: MODIFICATION FOR DESKTOP HEIGHT
-         ======================================================= */
-      @media (min-width: 768px) {
-        .ai-chat-widget-window {
-          height: 825px;     /* Taller height for desktop */
-          max-height: 90vh;  /* Taller max-height for desktop */
-        }
-      }
-      /* =======================================================
-         END: MODIFICATION FOR DESKTOP HEIGHT
-         ======================================================= */
-
-      .ai-chat-widget-window.open {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-        visibility: visible;
-        transition: transform 0.3s ease-out, opacity 0.3s ease-out, visibility 0s linear 0s;
-      }
-      .ai-chat-header {
-        background-color: ${config.themeColor || '#db2777'};
-        color: white;
-        padding: 10px 15px;
-        font-weight: bold;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-top-left-radius: 9px;
-        border-top-right-radius: 9px;
-      }
-      button.ai-chat-close-button {
-        background: none;
-        border: none;
-        color: white;
-        font-size: 24px;
-        cursor: pointer;
-        line-height: 1;
-      }
-      .ai-chat-messages-container {
-        flex-grow: 1;
-        padding: 10px;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-      .ai-chat-message {
-        padding: 8px 12px;
-        border-radius: 18px;
-        max-width: 80%;
-        word-wrap: break-word;
-        line-height: 1.4;
-      }
-      .ai-chat-message.user {
-        background-color: ${config.themeColor || '#db2777'};
-        color: white;
-        align-self: flex-end;
-        border-bottom-right-radius: 4px;
-      }
-      .ai-chat-message.bot, .ai-chat-message.error {
-        background-color: #f0f0f0;
-        color: #333;
-        align-self: flex-start;
-        border-bottom-left-radius: 4px;
-      }
-		/* Add this rule to give paragraphs some breathing room */
-	  .ai-chat-message.bot p {
-		margin: 0 0 0.75em 0; /* Add some margin to the bottom of each paragraph */
-		}
-	  .ai-chat-message.bot p:last-child {
-		margin-bottom: 0; /* Remove margin from the very last paragraph */
-		}
-      .ai-chat-message.error {
-        background-color: #ffebee;
-        color: #c62828;
-        border: 1px solid #ef9a9a;
-      }
-      .ai-chat-message.loading {
-        font-style: italic;
-        color: #777;
-        align-self: flex-start;
-        padding: 8px 12px;
-      }
-      .ai-chat-message-sources {
-        margin-top: 8px;
-        font-size: 0.85em;
-        color: #555;
-      }
-      .ai-chat-message-sources strong {
-        display: block;
-        margin-bottom: 4px;
-      }
-      .ai-chat-message-sources ul {
-        list-style-type: disc;
-        margin-left: 20px;
-        padding-left: 0;
-        margin-top: 2px;
-        margin-bottom: 0;
-      }
-      .ai-chat-message-sources li {
-        margin-bottom: 2px;
-    }
-    .ai-chat-input-area {
-        display: flex;
-        padding: 10px;
-        border-top: 1px solid #eee;
-        background-color: #f9f9f9;
-		gap: 10px;
-		width: 100%;
-    }
-    .ai-chat-input-area input[type="text"] {
-        flex-grow: 1;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 20px;
-        margin-right: 8px;
-        font-size: 16px;
-    }
-    .ai-chat-input-area button {
-        padding: 0 12px;
-        color: white;
-        border: none;
-        border-radius: 20px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: bold;
-		flex-shrink: 0;
-    }
-
-    .ai-chat-iframe-modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0,0,0,0.6);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 100000;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease, visibility 0s linear 0.3s;
-    }
-    .ai-chat-iframe-modal-overlay.open {
-        opacity: 1;
-        visibility: visible;
-        transition: opacity 0.3s ease, visibility 0s linear 0s;
-    }
-    .ai-chat-iframe-modal-content {
-        background-color: white;
-        padding: 10px;
-        border-radius: 8px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-        width: 80vw;
-        height: 85vh;
-        display: flex;
-        flex-direction: column;
-    }
-    .ai-chat-iframe-modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #eee;
-    }
-    .ai-chat-iframe-modal-header h3 {
-        margin: 0;
-        font-size: 1.1em;
-    }
-    .ai-chat-iframe-modal-close-btn {
-        background: none;
-        border: none;
-        font-size: 24px;
-        cursor: pointer;
-        color: #777;
-}
-    .ai-chat-iframe-modal-body {
-        flex-grow: 1;
-        overflow: hidden;
-    }
-    .ai-chat-iframe-modal-body iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-    }
-
-      /* --- STYLES for Email Form --- */
-    .ai-chat-footer {
-        text-align: center;
-        border-top: 1px solid #eee;
-        background-color: #f9f9f9;
-        display: flex;
-        justify-content: space-between;
-		align-items: flex-end;
-        gap: 8px;
-        padding-inline: 8px;
-		padding-block: 0.5rem;
-    }
-    .ai-chat-show-email-form-button {
-        padding: 4px 10px;
-        background-color: transparent;
-        border: 1px solid ${config.themeColor || '#db2777'};
-        border-radius: 20px;
-		color: white;
-        cursor: pointer;
-        font-size: 13px;
-        font-weight: normal;
-        transition: background-color 0.2s, color 0.2s;
-        align-self: center;
-    }
-    .ai-chat-footer .ai-chat-footer-branding {
-        font-size: 0.75rem; 
-        color: #888;
-        text-decoration: none;
-        cursor: pointer;
-		line-height: normal;
-    }
-    .ai-chat-footer .ai-chat-footer-branding:hover {
-        text-decoration: underline;
-    }
-
-	.ai-chat-email-form-container,
-	.ai-chat-opt-in-form-container {
-        flex-grow: 1;
-        padding: 15px;
-        overflow-y: auto;
-        flex-direction: column;
-        gap: 12px;
-	}
-	.ai-chat-email-form-container {
-		display: none; /* Initially hidden */
-	}
-	.ai-chat-opt-in-form-container {
-		display: flex;
-	}
-    :is(.ai-chat-email-form-container, .ai-chat-opt-in-form-container) label {
-        font-size: 14px;
-        color: #333;
-        margin-bottom: -8px;
-    }
-    :is(.ai-chat-email-form-container, .ai-chat-opt-in-form-container) input[type="text"],
-    :is(.ai-chat-email-form-container, .ai-chat-opt-in-form-container) input[type="email"],
-    .ai-chat-email-form-container textarea {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        font-size: 14px;
-        box-sizing: border-box;
-    }
-    .ai-chat-email-form-container textarea {
-        min-height: 80px;
-        resize: vertical;
-    }
-    :is(.ai-chat-email-form-actions, .ai-chat-opt-in-form-actions) {
-        display: flex;
-        gap: 10px;
-        margin-top: 10px;
-    }
-    :is(.ai-chat-email-form-actions, .ai-chat-opt-in-form-actions) button {
-        flex-grow: 1;
-        padding: 10px 15px;
-        border: none;
-        border-radius: 20px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: bold;
-    }
-		:is(.ai-chat-email-form-actions, .ai-chat-opt-in-form-actions) button:disabled {
-			opacity: 0.5;
-			cursor: not-allowed;
-		}
-    :is(.ai-chat-email-form-actions, .ai-chat-opt-in-form-actions) .send {
-        color: white;
-    }
-    :is(.ai-chat-email-form-actions, .ai-chat-opt-in-form-actions) .cancel {
-        background-color: #f0f0f0;
-        color: #333;
-        border: 1px solid #ddd;
-    }
-	:is(.ai-chat-email-form-actions, .ai-chat-opt-in-form-actions) .cancel:hover {
-		color: white;
-	}
-    :is(.ai-chat-email-form-status, .ai-chat-opt-in-form-status) {
-        font-size: 13px;
-        padding: 8px;
-        border-radius: 4px;
-        margin-top: 5px;
-        text-align: center;
-	}
-	:is(.ai-chat-email-form-status.success, .ai-chat-opt-in-form-status.success) {
-        background-color: #e6ffed;
-        color: #008726;
-        border: 1px solid #b3ffc6;
-    }
-    :is(.ai-chat-email-form-status.error, .ai-chat-opt-in-form-status.error) {
-        background-color: #ffebee;
-        color: #c62828;
-        border: 1px solid #ef9a9a;
-    }
-		/* --- DEFAULT, HOVER and FOCUS states --- */
-		button.ai-chat-widget-toggle:hover {
-			transform: translateY(-2px);
-			box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-		}
-		button.ai-chat-widget-toggle:focus-visible {
-			outline: 2px solid ${config.themeColor || '#db2777'};
-			outline-offset: 2px;
-		}
-		button.ai-chat-widget-toggle,
-		button.ai-chat-widget-toggle:hover,
-		.ai-chat-input-area button,
-		.ai-chat-input-area button:hover,
-		button.ai-chat-show-email-form-button,
-		button.ai-chat-show-email-form-button:hover,
-		.ai-chat-email-form-actions button.send,
-		.ai-chat-email-form-actions button.send:hover,
-		.ai-chat-email-form-actions button.cancel:hover,
-		.ai-chat-opt-in-form-actions button.send,
-		.ai-chat-opt-in-form-actions button.send:hover,
-		.ai-chat-opt-in-form-actions button.cancel:hover {
-			background-color:${config.themeColor || '#db2777'};
-		}
-		.ai-chat-show-email-form-button:hover,
-		.ai-chat-show-email-form-button:hover {
-			color: white;
-		}
-		.ai-chat-footer .ai-chat-footer-branding:hover {
-			color: ${config.themeColor || '#db2777'};
-		}
-		button.ai-chat-close-button,
-		button.ai-chat-close-button:hover {
-			background-color: transparent;
-		}
-		button:hover {
-			opacity: 0.8;
-		}
-
-		@media (max-width: 768px) {
-			.ai-chat-widget-window {
-				top: 10px;
-				bottom: auto;
-				min-height: 430px;
+				/* Appearance */
+				color: white;
+				border: none;
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+				cursor: pointer;
+				overflow: hidden; /* Crucial: Hides the text that's outside the button's initial width */
+				/* --- ANIMATION --- */
+				/* Smoothly transition the properties that will change */
+				transition: width 0.4s ease-in-out,
+					border-radius 0.4s ease-in-out, padding 0.4s ease-in-out;
 			}
-		} 
-    `;
+
+			/* --- Style for the Text Span inside the button --- */
+			.ai-chat-widget-toggle span {
+				/* Initial State: Hidden */
+				max-width: 0;
+				opacity: 0;
+
+				/* Keep text on one line during animation */
+				white-space: nowrap;
+
+				/* Text appearance */
+				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+					Roboto, sans-serif;
+				font-size: 14px;
+				font-weight: 600;
+				margin-left: 0; /* No margin when hidden */
+
+				/* --- ANIMATION --- */
+				/* Animate the span's properties. Delay opacity so it fades in after expanding. */
+				transition: max-width 0.4s ease-in-out,
+					opacity 0.2s 0.2s ease-in-out,
+					/* opacity starts after 0.2s delay */ margin-left 0.4s
+						ease-in-out;
+			}
+
+			/* 
+		=========================================================
+			EXPANDED STATE: When the .expanded class is added 
+		=========================================================
+		*/
+			.ai-chat-widget-toggle.expanded {
+				/* Final State: A Pill/Rectangle */
+				width: auto; /* Let the content determine the width */
+				border-radius: 50px; /* A "pill" shape */
+				padding: 12px 20px; /* Add padding back in */
+			}
+
+			/* The text span becomes visible inside the expanded button */
+			.ai-chat-widget-toggle.expanded span {
+				max-width: 150px; /* Set a max-width for the text to expand into */
+				opacity: 1;
+				margin-left: 8px; /* Create a gap between the icon and text */
+			}
+			.ai-chat-widget-toggle:hover {
+				transform: scale(1.1);
+			}
+			.ai-chat-widget-window {
+				position: fixed;
+				bottom: 90px;
+				right: 20px;
+				width: 1200px;
+				max-width: 90vw;
+				height: 150px;
+				max-height: 40vh;
+				background-color: white;
+				border: 1px solid #ccc;
+				border-radius: 10px;
+				box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+				display: flex;
+				flex-direction: column;
+				overflow: hidden;
+				z-index: 99999;
+				transform: translateY(100%) scale(0.5);
+				opacity: 0;
+				visibility: hidden;
+				transition: transform 0.3s ease-out, opacity 0.3s ease-out,
+					visibility 0s linear 0.3s;
+			}
+
+			/* =======================================================
+		START: MODIFICATION FOR DESKTOP HEIGHT
+		======================================================= */
+			@media (min-width: 768px) {
+				.ai-chat-widget-window {
+					height: 825px; /* Taller height for desktop */
+					max-height: 90vh; /* Taller max-height for desktop */
+				}
+			}
+			/* =======================================================
+		END: MODIFICATION FOR DESKTOP HEIGHT
+		======================================================= */
+
+			.ai-chat-widget-window.open {
+				transform: translateY(0) scale(1);
+				opacity: 1;
+				visibility: visible;
+				transition: transform 0.3s ease-out, opacity 0.3s ease-out,
+					visibility 0s linear 0s;
+			}
+			.ai-chat-header {
+				background-color: ${config.themeColor || '#db2777'};
+				color: white;
+				padding: 10px 15px;
+				font-weight: bold;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				border-top-left-radius: 9px;
+				border-top-right-radius: 9px;
+			}
+			button.ai-chat-close-button {
+				background: none;
+				border: none;
+				color: white;
+				font-size: 24px;
+				cursor: pointer;
+				line-height: 1;
+			}
+			.ai-chat-messages-container {
+				flex-grow: 1;
+				padding: 10px;
+				overflow-y: auto;
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+			}
+			.ai-chat-message {
+				padding: 8px 12px;
+				border-radius: 18px;
+				max-width: 80%;
+				word-wrap: break-word;
+				line-height: 1.4;
+			}
+			.ai-chat-message.user {
+				background-color: ${config.themeColor || '#db2777'};
+				color: white;
+				align-self: flex-end;
+				border-bottom-right-radius: 4px;
+			}
+			.ai-chat-message.bot,
+			.ai-chat-message.error {
+				background-color: #f0f0f0;
+				color: #333;
+				align-self: flex-start;
+				border-bottom-left-radius: 4px;
+			}
+			/* Add this rule to give paragraphs some breathing room */
+			.ai-chat-message.bot p {
+				margin: 0 0 0.75em 0; /* Add some margin to the bottom of each paragraph */
+			}
+			.ai-chat-message.bot p:last-child {
+				margin-bottom: 0; /* Remove margin from the very last paragraph */
+			}
+			.ai-chat-message.error {
+				background-color: #ffebee;
+				color: #c62828;
+				border: 1px solid #ef9a9a;
+			}
+			.ai-chat-message.loading {
+				font-style: italic;
+				color: #777;
+				align-self: flex-start;
+				padding: 8px 12px;
+			}
+			.ai-chat-message-sources {
+				margin-top: 8px;
+				font-size: 0.85em;
+				color: #555;
+			}
+			.ai-chat-message-sources strong {
+				display: block;
+				margin-bottom: 4px;
+			}
+			.ai-chat-message-sources ul {
+				list-style-type: disc;
+				margin-left: 20px;
+				padding-left: 0;
+				margin-top: 2px;
+				margin-bottom: 0;
+			}
+			.ai-chat-message-sources li {
+				margin-bottom: 2px;
+			}
+			.ai-chat-input-area {
+				display: flex;
+				padding: 10px;
+				border-top: 1px solid #eee;
+				background-color: #f9f9f9;
+				gap: 10px;
+				width: 100%;
+			}
+			.ai-chat-input-area input[type='text'] {
+				flex-grow: 1;
+				padding: 10px;
+				border: 1px solid #ddd;
+				border-radius: 20px;
+				margin-right: 8px;
+				font-size: 16px;
+			}
+			.ai-chat-input-area button {
+				padding: 0 12px;
+				color: white;
+				border: none;
+				border-radius: 20px;
+				cursor: pointer;
+				font-size: 14px;
+				font-weight: bold;
+				flex-shrink: 0;
+			}
+
+			.ai-chat-iframe-modal-overlay {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0, 0, 0, 0.6);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				z-index: 100000;
+				opacity: 0;
+				visibility: hidden;
+				transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+			}
+			.ai-chat-iframe-modal-overlay.open {
+				opacity: 1;
+				visibility: visible;
+				transition: opacity 0.3s ease, visibility 0s linear 0s;
+			}
+			.ai-chat-iframe-modal-content {
+				background-color: white;
+				padding: 10px;
+				border-radius: 8px;
+				box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+				width: 80vw;
+				height: 85vh;
+				display: flex;
+				flex-direction: column;
+			}
+			.ai-chat-iframe-modal-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding-bottom: 10px;
+				border-bottom: 1px solid #eee;
+			}
+			.ai-chat-iframe-modal-header h3 {
+				margin: 0;
+				font-size: 1.1em;
+			}
+			.ai-chat-iframe-modal-close-btn {
+				background: none;
+				border: none;
+				font-size: 24px;
+				cursor: pointer;
+				color: #777;
+			}
+			.ai-chat-iframe-modal-body {
+				flex-grow: 1;
+				overflow: hidden;
+			}
+			.ai-chat-iframe-modal-body iframe {
+				width: 100%;
+				height: 100%;
+				border: none;
+			}
+
+			/* --- STYLES for Email Form --- */
+			.ai-chat-footer {
+				text-align: center;
+				border-top: 1px solid #eee;
+				background-color: #f9f9f9;
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-end;
+				gap: 8px;
+				padding-inline: 8px;
+				padding-block: 0.5rem;
+			}
+			.ai-chat-show-email-form-button {
+				padding: 4px 10px;
+				background-color: transparent;
+				border: 1px solid ${config.themeColor || '#db2777'};
+				border-radius: 20px;
+				color: white;
+				cursor: pointer;
+				font-size: 13px;
+				font-weight: normal;
+				transition: background-color 0.2s, color 0.2s;
+				align-self: center;
+			}
+			.ai-chat-footer .ai-chat-footer-branding {
+				font-size: 0.75rem;
+				color: #888;
+				text-decoration: none;
+				cursor: pointer;
+				line-height: normal;
+			}
+			.ai-chat-footer .ai-chat-footer-branding:hover {
+				text-decoration: underline;
+			}
+
+			.ai-chat-email-form-container,
+			.ai-chat-opt-in-form-container {
+				flex-grow: 1;
+				padding: 15px;
+				overflow-y: auto;
+				flex-direction: column;
+				gap: 12px;
+			}
+			.ai-chat-email-form-container {
+				display: none; /* Initially hidden */
+			}
+			.ai-chat-opt-in-form-container {
+				display: flex;
+			}
+			:is(.ai-chat-email-form-container, .ai-chat-opt-in-form-container)
+				label {
+				font-size: 14px;
+				color: #333;
+				margin-bottom: -8px;
+			}
+			:is(.ai-chat-email-form-container, .ai-chat-opt-in-form-container)
+				input[type='text'],
+			:is(.ai-chat-email-form-container, .ai-chat-opt-in-form-container)
+				input[type='email'],
+			.ai-chat-email-form-container textarea {
+				width: 100%;
+				padding: 10px;
+				border: 1px solid #ddd;
+				border-radius: 5px;
+				font-size: 14px;
+				box-sizing: border-box;
+			}
+			.ai-chat-email-form-container textarea {
+				min-height: 80px;
+				resize: vertical;
+			}
+			:is(.ai-chat-email-form-actions, .ai-chat-opt-in-form-actions) {
+				display: flex;
+				gap: 10px;
+				margin-top: 10px;
+			}
+			:is(.ai-chat-email-form-actions, .ai-chat-opt-in-form-actions)
+				button {
+				flex-grow: 1;
+				padding: 10px 15px;
+				border: none;
+				border-radius: 20px;
+				cursor: pointer;
+				font-size: 14px;
+				font-weight: bold;
+			}
+			:is(.ai-chat-email-form-actions, .ai-chat-opt-in-form-actions)
+				button:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+			:is(.ai-chat-email-form-actions, .ai-chat-opt-in-form-actions)
+				.send {
+				color: white;
+			}
+			:is(.ai-chat-email-form-actions, .ai-chat-opt-in-form-actions)
+				.cancel {
+				background-color: #f0f0f0;
+				color: #333;
+				border: 1px solid #ddd;
+			}
+			:is(.ai-chat-email-form-actions, .ai-chat-opt-in-form-actions)
+				.cancel:hover {
+				color: white;
+			}
+			:is(.ai-chat-email-form-status, .ai-chat-opt-in-form-status) {
+				font-size: 13px;
+				padding: 8px;
+				border-radius: 4px;
+				margin-top: 5px;
+				text-align: center;
+			}
+			:is(
+					.ai-chat-email-form-status.success,
+					.ai-chat-opt-in-form-status.success
+				) {
+				background-color: #e6ffed;
+				color: #008726;
+				border: 1px solid #b3ffc6;
+			}
+			:is(
+					.ai-chat-email-form-status.error,
+					.ai-chat-opt-in-form-status.error
+				) {
+				background-color: #ffebee;
+				color: #c62828;
+				border: 1px solid #ef9a9a;
+			}
+			/* --- DEFAULT, HOVER and FOCUS states --- */
+			button.ai-chat-widget-toggle:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+			}
+			button.ai-chat-widget-toggle:focus-visible {
+				outline: 2px solid ${config.themeColor || '#db2777'};
+				outline-offset: 2px;
+			}
+			button.ai-chat-widget-toggle,
+			button.ai-chat-widget-toggle:hover,
+			.ai-chat-input-area button,
+			.ai-chat-input-area button:hover,
+			button.ai-chat-show-email-form-button,
+			button.ai-chat-show-email-form-button:hover,
+			.ai-chat-email-form-actions button.send,
+			.ai-chat-email-form-actions button.send:hover,
+			.ai-chat-email-form-actions button.cancel:hover,
+			.ai-chat-opt-in-form-actions button.send,
+			.ai-chat-opt-in-form-actions button.send:hover,
+			.ai-chat-opt-in-form-actions button.cancel:hover {
+				background-color: ${config.themeColor || '#db2777'};
+			}
+			.ai-chat-show-email-form-button:hover,
+			.ai-chat-show-email-form-button:hover {
+				color: white;
+			}
+			.ai-chat-footer .ai-chat-footer-branding:hover {
+				color: ${config.themeColor || '#db2777'};
+			}
+			button.ai-chat-close-button,
+			button.ai-chat-close-button:hover {
+				background-color: transparent;
+			}
+			button:hover {
+				opacity: 0.8;
+			}
+
+			@media (max-width: 768px) {
+				.ai-chat-widget-window {
+					top: 10px;
+					bottom: auto;
+					min-height: 430px;
+				}
+			}
+		`;
 		document.head.appendChild(widgetStyleElement);
 		console.log(config.buttonText || 'Widget styles injected.');
 	}
@@ -514,11 +532,11 @@
 
 		// The innerHTML remains the same, containing both icon and text
 		chatToggleButton.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px">
-        <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 10H6v-2h12v2zm0-3H6V7h12v2z"/>
-      </svg>
-      <span>${config.buttonText || 'How can we help?'}</span>
-    `;
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px">
+				<path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 10H6v-2h12v2zm0-3H6V7h12v2z"/>
+			</svg>
+			<span>${config.buttonText || 'How can we help?'}</span>
+		`;
 
 		chatToggleButton.setAttribute('aria-label', 'Open Chat');
 		chatToggleButton.onclick = toggleChatWindow;
@@ -1171,15 +1189,6 @@
 		optInFormEmailInput.placeholder =
 			config.optInFormEmailPlaceholder || 'e.g., jane.doe@example.com';
 
-		// const messageLabel = document.createElement('label');
-		// messageLabel.setAttribute('for', 'ai-chat-email-message');
-		// messageLabel.textContent =
-		// 	config.emailFormMessageLabel || 'Your Message:';
-		// emailFormMessageInput = document.createElement('textarea');
-		// emailFormMessageInput.id = 'ai-chat-email-message';
-		// emailFormMessageInput.placeholder =
-		// 	config.emailFormMessagePlaceholder || 'How can we help you?';
-
 		optInFormStatusMessage = document.createElement('div');
 		optInFormStatusMessage.className = 'ai-chat-opt-in-form-status';
 		optInFormStatusMessage.style.display = 'none';
@@ -1243,15 +1252,6 @@
 			optInFormEmailInput.focus();
 			return;
 		}
-		// if (!message) {
-		// 	displayOptInFormStatus(
-		// 		config.optInFormErrorMessageRequired ||
-		// 			'Please enter your message.',
-		// 		false
-		// 	);
-		// 	optInFormMessageInput.focus();
-		// 	return;
-		// }
 
 		optInFormSendButton.disabled = true;
 		optInFormCancelButton.disabled = true;
@@ -1272,7 +1272,6 @@
 				body: JSON.stringify({
 					name: name,
 					email: email,
-					// message: message,
 					sessionId: sessionId,
 					visitorUuid: visitorUuid,
 				}),
@@ -1352,13 +1351,11 @@
 			displayMessage(config.welcomeMessage, [], 'bot');
 		} else if (optInRequired && !optInCompleted) {
 			console.log('Opt-in required, not displaying welcome message.');
-			// Opt-in form goes here
-			chatHeaderTitle.textContent = 'Please enter you name and email to start the chat';
+			chatHeaderTitle.textContent =
+				'Please enter you name and email to start the chat';
 			createOptInForm();
 			messagesContainer.appendChild(optInFormContainer);
 			isOptInFormVisible = true;
-			// Set optInCompleted = true; upon completion
-			// Show welcome message after opt-in
 		}
 
 		console.log('Widget initialized.');
