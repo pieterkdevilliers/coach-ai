@@ -113,7 +113,7 @@
 						ease-in-out;
 			}
 
-			/* 
+		/* 
 		=========================================================
 			EXPANDED STATE: When the .expanded class is added 
 		=========================================================
@@ -1354,16 +1354,16 @@
 		createChatWindow();
 
 		switchToChatView(false); // Start in chat view, don't focus input yet
+		console.log('config.optInRequired:', config.optInRequired);
 
-		let optInRequired = config.optInRequired;
-		optInRequired = true;
-		const optInCompleted = false;
 		if (
-			(config.welcomeMessage && !isEmailFormVisible && !optInRequired) ||
-			(config.welcomeMessage && optInRequired && optInCompleted)
+			(config.welcomeMessage &&
+				!isEmailFormVisible &&
+				!config.optInRequired) ||
+			(config.welcomeMessage && config.optInRequired && optInCompleted)
 		) {
 			displayMessage(config.welcomeMessage, [], 'bot');
-		} else if (optInRequired && !optInCompleted) {
+		} else if (config.optInRequired && !optInCompleted) {
 			console.log('Opt-in required, not displaying welcome message.');
 			createOptInForm();
 			messagesContainer.appendChild(optInFormContainer);
@@ -1371,7 +1371,7 @@
 		}
 
 		const chatInputArea = document.querySelector('.ai-chat-input-area');
-		if (optInRequired && !optInCompleted) {
+		if (config.optInRequired && !optInCompleted) {
 			chatInputArea.style.display = 'none';
 		} else {
 			chatInputArea.style.display = 'flex';
