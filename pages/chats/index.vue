@@ -93,6 +93,8 @@ interface ChatSession {
 	start_time: string;
 	end_time: string;
 	account_unique_id: string;
+	visitor_name: string;
+	cisitor_email: string;
 }
 
 const toast = useToast();
@@ -132,6 +134,8 @@ if (error.value) {
 // Columns (unchanged)
 const columns = [
 	{ key: 'id', label: 'ID' },
+	{ key: 'visitor_name', lable: 'Name'},
+	{ key: 'visitor_email', lable: 'Email'},
 	{ key: 'visitor_uuid', label: 'Visitor ID' },
 	{ key: 'start_time', label: 'Start Time' },
 	{ key: 'end_time', label: 'End Time' },
