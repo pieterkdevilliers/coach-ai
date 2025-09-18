@@ -158,8 +158,8 @@
 			}
 
 			/* =======================================================
-		START: MODIFICATION FOR DESKTOP HEIGHT
-		======================================================= */
+			START: MODIFICATION FOR DESKTOP HEIGHT
+			======================================================= */
 			@media (min-width: 768px) {
 				.ai-chat-widget-window {
 					height: 825px; /* Taller height for desktop */
@@ -167,8 +167,8 @@
 				}
 			}
 			/* =======================================================
-		END: MODIFICATION FOR DESKTOP HEIGHT
-		======================================================= */
+			END: MODIFICATION FOR DESKTOP HEIGHT
+			======================================================= */
 
 			.ai-chat-widget-window.open {
 				transform: translateY(0) scale(1);
@@ -473,6 +473,10 @@
 				background-color: #ffebee;
 				color: #c62828;
 				border: 1px solid #ef9a9a;
+			}
+			.ai-chat-opt-in-form-title {
+				color: ${config.themeColor || '#db2777'};
+				font-size: 1.5rem;
 			}
 			/* --- DEFAULT, HOVER and FOCUS states --- */
 			button.ai-chat-widget-toggle:hover {
@@ -1171,6 +1175,10 @@
 		optInFormContainer = document.createElement('div');
 		optInFormContainer.className = 'ai-chat-opt-in-form-container';
 
+		const optInFormTitle = document.createElement('h2');
+		optInFormTitle.className = 'ai-chat-opt-in-form-title';
+		optInFormTitle.textContent =
+			'Please enter you name and email to start the chat';
 		const nameLabel = document.createElement('label');
 		nameLabel.setAttribute('for', 'ai-chat-opt-in-name');
 		nameLabel.textContent = config.optInFormNameLabel || 'Your Name:';
@@ -1211,6 +1219,7 @@
 		actionsDiv.appendChild(optInFormCancelButton);
 		actionsDiv.appendChild(optInFormSendButton);
 
+		optInFormContainer.appendChild(optInFormTitle);
 		optInFormContainer.appendChild(nameLabel);
 		optInFormContainer.appendChild(optInFormNameInput);
 		optInFormContainer.appendChild(emailLabel);
@@ -1351,8 +1360,6 @@
 			displayMessage(config.welcomeMessage, [], 'bot');
 		} else if (optInRequired && !optInCompleted) {
 			console.log('Opt-in required, not displaying welcome message.');
-			chatHeaderTitle.textContent =
-				'Please enter you name and email to start the chat';
 			createOptInForm();
 			messagesContainer.appendChild(optInFormContainer);
 			isOptInFormVisible = true;
