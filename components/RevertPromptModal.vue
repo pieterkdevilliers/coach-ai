@@ -1,8 +1,23 @@
 <template>
-	<UModal v-model="isOpenInternal" class="modal--wide">
+	<UModal
+		v-model="isOpenInternal"
+		class="modal--wide"
+		@update:model-value="handleClose"
+	>
 		<UCard class="max-h-[90vh] overflow-y-auto">
 			<template #header>
-				<h2 class="text-lg font-bold">Revert Prompt</h2>
+				<div class="flex items-center justify-between">
+					<h3 class="heading heading--h3 text-gradient">
+						Revert Prompt
+					</h3>
+					<UButton
+						color="gray"
+						variant="ghost"
+						icon="i-heroicons-x-mark-20-solid"
+						class="-my-1"
+						@click="handleClose"
+					/>
+				</div>
 			</template>
 
 			<div class="space-y-4 overflow-y-auto">
@@ -82,6 +97,10 @@ const isOpenInternal = ref(props.isOpen);
 const isSaving = ref(false);
 const prompts = ref<Prompt[]>([]);
 const selectedPrompt = ref<Prompt | null>(null);
+
+const handleClose = () => {
+	emit('close'); // Emit close to parent
+};
 
 // Keep modal state in sync with parent
 watch(
