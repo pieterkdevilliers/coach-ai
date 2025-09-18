@@ -13,8 +13,8 @@
 		</div>
 	</section>
 	<section class="my-subscriptions container--default mx-auto">
-		<h2 class="heading heading--h2 page__title">Notification Webhook</h2>
-		<div class="card-grid">
+		<h2 class="heading heading--h2 page__title">Notification Webhooks</h2>
+		<div class="subscription-grid card-grid">
 			<div class="card__outer">
 				<WebhookCard
 					:webhook="webhook"
