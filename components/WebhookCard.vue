@@ -22,7 +22,7 @@
 				class="paragraph-label-text__text"
 			>
 				<span>
-					{{ webhook.account.webhook_url }}
+					{{ webhook.account.opt_in_webhook_url }}
 				</span>
 			</UTooltip>
 		</p>
