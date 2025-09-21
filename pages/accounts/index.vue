@@ -13,12 +13,18 @@
 		</div>
 	</section>
 	<section class="my-subscriptions container--default mx-auto">
-		<h2 class="heading heading--h2 page__title">Notification Webhooks</h2>
+		<h2 class="heading heading--h2 page__title">Integration Webhooks</h2>
 		<div class="subscription-grid card-grid">
 			<div class="card__outer">
 				<WebhookCard
 					:webhook="webhook"
 					@edit-webhook-clicked="openEditWebhookModal"
+				/>
+			</div>
+			<div class="card__outer">
+				<ScoreAppWebhookIntegration
+					:scoreapp_account="scoreapp_account"
+					@edit-scoreapp-account-clicked="openEditScoreAppAccountModal"
 				/>
 			</div>
 		</div>
@@ -70,6 +76,14 @@
 		@prompt-updated="handlePromptUpdated"
 	/>
 
+	<!-- Edit ScoreApp Account Modal -->
+	<EditScoreAppAccountModal
+		:is-open="isEditScoreAppAccountModalOpen"
+		:scoreapp_account="scoreappAccountToEdit"
+		@close="closeEditScoreAppAccountModal"
+		@scoreapp_account-updated="handleScoreAppAccountUpdated"
+	/>
+
 	<!-- Add Prompt Modal -->
 	<AddPromptModal
 		:is-open="isAddPromptModalOpen"
@@ -94,9 +108,11 @@ const config = useRuntimeConfig();
 import SubscriptionCard from '~/components/SubscriptionCard.vue';
 import SubscriptionModal from '~/components/SubscriptionModal.vue';
 import WebhookCard from '~/components/WebhookCard.vue';
+import ScoreAppWebhookIntegration from '~/components/ScoreAppWebhookIntegration.vue';
 import AccountPromptCard from '~/components/AccountPromptCard.vue';
 import EditWebhookModal from '~/components/EditWebhookModal.vue';
 import EditPromptModal from '~/components/EditPromptModal.vue';
+import EditScoreAppAccountModal from '~/components/EditScoreAppAccountModal.vue'
 import AddPromptModal from '~/components/AddPromptModal.vue';
 import RevertPromptModal from '~/components/RevertPromptModal.vue';
 import { ref, watch } from 'vue';
@@ -218,14 +234,40 @@ if (error.value) {
 	console.log('Stored Unique Account ID:', authStore.uniqueAccountId);
 }
 
-const refreshWebhooks = async () => {
-	console.log('Refreshing webhooks...');
-	await refresh();
-};
+
+interface ScoreAppAccount {
+	id: number;
+	scoreapp_id: string;
+	account_unique_id: string;
+}
+
+const {
+	data: scoreapp_account,
+	error: scoreappAccountError,
+	refresh: refreshScoreAppAccount,
+} = await useFetch(`${config.public.apiBase}/score-app-account/${uniqueAccountId}`, {
+	method: 'GET',
+	headers: {
+		accept: 'application/json',
+		Authorization: `Bearer ${apiAuthorizationToken}`,
+	},
+});
+
+
+if (error.value) {
+	console.error('Error fetching scoreapp account:', scoreappAccountError.value);
+} else {
+	console.log('Stored Unique Account ID:', authStore.uniqueAccountId);
+}
 
 // --- State for Edit Webhook Modal ---
 const isEditWebhookModalOpen = ref(false);
 const webhookToEdit = ref<Webhook | null>(null);
+
+
+// --- State for Edit ScoreApp Account Modal ---
+const isEditScoreAppAccountModalOpen = ref(false);
+const scoreappAccountToEdit = ref<ScoreAppAccount | null>(null);
 
 const openEditWebhookModal = (webhook: Webhook) => {
 	webhookToEdit.value = webhook;
@@ -234,11 +276,26 @@ const openEditWebhookModal = (webhook: Webhook) => {
 
 const closeEditWebhookModal = () => {
 	isEditWebhookModalOpen.value = false;
-	webhookToEdit.value = null; // Clear the selected user
+	webhookToEdit.value = null;
 };
 
 const handleWebhookUpdated = async (updatedWebhook: Webhook) => {
 	await refreshWebhook();
+};
+
+
+const openEditScoreAppAccountModal = (scoreapp_account: ScoreAppAccount) => {
+	scoreappAccountToEdit.value = scoreapp_account;
+	isEditScoreAppAccountModalOpen.value = true;
+};
+
+const closeEditScoreAppAccountModal = () => {
+	isEditScoreAppAccountModalOpen.value = false;
+	scoreappAccountToEdit.value = null;
+};
+
+const handleScoreAppAccountUpdated = async (updatedScoreAppAccount: ScoreAppAccount) => {
+	await refreshScoreAppAccount();
 };
 
 const {
