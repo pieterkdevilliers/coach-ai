@@ -9,7 +9,7 @@
 			<template #header>
 				<div class="flex items-center justify-between">
 					<h3 class="heading heading--h3 text-gradient">
-						Edit Webhook Destination URLs
+						Edit ScoreApp Account Subdomain
 					</h3>
 					<UButton
 						color="gray"
@@ -27,11 +27,8 @@
 				class="space-y-4 p-4"
 				@submit="submitForm"
 			>
-				<UFormGroup label="Contact Us Destination URL" name="Contact Us Destination URL">
-					<UInput v-model="state.webhook_url" />
-				</UFormGroup>
-				<UFormGroup label="Opt-in Destination URL" name="Opt-in Destination URL">
-					<UInput v-model="state.opt_in_webhook_url" />
+				<UFormGroup label="ScoreApp Account Subdomain" name="ScoreApp Account Subdomain">
+					<UInput v-model="state.scoreapp_id" />
 				</UFormGroup>
 
 				<div class="flex justify-end gap-2 pt-4">
@@ -59,15 +56,16 @@ import type { FormSubmitEvent } from '#ui/types';
 
 const props = defineProps<{
 	isOpen: boolean;
-	webhook: {
-		account: {
-			webhook_url: string;
-			opt_in_webhook_url: string
+		scoreapp_account: {
+			account: {
+				account_unique_id: string;
+				scoreapp_id: string;
+				id: number;
+			}
 		};
-	} | null; // Allow it to be null when the modal is closed
 }>();
 
-const emit = defineEmits(['close', 'webhookUpdated']);
+const emit = defineEmits(['close', 'scoreapp_account-updated']);
 
 const toast = useToast();
 const authStore = useAuthStore();
@@ -82,65 +80,60 @@ const handleClose = () => {
 
 // Zod schema for validation
 const schema = z.object({
-	webhook_url: z.string(),
-	opt_in_webhook_url: z.string(),
+	scoreapp_id: z.string(),
 });
 
 type Schema = z.output<typeof schema>;
 
 // Form state
 const state = reactive<Schema>({
-	webhook_url: '',
-	opt_in_webhook_url: '',
+	scoreapp_id: '',
 });
 
 watch(
-	() => props.webhook,
-	(newWebhook) => {
-		if (newWebhook && newWebhook.account) {
+	() => props.scoreapp_account,
+	(newScoreAppAccount) => {
+		if (newScoreAppAccount && newScoreAppAccount.account.scoreapp_id) {
 			// Update the form state with the current value
-			state.webhook_url = newWebhook.account.webhook_url;
-			state.opt_in_webhook_url = newWebhook.account.opt_in_webhook_url;
+			state.scoreapp_id = newScoreAppAccount.account.scoreapp_id;
 		} else {
 			// Reset the form when the modal is closed
-			state.webhook_url = '';
-			state.opt_in_webhook_url = '';
+			state.scoreapp_id = '';
 		}
 	}
 );
 
 const submitForm = async (event: FormSubmitEvent<Schema>) => {
-	if (!props.webhook) return; // Should not happen if modal is open with a webhook
+	if (!props.scoreapp_account) return;
 
 	isLoading.value = true;
 	try {
-		const updatedWebhookData = await $fetch(
-			`${config.public.apiBase}/accounts/${account_unique_id}`,
+		const updatedScoreAppAccountData = await $fetch(
+			`${config.public.apiBase}/score-app-account/${props.scoreapp_account.account.id}`,
 			{
 				method: 'PUT',
 				headers: {
-					'Content-Type': 'application/json', // Usually for PUT with JSON body
+					'Content-Type': 'application/json',
 					accept: 'application/json',
 					Authorization: `Bearer ${apiAuthorizationToken}`,
 				},
 				body: {
-					webhook_url: event.data.webhook_url,
-					opt_in_webhook_url: event.data.opt_in_webhook_url,
+					scoreapp_id: event.data.scoreapp_id,
 				},
 			}
 		);
 
 		toast.add({
-			title: 'Webhook Updated',
-			description: `Webhook URL has been updated.`,
+			title: 'ScoreApp Account Updated',
+			description: `ScoreApp Subdomain has been updated.`,
 			color: 'green',
 		});
-		emit('webhookUpdated', updatedWebhookData); // Emit event with the updated user data from API
+		emit('scoreapp_account-updated', updatedScoreAppAccountData);
 		handleClose(); // Close the modal
 	} catch (error: any) {
-		console.error('Error updating webhook:', error);
+		console.error('Error updating subdomain:', error);
 		const errorMessage =
-			error.data?.detail || error.message || 'Could not update webhook.';
+			error.data?.detail || error.message || 'Could not update subdomain.';
 		toast.add({ title: 'Error', description: errorMessage, color: 'red' });
 	} finally {
 		isLoading.value = false;
