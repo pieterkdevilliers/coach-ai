@@ -26,6 +26,7 @@
 					:scoreapp_account="scoreapp_account"
 					@edit-scoreapp-account-clicked="openEditScoreAppAccountModal"
 					@add-scoreapp-account-clicked="openAddScoreAppAccountModal"
+					@delete-scoreapp-account-clicked="openDeleteConfirmation"
 				/>
 			</div>
 		</div>
@@ -93,6 +94,16 @@
 		@scoreapp-account-added="handleScoreAppAccountAdded"
 	/>
 
+	<!-- Delete ScoreApp Account Modal -->
+		<ConfirmDeleteModal
+			:is-open="isConfirmDeleteModalOpen"
+			:item-name="scoreappAccountToDelete ? scoreappAccountToDelete.account.scoreapp_id : ''"
+			@update:is-open="isConfirmDeleteModalOpen = $event"
+			@confirm="handleDeleteScoreAppAccountConfirmed"
+			@cancel="closeConfirmDeleteModal"
+			@close="closeConfirmDeleteModal"
+		/>
+
 	<!-- Add Prompt Modal -->
 	<AddPromptModal
 		:is-open="isAddPromptModalOpen"
@@ -117,6 +128,7 @@ const config = useRuntimeConfig();
 import SubscriptionCard from '~/components/SubscriptionCard.vue';
 import SubscriptionModal from '~/components/SubscriptionModal.vue';
 import WebhookCard from '~/components/WebhookCard.vue';
+import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue';
 import ScoreAppWebhookIntegration from '~/components/ScoreAppWebhookIntegration.vue';
 import AddScoreAppAccountModal from '~/components/AddScoreAppAccountModal.vue'
 import AccountPromptCard from '~/components/AccountPromptCard.vue';
@@ -280,6 +292,9 @@ const isEditScoreAppAccountModalOpen = ref(false);
 const scoreappAccountToEdit = ref<ScoreAppAccount | null>(null);
 const isAddScoreAppAccountModalOpen = ref(false);
 const scoreappAccountToAdd = ref<ScoreAppAccount | null>(null);
+const isConfirmDeleteModalOpen = ref(false);
+const scoreappAccountToDelete = ref<ScoreAppAccount | null>(null);
+const isDeletingInProgress = ref(false);
 
 const openEditWebhookModal = (webhook: Webhook) => {
 	webhookToEdit.value = webhook;
@@ -323,6 +338,55 @@ const closeAddScoreAppAccountModal = () => {
 
 const handleScoreAppAccountAdded = async (scoreapp_account: ScoreAppAccount) => {
 	await refreshScoreAppAccount();
+};
+
+// --- State for Delete File Modal ---
+const openDeleteConfirmation = (scoreapp_account: ScoreAppAccount) => {
+	scoreappAccountToDelete.value = scoreapp_account;
+	isConfirmDeleteModalOpen.value = true;
+};
+
+const closeConfirmDeleteModal = () => {
+	isConfirmDeleteModalOpen.value = false;
+	scoreappAccountToDelete.value = null;
+};
+
+const handleDeleteScoreAppAccountConfirmed = async () => {
+	if (!scoreappAccountToDelete.value) return;
+
+	isDeletingInProgress.value = true; // You can use this for a global loading indicator or pass to modal
+	const scoreappAccountBeingDeleted = scoreapp_account.value; // Keep a reference
+
+	// Close modal optimistically, or wait for API response
+	closeConfirmDeleteModal();
+
+	try {
+		const response = await $fetch(
+			`${config.public.apiBase}/score-app-account/${scoreappAccountBeingDeleted.account.scoreapp_id}`,
+			{
+				method: 'DELETE',
+				headers: {
+					// 'Content-Type': 'application/x-www-form-urlencoded', // DELETE often doesn't need Content-Type for body
+					accept: 'application/json',
+					Authorization: `Bearer ${apiAuthorizationToken}`,
+				},
+			}
+		);
+
+		toast.add({
+			title: 'ScoreApp Integration Deleted',
+			description: `ScoreApp Account Integration "${scoreappAccountBeingDeleted.account.scoreapp_id}" has been deleted.`,
+			color: 'green',
+		});
+		await refreshScoreAppAccount(); // Refresh the list from the server
+	} catch (err: any) {
+		console.error('Error deleting ScoreApp Integration:', err);
+		const errorMessage =
+			err.data?.detail || err.message || 'Could not delete ScoreApp Integration.';
+		toast.add({ title: 'Error', description: errorMessage, color: 'red' });
+	} finally {
+		isDeletingInProgress.value = false;
+	}
 };
 
 const {

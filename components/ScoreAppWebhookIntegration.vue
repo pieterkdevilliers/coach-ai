@@ -46,6 +46,12 @@
 						@click="emitEditScoreAppSubdomain"
 					/>
 				</UTooltip>
+				<UTooltip text="Delete ScoreApp Account Integration">
+					<UButton
+						icon="i-heroicons:trash"
+						@click="emitDeleteScoreAppSubdomain"
+					/>
+				</UTooltip>
 			</div>
 			<div v-else class="flex gap-2">
 				<UTooltip text="Add ScoreApp Account Integration">
@@ -72,7 +78,7 @@ const { scoreapp_account } = defineProps<{
 		};
 }>();
 
-const emit = defineEmits(['edit-scoreapp-account-clicked', 'add-scoreapp-account-clicked']);
+const emit = defineEmits(['edit-scoreapp-account-clicked', 'add-scoreapp-account-clicked', 'delete-scoreapp-account-clicked']);
 console.log('ScoreApp Account: ', scoreapp_account);
 const toast = useToast(); // For notifications
 const authStore = useAuthStore();
@@ -87,6 +93,10 @@ const emitEditScoreAppSubdomain = () => {
 
 const emitAddScoreAppSubdomain = () => {
 	emit('add-scoreapp-account-clicked', scoreapp_account);
+};
+
+const emitDeleteScoreAppSubdomain = () => {
+	emit('delete-scoreapp-account-clicked', scoreapp_account);
 };
 </script>
 
