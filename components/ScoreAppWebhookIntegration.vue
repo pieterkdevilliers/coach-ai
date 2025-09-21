@@ -15,6 +15,19 @@
 					</span>
 				</UTooltip>
 			</p>
+			<p class="paragraph-label-text block">
+				<strong class="paragraph-label-text__label"
+					>Webhook Secret Key:</strong
+				>
+				<UTooltip
+					:text="scoreapp_account.account.scoreapp_id"
+					class="paragraph-label-text__text"
+				>
+					<span>
+						{{ scoreapp_account.account.scoreapp_id }}
+					</span>
+				</UTooltip>
+			</p>
 		</div>
 		
 		<!-- Display when no scoreapp_account -->
@@ -25,13 +38,20 @@
 			</p>
 		</div>
 
-		<!-- Footer slot - only show when scoreapp_account exists -->
-		<template v-if="scoreapp_account && scoreapp_account.account" #footer>
-			<div class="flex gap-2">
+		<template #footer>
+			<div v-if="scoreapp_account && scoreapp_account.account.scoreapp_id" class="flex gap-2">
+				<UTooltip text="Edit ScoreApp Account Integration">
+					<UButton
+						icon="i-heroicons:pencil-square"
+						@click="emitEditScoreAppSubdomain"
+					/>
+				</UTooltip>
+			</div>
+			<div v-else class="flex gap-2">
 				<UTooltip text="Add ScoreApp Account Integration">
 					<UButton
 						icon="i-heroicons:plus"
-						@click="emitEditScoreAppSubdomain"
+						@click="emitAddScoreAppSubdomain"
 					/>
 				</UTooltip>
 			</div>
@@ -51,7 +71,7 @@ const { scoreapp_account } = defineProps<{
 		};
 }>();
 
-const emit = defineEmits(['edit-scoreapp-account-clicked']);
+const emit = defineEmits(['edit-scoreapp-account-clicked', 'add-scoreapp-account-clicked']);
 console.log('ScoreApp Account: ', scoreapp_account);
 const toast = useToast(); // For notifications
 const authStore = useAuthStore();
@@ -62,6 +82,10 @@ const apiAuthorizationToken = authStore.access_token;
 
 const emitEditScoreAppSubdomain = () => {
 	emit('edit-scoreapp-account-clicked', scoreapp_account);
+};
+
+const emitAddScoreAppSubdomain = () => {
+	emit('add-scoreapp-account-clicked', scoreapp_account);
 };
 </script>
 

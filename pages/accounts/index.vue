@@ -25,6 +25,7 @@
 				<ScoreAppWebhookIntegration
 					:scoreapp_account="scoreapp_account"
 					@edit-scoreapp-account-clicked="openEditScoreAppAccountModal"
+					@add-scoreapp-account-clicked="openAddScoreAppAccountModal"
 				/>
 			</div>
 		</div>
@@ -84,6 +85,14 @@
 		@scoreapp_account-updated="handleScoreAppAccountUpdated"
 	/>
 
+	<!-- Add ScoreApp Account Modal -->
+	<AddScoreAppAccountModal
+		:is-open="isAddScoreAppAccountModalOpen"
+		:scoreapp_account="scoreappAccountToAdd"
+		@close="closeAddScoreAppAccountModal"
+		@scoreapp-account-added="handleScoreAppAccountAdded"
+	/>
+
 	<!-- Add Prompt Modal -->
 	<AddPromptModal
 		:is-open="isAddPromptModalOpen"
@@ -109,6 +118,7 @@ import SubscriptionCard from '~/components/SubscriptionCard.vue';
 import SubscriptionModal from '~/components/SubscriptionModal.vue';
 import WebhookCard from '~/components/WebhookCard.vue';
 import ScoreAppWebhookIntegration from '~/components/ScoreAppWebhookIntegration.vue';
+import AddScoreAppAccountModal from '~/components/AddScoreAppAccountModal.vue'
 import AccountPromptCard from '~/components/AccountPromptCard.vue';
 import EditWebhookModal from '~/components/EditWebhookModal.vue';
 import EditPromptModal from '~/components/EditPromptModal.vue';
@@ -268,6 +278,8 @@ const webhookToEdit = ref<Webhook | null>(null);
 // --- State for Edit ScoreApp Account Modal ---
 const isEditScoreAppAccountModalOpen = ref(false);
 const scoreappAccountToEdit = ref<ScoreAppAccount | null>(null);
+const isAddScoreAppAccountModalOpen = ref(false);
+const scoreappAccountToAdd = ref<ScoreAppAccount | null>(null);
 
 const openEditWebhookModal = (webhook: Webhook) => {
 	webhookToEdit.value = webhook;
@@ -295,6 +307,21 @@ const closeEditScoreAppAccountModal = () => {
 };
 
 const handleScoreAppAccountUpdated = async (updatedScoreAppAccount: ScoreAppAccount) => {
+	await refreshScoreAppAccount();
+};
+
+const openAddScoreAppAccountModal = (scoreapp_account: ScoreAppAccount) => {
+	scoreappAccountToAdd.value = scoreapp_account;
+	isAddScoreAppAccountModalOpen.value = true;
+	console.log('Opening add modal with scoreapp_account:', scoreapp_account);
+};
+
+const closeAddScoreAppAccountModal = () => {
+	isAddScoreAppAccountModalOpen.value = false;
+	scoreappAccountToAdd.value = null; 
+};
+
+const handleScoreAppAccountAdded = async (scoreapp_account: ScoreAppAccount) => {
 	await refreshScoreAppAccount();
 };
 
