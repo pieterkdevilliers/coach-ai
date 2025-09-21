@@ -28,9 +28,9 @@
 		<!-- Footer slot - only show when scoreapp_account exists -->
 		<template v-if="scoreapp_account && scoreapp_account.account" #footer>
 			<div class="flex gap-2">
-				<UTooltip text="Edit ScoreApp Account Subdomain">
+				<UTooltip text="Add ScoreApp Account Integration">
 					<UButton
-						icon="i-heroicons:pencil-square"
+						icon="i-heroicons:plus"
 						@click="emitEditScoreAppSubdomain"
 					/>
 				</UTooltip>
@@ -51,7 +51,7 @@ const { scoreapp_account } = defineProps<{
 		};
 }>();
 
-const emit = defineEmits(['emitEditScoreAppSubdomainClicked']);
+const emit = defineEmits(['edit-scoreapp-account-clicked']);
 console.log('ScoreApp Account: ', scoreapp_account);
 const toast = useToast(); // For notifications
 const authStore = useAuthStore();
@@ -61,7 +61,7 @@ const uniqueAccountId = authStore.uniqueAccountId;
 const apiAuthorizationToken = authStore.access_token;
 
 const emitEditScoreAppSubdomain = () => {
-	emit('emitEditScoreAppSubdomainClicked', scoreapp_account);
+	emit('edit-scoreapp-account-clicked', scoreapp_account);
 };
 </script>
 
