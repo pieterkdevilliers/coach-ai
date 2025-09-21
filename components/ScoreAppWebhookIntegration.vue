@@ -20,11 +20,11 @@
 					>Webhook Secret Key:</strong
 				>
 				<UTooltip
-					:text="scoreapp_account.account.scoreapp_id"
+					:text="scoreapp_account.widget_key"
 					class="paragraph-label-text__text"
 				>
 					<span>
-						{{ scoreapp_account.account.scoreapp_id }}
+						{{ scoreapp_account.widget_key }}
 					</span>
 				</UTooltip>
 			</p>
@@ -67,7 +67,8 @@ const { scoreapp_account } = defineProps<{
 				account_unique_id: string;
 				scoreapp_id: string;
 				id: number;
-			}
+			};
+			widget_key: string
 		};
 }>();
 
