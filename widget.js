@@ -22,6 +22,8 @@
 	const widgetOptInApiEndpoint = `${apiBaseUrl}/api/v1/widget/opt-in`;
 	let sessionId = '';
 	let visitorUuid = '';
+	let optInCompleted = false;
+	let email = '';
 
 	console.log('sessionId initialized:', sessionId);
 	console.log('visitorUuid initialized:', visitorUuid);
@@ -944,7 +946,9 @@
 				'Inside handleSendMessage USER Chat session ID:',
 				sessionId,
 				'Visitor UUID:',
-				visitorUuid
+				visitorUuid,
+				'Visitor email:',
+				email,
 			);
 			await fetch(chatMessageApiEndpoint, {
 				method: 'POST',
@@ -958,6 +962,7 @@
 					accountId: accountId,
 					chat_session_id: sessionId,
 					visitor_uuid: visitorUuid,
+					email: email,
 					sources: [],
 				}),
 			});
@@ -976,7 +981,9 @@
 				'with chat_session_id:',
 				sessionId,
 				'Visitor UUID:',
-				visitorUuid
+				visitorUuid,
+				'Visitor email:',
+				email,
 			);
 			const response = await fetch(widgetApiEndpoint, {
 				method: 'POST',
@@ -988,6 +995,7 @@
 					query: question,
 					chat_session_id: sessionId,
 					visitor_uuid: visitorUuid,
+					email: email,
 				}),
 			});
 			messagesContainer.removeChild(loadingElement);
@@ -1237,7 +1245,7 @@
 	async function handleOptInSubmission() {
 		clearOptInFormStatus();
 		const name = optInFormNameInput.value.trim();
-		const email = optInFormEmailInput.value.trim();
+		const userEmail = optInFormEmailInput.value.trim();
 
 		if (!name) {
 			displayOptInFormStatus(
@@ -1247,7 +1255,7 @@
 			optInFormNameInput.focus();
 			return;
 		}
-		if (!email) {
+		if (!userEmail) {
 			displayOptInFormStatus(
 				config.optInFormErrorEmailRequired ||
 					'Please enter your email address.',
@@ -1257,7 +1265,7 @@
 			return;
 		}
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		if (!emailRegex.test(email)) {
+		if (!emailRegex.test(userEmail)) {
 			displayOptInFormStatus(
 				config.optInFormErrorEmailInvalid ||
 					'Please enter a valid email address.',
@@ -1285,7 +1293,7 @@
 				},
 				body: JSON.stringify({
 					name: name,
-					email: email,
+					email: userEmail,
 					sessionId: sessionId,
 					visitorUuid: visitorUuid,
 				}),
@@ -1312,6 +1320,7 @@
 				if (isOptInFormVisible) switchToChatView();
 				messagesContainer.innerHTML = ''; // Clear existing messages
 				optInCompleted = true;
+				email = userEmail;
 				displayMessage(config.welcomeMessage, [], 'bot');
 			}, 3000);
 		} catch (error) {

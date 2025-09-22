@@ -48,7 +48,7 @@ onMounted(() => {
 		buttonText: 'Try ExpertEcho Here',
 		widgetTitle: 'Ask questions about ExpertEcho',
 		welcomeMessage: "Hi there, I'm your ExpertEcho agent. I'll help answer questions you might have about ExpertEcho.",
-		optInRequired: false,
+		optInRequired: true,
 	};
 
 	// 2. Create the script element
