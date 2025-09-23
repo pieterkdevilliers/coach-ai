@@ -1,4 +1,11 @@
 <template>
+	<section v-if="isAccountOwner">
+		<UButton
+			label="Delete My Account"
+			color="red"
+			@click="openConfirmDeleteAccountModal"
+			/>
+	</section>
 	<section class="my-prompts container--default mx-auto">
 	<h2 class="heading heading--h2 page__title">Account Prompts</h2>
 		<div>
@@ -112,7 +119,6 @@
 		@prompt-added="handlePromptAdded"
 	/>
 
-
 	<!-- Add Prompt Modal -->
 	<RevertPromptModal
 		:is-open="isRevertPromptModalOpen"
@@ -120,6 +126,24 @@
 		@close="closeRevertPromptModal"
 		@prompt-reverted="handlePromptReverted"
 	/>
+
+	<!-- Delete Account Modals -->
+	<ConfirmDeleteAccountModal
+		:is-open="isConfirmDeleteAccountModalOpen"
+		@update:is-open="isConfirmDeleteAccountModalOpen = $event"
+		@confirm="openFinalDeleteAccountModal"
+		@cancel="closeConfirmDeleteAccountModal"
+		@close="closeConfirmDeleteAccountModal"
+	/>
+
+	<FinalDeleteAccountModal
+		:is-open="isFinalDeleteAccountModalOpen"
+		@update:is-open="isFinalDeleteAccountModalOpen = $event"
+		@confirm="handleDeleteAccountConfirmed"
+		@cancel="closeFinalDeleteAccountModal"
+		@close="closeFinalDeleteAccountModal"
+	/>
+
 	<UNotifications />
 </template>
 
@@ -137,6 +161,8 @@ import EditPromptModal from '~/components/EditPromptModal.vue';
 import EditScoreAppAccountModal from '~/components/EditScoreAppAccountModal.vue'
 import AddPromptModal from '~/components/AddPromptModal.vue';
 import RevertPromptModal from '~/components/RevertPromptModal.vue';
+import ConfirmDeleteAccountModal from '~/components/ConfirmDeleteAccountModal.vue';
+import FinalDeleteAccountModal from '~/components/FinalDeleteAccountModal.vue';
 import { ref, watch } from 'vue';
 import { useAuthStore } from '~/stores/auth';
 
@@ -147,10 +173,13 @@ definePageMeta({
 
 const authStore = useAuthStore();
 const toast = useToast(); // For notifications
+const router = useRouter(); // For navigation after account deletion
 
 const apiAuthorizationToken = authStore.access_token;
 const uniqueAccountId = authStore.uniqueAccountId;
 const activeSubscription = computed(() => authStore.subs_status);
+const isAccountOwner = authStore.is_account_owner;
+console.log('isAccountOwner: ', isAccountOwner);
 const accountOrganisation = ref('');
 
 const isSubscriptionModalOpen = ref(false);
@@ -473,5 +502,66 @@ const closeRevertPromptModal = () => {
 
 const handlePromptReverted = async (revertedPrompt: Prompt) => {
 	await refreshAccountPrompt();
+};
+
+// --- State for Delete Account Modals ---
+const isConfirmDeleteAccountModalOpen = ref(false);
+const isFinalDeleteAccountModalOpen = ref(false);
+
+const openConfirmDeleteAccountModal = () => {
+	isConfirmDeleteAccountModalOpen.value = true;
+};
+
+const closeConfirmDeleteAccountModal = () => {
+	isConfirmDeleteAccountModalOpen.value = false;
+};
+
+const openFinalDeleteAccountModal = () => {
+	isConfirmDeleteAccountModalOpen.value = false;
+	isFinalDeleteAccountModalOpen.value = true;
+};
+
+const closeFinalDeleteAccountModal = () => {
+	isFinalDeleteAccountModalOpen.value = false;
+};
+
+const handleDeleteAccountConfirmed = async () => {
+	try {
+		const response = await $fetch(
+			`${config.public.apiBase}/accounts/${uniqueAccountId}`,
+			{
+				method: 'DELETE',
+				headers: {
+					accept: 'application/json',
+					Authorization: `Bearer ${apiAuthorizationToken}`,
+				},
+			}
+		);
+
+		// Close the modal
+		isFinalDeleteAccountModalOpen.value = false;
+
+		// Show success toast
+		toast.add({
+			title: 'Account Deleted',
+			description: 'Your account has been permanently deleted.',
+			color: 'green',
+		});
+
+		router.push('/');
+		
+	} catch (err: any) {
+		console.error('Error deleting account:', err);
+		const errorMessage =
+			err.data?.detail || err.message || 'Could not delete account.';
+		
+		toast.add({ 
+			title: 'Error', 
+			description: errorMessage, 
+			color: 'red' 
+		});
+		
+		// Keep modal open on error so user can retry
+	}
 };
 </script>

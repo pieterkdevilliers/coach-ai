@@ -8,6 +8,7 @@ export const useAuthStore = defineStore('auth', {
     docs_count: null as number | null,
     subs_status: null as boolean | null,
     processed_docs_count: null as number | null,
+    is_account_owner: null as boolean | null,
   }),
   getters: {
     // This getter will return true if there's a token, false otherwise.
@@ -62,6 +63,14 @@ export const useAuthStore = defineStore('auth', {
 
     clearProcessedDocsCount() {
       this.processed_docs_count = null;
+    },
+
+    setIsAccountOwner(is_account_owner: boolean) {
+      this.is_account_owner = is_account_owner;
+    },
+
+    clearIsAccountOwner() {
+      this.is_account_owner = null;
     },
   },
   persist: true,
