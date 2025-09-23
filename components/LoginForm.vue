@@ -98,12 +98,14 @@ const handleLogin = async () => {
 		const docsCount = data.docs_count;
 		const subsStatus = data.active_subscription;
 		const processed_docs_count = data.processed_docs_count;
+		const isAccountOwner = data.is_account_owner;
 		authStore.setUniqueAccountId(uniqueAccountId);
 		authStore.setAuthToken(access_token);
 		authStore.setAccountOrganisation(accountOrganisation);
 		authStore.setDocsCount(docsCount);
 		authStore.setSubsStatus(subsStatus);
 		authStore.setProcessedDocsCount(processed_docs_count);
+		authStore.setIsAccountOwner(isAccountOwner);
 
 		if (response.ok) {
 			// CHECK for a redirect path in the URL query
