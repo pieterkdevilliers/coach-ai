@@ -708,6 +708,23 @@ to-purple-800;
 	.account__page-layout {
 		@apply flex min-h-screen;
 	}
+
+	.account__page-layout .account-content {
+		@apply flex-1 px-8 pb-8 overflow-y-auto;
+	}
+
+	/* My Account - Sidebar */
+	/* .account__sidebar button {
+		@apply font-normal;
+	}
+	.account__sidebar button.active {
+		@apply text-gradient font-semibold;
+	} */
+
+	/* My Account - Subscriptions */
+	.my-subscriptions .search-pagination-container:empty {
+		@apply hidden;
+	}
 }
 
 @layer components {
