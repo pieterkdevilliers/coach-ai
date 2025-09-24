@@ -1,16 +1,13 @@
 <template>
-  <div class="account-page-layout">
-    <AccountSidebar 
-      :active-section="activeSection"
-      :is-account-owner="isAccountOwner"
-      @section-changed="activeSection = $event"
-    />
-    
-    <main class="account-content">
-      <!-- Account Prompts Section -->
-      <section v-if="activeSection === 'prompts'" class="my-prompts container--default mx-auto">
-        <!-- Your existing prompts content -->
-		<h2 class="heading heading--h2 page__title">Account Prompts</h2>
+	<section v-if="isAccountOwner">
+		<UButton
+			label="Delete My Account"
+			color="red"
+			@click="openConfirmDeleteAccountModal"
+			/>
+	</section>
+	<section class="my-prompts container--default mx-auto">
+	<h2 class="heading heading--h2 page__title">Account Prompts</h2>
 		<div>
 			<div v-if="account_prompt" class="card__outer">
 				<AccountPromptCard
@@ -21,11 +18,8 @@
 					/>
 			</div>
 		</div>
-      </section>
-      
-      <!-- Webhooks Section -->
-      <section v-if="activeSection === 'webhooks'" class="my-subscriptions container--default mx-auto">
-        <!-- Your existing webhooks content -->
+	</section>
+	<section class="my-subscriptions container--default mx-auto">
 		<h2 class="heading heading--h2 page__title">Integration Webhooks</h2>
 		<div class="subscription-grid card-grid">
 			<div class="card__outer">
@@ -43,33 +37,8 @@
 				/>
 			</div>
 		</div>
-      </section>
-
-	  <!-- Products Section -->
-      <section v-if="activeSection === 'products'" class="my-subscriptions container--default mx-auto">
-        <!-- Your existing products content -->
-		<h2 class="heading heading--h2 page__title">Available Products - Under Construction</h2>
-		<div class="subscription-grid card-grid">
-			<div class="card__outer">
-				<WebhookCard
-					:webhook="webhook"
-					@edit-webhook-clicked="openEditWebhookModal"
-				/>
-			</div>
-			<div class="card__outer">
-				<ScoreAppWebhookIntegration
-					:scoreapp_account="scoreapp_account"
-					@edit-scoreapp-account-clicked="openEditScoreAppAccountModal"
-					@add-scoreapp-account-clicked="openAddScoreAppAccountModal"
-					@delete-scoreapp-account-clicked="openDeleteConfirmation"
-				/>
-			</div>
-		</div>
-      </section>
-      
-      <!-- Subscriptions Section -->
-      <section v-if="activeSection === 'subscriptions'" class="my-subscriptions container--default mx-auto">
-        <!-- Your existing subscriptions content -->
+	</section>
+	<section class="my-subscriptions container--default mx-auto">
 		<div class="page-header">
 			<h2 class="heading heading--h2 page__title">My Subscriptions</h2>
 			<div v-if="!activeSubscription" class="text-center">
@@ -96,20 +65,7 @@
 				/>
 			</div>
 		</div>
-      </section>
-      
-      <!-- Account Settings Section -->
-      <section v-if="activeSection === 'account' && isAccountOwner">
-        <UButton
-          label="Delete My Account"
-          color="red"
-          @click="openConfirmDeleteAccountModal"
-        />
-      </section>
-    </main>
-    
-    <!-- All your existing modals remain the same -->
-  </div>
+	</section>
 
 	<SubscriptionModal v-model="isSubscriptionModalOpen" />
 
@@ -207,7 +163,6 @@ import AddPromptModal from '~/components/AddPromptModal.vue';
 import RevertPromptModal from '~/components/RevertPromptModal.vue';
 import ConfirmDeleteAccountModal from '~/components/ConfirmDeleteAccountModal.vue';
 import FinalDeleteAccountModal from '~/components/FinalDeleteAccountModal.vue';
-import AccountSidebar from '~/components/AccountSidebar.vue';
 import { ref, watch } from 'vue';
 import { useAuthStore } from '~/stores/auth';
 
@@ -216,23 +171,6 @@ definePageMeta({
 	layout: 'user-access',
 });
 
-const activeSection = ref('prompts') // Default section
-
-// Optional: Update URL to reflect current section
-watch(activeSection, (newSection) => {
-  // Update URL without page reload
-  window.history.replaceState({}, '', `?section=${newSection}`)
-})
-
-// Optional: Read initial section from URL
-onMounted(() => {
-  const urlParams = new URLSearchParams(window.location.search)
-  const section = urlParams.get('section')
-  if (section && ['prompts', 'webhooks', 'subscriptions', 'account'].includes(section)) {
-    activeSection.value = section
-  }
-})
-
 const authStore = useAuthStore();
 const toast = useToast(); // For notifications
 const router = useRouter(); // For navigation after account deletion
@@ -240,7 +178,7 @@ const router = useRouter(); // For navigation after account deletion
 const apiAuthorizationToken = authStore.access_token;
 const uniqueAccountId = authStore.uniqueAccountId;
 const activeSubscription = computed(() => authStore.subs_status);
-const isAccountOwner = computed(() => authStore.is_account_owner);
+const isAccountOwner = authStore.is_account_owner;
 console.log('isAccountOwner: ', isAccountOwner);
 const accountOrganisation = ref('');
 
@@ -627,48 +565,3 @@ const handleDeleteAccountConfirmed = async () => {
 	}
 };
 </script>
-
-<style scoped>
-.account-page-layout {
-  display: flex;
-  min-height: 100vh;
-}
-
-.account-sidebar {
-  width: 250px;
-  background: #f8f9fa;
-  border-right: 1px solid #dee2e6;
-  padding: 1rem;
-}
-
-.account-content {
-  flex: 1;
-  padding: 2rem;
-  overflow-y: auto;
-}
-
-.account-sidebar nav ul {
-  list-style: none;
-  padding: 0;
-}
-
-.account-sidebar nav li {
-  margin-bottom: 0.5rem;
-}
-
-.account-sidebar nav button {
-  width: 100%;
-  text-align: left;
-  padding: 0.75rem 1rem;
-  border: none;
-  background: transparent;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.account-sidebar nav button:hover,
-.account-sidebar nav button.active {
-  background-color: #e9ecef;
-}
-</style>
