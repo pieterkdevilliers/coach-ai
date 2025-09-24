@@ -47,15 +47,25 @@
 
 	  <!-- Products Section -->
       <section v-if="activeSection === 'products'" class="my-subscriptions container--default mx-auto">
+		<div>
+			<!-- Add Product button -->
+			<UButton
+			icon="i-heroicons-plus-circle"
+			class="bg-blue-600 text-white"
+			@click="isAddAccountProductModalOpen = true"
+			>
+			Add Product
+			</UButton>
+		</div>
         <!-- Your existing products content -->
 		<h2 class="heading heading--h2 page__title">Available Products - Under Construction</h2>
 		<div class="subscription-grid card-grid">
 			<div v-for="account_product in account_products.user_products" class="card__outer">
 				<AccountProductCard
 					:account_product="account_product"
-					@edit-scoreapp-account-clicked="openEditScoreAppAccountModal"
-					@add-scoreapp-account-clicked="openAddScoreAppAccountModal"
-					@delete-scoreapp-account-clicked="openDeleteConfirmation"
+					@edit-account-product-clicked="openEditAccountProductModal"
+					@add-account-product-clicked="openAddAccountProductModal"
+					@delete-account-product-clicked="openConfirmDeleteAccountProductModal"
 				/>
 			</div>
 		</div>
@@ -182,6 +192,32 @@
 		@close="closeFinalDeleteAccountModal"
 	/>
 
+	<!-- Edit Account Product Modal -->
+	<EditAccountProductModal
+		:is-open="isEditAccountProductModalOpen"
+		:account_product="accountProductToEdit"
+		@close="closeEditAccountProductModal"
+		@account-product-updated="handleAccountProductUpdated"
+	/>
+
+	<!-- Add Account Product Modal -->
+	<AddAccountProductModal
+		:is-open="isAddAccountProductModalOpen"
+		:account_product="accountProductToAdd"
+		@close="closeAddAccountProductModal"
+		@account-product-added="handleAccountProductAdded"
+	/>
+
+	<!-- Delete Account Product Modal -->
+	<ConfirmDeleteAccountProductModal
+		:is-open="isConfirmDeleteAccountProductModalOpen"
+		:item-name="accountProductToDelete ? accountProductToDelete.product_title : ''"
+		@update:is-open="isConfirmDeleteAccountProductModalOpen = $event"
+		@confirm="handleDeleteAccountProductConfirmed"
+		@cancel="handleCancelDeleteAccountProduct"
+		@close="closeConfirmDeleteAccountProductModal"
+	/>
+
 	<UNotifications />
 </template>
 
@@ -197,8 +233,10 @@ import AccountPromptCard from '~/components/AccountPromptCard.vue';
 import AccountProductCard from '~/components/AccountProductCard.vue';
 import EditWebhookModal from '~/components/EditWebhookModal.vue';
 import EditPromptModal from '~/components/EditPromptModal.vue';
+import EditAccountProductModal from '~/components/EditAccountProductModal.vue';
 import EditScoreAppAccountModal from '~/components/EditScoreAppAccountModal.vue'
 import AddPromptModal from '~/components/AddPromptModal.vue';
+import AddAccountProductModal from '~/components/AddAccountProductModal.vue';
 import RevertPromptModal from '~/components/RevertPromptModal.vue';
 import ConfirmDeleteAccountModal from '~/components/ConfirmDeleteAccountModal.vue';
 import FinalDeleteAccountModal from '~/components/FinalDeleteAccountModal.vue';
@@ -651,6 +689,105 @@ if (error.value) {
 } else {
 	console.log('Stored Unique Account ID:', authStore.uniqueAccountId);
 }
+
+// --- State for Edit AccountProduct Modal ---
+const isEditAccountProductModalOpen = ref(false);
+const accountProductToEdit = ref<AccountProduct | null>(null);
+
+const openEditAccountProductModal = (account_product: AccountProduct) => {
+	accountProductToEdit.value = account_product;
+	isEditAccountProductModalOpen.value = true;
+	console.log('Opening edit modal with account_product:', account_product);
+};
+
+const closeEditAccountProductModal = () => {
+	isEditAccountProductModalOpen.value = false;
+	accountProductToEdit.value = null; 
+};
+
+const handleAccountProductUpdated = async (account_product: AccountProduct) => {
+	await refreshAccountProducts();
+};
+
+// --- State for Add AccountProduct Modal ---
+const isAddAccountProductModalOpen = ref(false);
+const accountProductToAdd = ref<AccountProduct | null>(null);
+
+const openAddAccountProductModal = (account_product: AccountProduct) => {
+	accountProductToAdd.value = account_product;
+	isAddAccountProductModalOpen.value = true;
+	console.log('Opening add modal with account_product:', account_product);
+};
+
+const closeAddAccountProductModal = () => {
+	isAddAccountProductModalOpen.value = false;
+	accountProductToAdd.value = null; 
+};
+
+const handleAccountProductAdded = async (addedAccountProduct: AccountProduct) => {
+	await refreshAccountProducts();
+};
+
+// --- State for Delete Account Modals ---
+
+const accountProductToDelete = ref<AccountProduct | null>(null);
+const isConfirmDeleteAccountProductModalOpen = ref(false);
+
+
+const openConfirmDeleteAccountProductModal = (account_product: AccountProduct) => {
+	accountProductToDelete.value = account_product;
+	isConfirmDeleteAccountProductModalOpen.value = true;
+};
+
+const closeConfirmDeleteAccountProductModal = () => {
+	isConfirmDeleteAccountModalOpen.value = false;
+	accountProductToDelete.value = null;
+};
+
+const handleCancelDeleteAccountProduct = () => {
+	isConfirmDeleteAccountProductModalOpen.value = false;
+	accountProductToDelete.value = null;
+};
+
+const handleDeleteAccountProductConfirmed = async () => {
+	try {
+		const response = await $fetch(
+			`${config.public.apiBase}/user-products/${uniqueAccountId}/${accountProductToDelete.value?.id}`,
+			{
+				method: 'DELETE',
+				headers: {
+					accept: 'application/json',
+					Authorization: `Bearer ${apiAuthorizationToken}`,
+				},
+			}
+		);
+
+		// Close the modal
+		isConfirmDeleteAccountProductModalOpen.value = false;
+
+		await refreshAccountProducts();
+
+		// Show success toast
+		toast.add({
+			title: 'Product Deleted',
+			description: 'Product successfully deleted.',
+			color: 'green',
+		});
+		
+	} catch (err: any) {
+		console.error('Error deleting product:', err);
+		const errorMessage =
+			err.data?.detail || err.message || 'Could not delete product.';
+		
+		toast.add({ 
+			title: 'Error', 
+			description: errorMessage, 
+			color: 'red' 
+		});
+		
+		// Keep modal open on error so user can retry
+	}
+};
 </script>
 
 <style scoped>
