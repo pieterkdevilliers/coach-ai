@@ -50,15 +50,9 @@
         <!-- Your existing products content -->
 		<h2 class="heading heading--h2 page__title">Available Products - Under Construction</h2>
 		<div class="subscription-grid card-grid">
-			<div class="card__outer">
-				<WebhookCard
-					:webhook="webhook"
-					@edit-webhook-clicked="openEditWebhookModal"
-				/>
-			</div>
-			<div class="card__outer">
-				<ScoreAppWebhookIntegration
-					:scoreapp_account="scoreapp_account"
+			<div v-for="account_product in account_products.user_products" class="card__outer">
+				<AccountProductCard
+					:account_product="account_product"
 					@edit-scoreapp-account-clicked="openEditScoreAppAccountModal"
 					@add-scoreapp-account-clicked="openAddScoreAppAccountModal"
 					@delete-scoreapp-account-clicked="openDeleteConfirmation"
@@ -146,14 +140,14 @@
 	/>
 
 	<!-- Delete ScoreApp Account Modal -->
-		<ConfirmDeleteModal
-			:is-open="isConfirmDeleteModalOpen"
-			:item-name="scoreappAccountToDelete ? scoreappAccountToDelete.account.scoreapp_id : ''"
-			@update:is-open="isConfirmDeleteModalOpen = $event"
-			@confirm="handleDeleteScoreAppAccountConfirmed"
-			@cancel="closeConfirmDeleteModal"
-			@close="closeConfirmDeleteModal"
-		/>
+	<ConfirmDeleteModal
+		:is-open="isConfirmDeleteModalOpen"
+		:item-name="scoreappAccountToDelete ? scoreappAccountToDelete.account.scoreapp_id : ''"
+		@update:is-open="isConfirmDeleteModalOpen = $event"
+		@confirm="handleDeleteScoreAppAccountConfirmed"
+		@cancel="closeConfirmDeleteModal"
+		@close="closeConfirmDeleteModal"
+	/>
 
 	<!-- Add Prompt Modal -->
 	<AddPromptModal
@@ -163,7 +157,7 @@
 		@prompt-added="handlePromptAdded"
 	/>
 
-	<!-- Add Prompt Modal -->
+	<!-- Revert Prompt Modal -->
 	<RevertPromptModal
 		:is-open="isRevertPromptModalOpen"
 		:prompt="promptToRevert"
@@ -200,6 +194,7 @@ import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue';
 import ScoreAppWebhookIntegration from '~/components/ScoreAppWebhookIntegration.vue';
 import AddScoreAppAccountModal from '~/components/AddScoreAppAccountModal.vue'
 import AccountPromptCard from '~/components/AccountPromptCard.vue';
+import AccountProductCard from '~/components/AccountProductCard.vue';
 import EditWebhookModal from '~/components/EditWebhookModal.vue';
 import EditPromptModal from '~/components/EditPromptModal.vue';
 import EditScoreAppAccountModal from '~/components/EditScoreAppAccountModal.vue'
@@ -228,7 +223,7 @@ watch(activeSection, (newSection) => {
 onMounted(() => {
   const urlParams = new URLSearchParams(window.location.search)
   const section = urlParams.get('section')
-  if (section && ['prompts', 'webhooks', 'subscriptions', 'account'].includes(section)) {
+  if (section && ['prompts', 'webhooks', 'products', 'subscriptions', 'account'].includes(section)) {
     activeSection.value = section
   }
 })
@@ -626,6 +621,36 @@ const handleDeleteAccountConfirmed = async () => {
 		// Keep modal open on error so user can retry
 	}
 };
+
+interface AccountProduct {
+  id: number;
+  product_title: string;
+  product_description: string;
+  product_sale_url: string;
+  who_is_this_for: string;
+  is_active: boolean;
+  account_unique_id: string;
+}
+
+const {
+	data: account_products,
+	error: accountProductError,
+	refresh: refreshAccountProducts,
+} = await useFetch(`${config.public.apiBase}/user-products/${uniqueAccountId}`, {
+	method: 'GET',
+	headers: {
+		accept: 'application/json',
+		Authorization: `Bearer ${apiAuthorizationToken}`,
+	},
+});
+console.log("Account Products in index file: ", account_products.value)
+
+
+if (error.value) {
+	console.error('Error fetching scoreapp account:', accountProductError.value);
+} else {
+	console.log('Stored Unique Account ID:', authStore.uniqueAccountId);
+}
 </script>
 
 <style scoped>

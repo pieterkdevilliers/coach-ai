@@ -23,7 +23,7 @@
             @click="$emit('section-changed', 'products')"
             :class="{ active: activeSection === 'products' }"
           >
-            Account Products
+            Products and CTAs
           </button>
         </li>
         <li>
