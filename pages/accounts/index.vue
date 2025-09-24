@@ -1,115 +1,160 @@
 <template>
-  <div class="account-page-layout">
-    <AccountSidebar 
-      :active-section="activeSection"
-      :is-account-owner="isAccountOwner"
-      @section-changed="activeSection = $event"
-    />
-    
-    <main class="account-content">
-      <!-- Account Prompts Section -->
-      <section v-if="activeSection === 'prompts'" class="my-prompts container--default mx-auto">
-        <!-- Your existing prompts content -->
-		<h2 class="heading heading--h2 page__title">Account Prompts</h2>
-		<div>
-			<div v-if="account_prompt" class="card__outer">
-				<AccountPromptCard
-					:prompt="account_prompt"
-					@edit-prompt-clicked="openEditPromptModal"
-					@add-prompt-clicked="openAddPromptModal"
-					@revert-prompt-clicked="openRevertPromptModal"
-					/>
-			</div>
-		</div>
-      </section>
-      
-      <!-- Webhooks Section -->
-      <section v-if="activeSection === 'webhooks'" class="my-subscriptions container--default mx-auto">
-        <!-- Your existing webhooks content -->
-		<h2 class="heading heading--h2 page__title">Integration Webhooks</h2>
-		<div class="subscription-grid card-grid">
-			<div class="card__outer">
-				<WebhookCard
-					:webhook="webhook"
-					@edit-webhook-clicked="openEditWebhookModal"
-				/>
-			</div>
-			<div class="card__outer">
-				<ScoreAppWebhookIntegration
-					:scoreapp_account="scoreapp_account"
-					@edit-scoreapp-account-clicked="openEditScoreAppAccountModal"
-					@add-scoreapp-account-clicked="openAddScoreAppAccountModal"
-					@delete-scoreapp-account-clicked="openDeleteConfirmation"
-				/>
-			</div>
-		</div>
-      </section>
+	<div class="account__page-layout">
+		<AccountSidebar
+			:active-section="activeSection"
+			:is-account-owner="isAccountOwner"
+			@section-changed="activeSection = $event"
+		/>
 
-	  <!-- Products Section -->
-      <section v-if="activeSection === 'products'" class="my-subscriptions container--default mx-auto">
-        <!-- Your existing products content -->
-		<h2 class="heading heading--h2 page__title">Available Products - Under Construction</h2>
-		<div class="subscription-grid card-grid">
-			<div class="card__outer">
-				<WebhookCard
-					:webhook="webhook"
-					@edit-webhook-clicked="openEditWebhookModal"
-				/>
-			</div>
-			<div class="card__outer">
-				<ScoreAppWebhookIntegration
-					:scoreapp_account="scoreapp_account"
-					@edit-scoreapp-account-clicked="openEditScoreAppAccountModal"
-					@add-scoreapp-account-clicked="openAddScoreAppAccountModal"
-					@delete-scoreapp-account-clicked="openDeleteConfirmation"
-				/>
-			</div>
-		</div>
-      </section>
-      
-      <!-- Subscriptions Section -->
-      <section v-if="activeSection === 'subscriptions'" class="my-subscriptions container--default mx-auto">
-        <!-- Your existing subscriptions content -->
-		<div class="page-header">
-			<h2 class="heading heading--h2 page__title">My Subscriptions</h2>
-			<div v-if="!activeSubscription" class="text-center">
-				<p>To subscribe to a plan, please click the button below.</p>
-				<UButton
-					label="Subscribe Now"
-					icon="i-heroicons:plus-circle-16-solid"
-					variant="solid"
-					@click="openSubscriptionModal"
-					class="mt-3"
-				/>
-			</div>
-		</div>
-		<div class="search-pagination-container"></div>
-		<div class="subscription-grid card-grid">
-			<div
-				v-for="subscription in subscriptions?.subscriptions"
-				:key="subscription.id"
-				class="card__outer"
+		<main class="account-content">
+			<!-- Account Prompts Section -->
+			<section
+				v-if="activeSection === 'prompts'"
+				class="my-prompts container--default mx-auto"
 			>
-				<SubscriptionCard
-					:subscription="subscription"
-					@subscription-canceled="handleSubscriptionCanceled"
+				<!-- Your existing prompts content -->
+				<div class="page-header">
+					<h2 class="heading heading--h2 page__title">
+						Account Prompts
+					</h2>
+				</div>
+				<div>
+					<div v-if="account_prompt" class="card__outer">
+						<AccountPromptCard
+							:prompt="account_prompt"
+							@edit-prompt-clicked="openEditPromptModal"
+							@add-prompt-clicked="openAddPromptModal"
+							@revert-prompt-clicked="openRevertPromptModal"
+						/>
+					</div>
+				</div>
+			</section>
+
+			<!-- Webhooks Section -->
+			<section
+				v-if="activeSection === 'webhooks'"
+				class="my-subscriptions container--default mx-auto"
+			>
+				<!-- Your existing webhooks content -->
+				<div class="page-header">
+					<h2 class="heading heading--h2 page__title">
+						Integration Webhooks
+					</h2>
+				</div>
+				<div class="subscription-grid card-grid">
+					<div class="card__outer">
+						<WebhookCard
+							:webhook="webhook"
+							@edit-webhook-clicked="openEditWebhookModal"
+						/>
+					</div>
+					<div class="card__outer">
+						<ScoreAppWebhookIntegration
+							:scoreapp_account="scoreapp_account"
+							@edit-scoreapp-account-clicked="
+								openEditScoreAppAccountModal
+							"
+							@add-scoreapp-account-clicked="
+								openAddScoreAppAccountModal
+							"
+							@delete-scoreapp-account-clicked="
+								openDeleteConfirmation
+							"
+						/>
+					</div>
+				</div>
+			</section>
+
+			<!-- Products Section -->
+			<section
+				v-if="activeSection === 'products'"
+				class="my-subscriptions container--default mx-auto"
+			>
+				<!-- Your existing products content -->
+				<div class="page-header">
+					<h2 class="heading heading--h2 page__title">
+						Available Products - Under Construction
+					</h2>
+				</div>
+				<div class="subscription-grid card-grid">
+					<div class="card__outer">
+						<WebhookCard
+							:webhook="webhook"
+							@edit-webhook-clicked="openEditWebhookModal"
+						/>
+					</div>
+					<div class="card__outer">
+						<ScoreAppWebhookIntegration
+							:scoreapp_account="scoreapp_account"
+							@edit-scoreapp-account-clicked="
+								openEditScoreAppAccountModal
+							"
+							@add-scoreapp-account-clicked="
+								openAddScoreAppAccountModal
+							"
+							@delete-scoreapp-account-clicked="
+								openDeleteConfirmation
+							"
+						/>
+					</div>
+				</div>
+			</section>
+
+			<!-- Subscriptions Section -->
+			<section
+				v-if="activeSection === 'subscriptions'"
+				class="my-subscriptions container--default mx-auto"
+			>
+				<!-- Your existing subscriptions content -->
+				<div class="page-header">
+					<h2 class="heading heading--h2 page__title">
+						My Subscriptions
+					</h2>
+				</div>
+				<div v-if="!activeSubscription" class="text-center">
+					<p>
+						To subscribe to a plan, please click the button below.
+					</p>
+					<UButton
+						label="Subscribe Now"
+						icon="i-heroicons:plus-circle-16-solid"
+						variant="solid"
+						@click="openSubscriptionModal"
+						class="mt-3"
+					/>
+				</div>
+				<div class="search-pagination-container"></div>
+				<div class="subscription-grid card-grid">
+					<div
+						v-for="subscription in subscriptions?.subscriptions"
+						:key="subscription.id"
+						class="card__outer"
+					>
+						<SubscriptionCard
+							:subscription="subscription"
+							@subscription-canceled="handleSubscriptionCanceled"
+						/>
+					</div>
+				</div>
+			</section>
+
+			<!-- Account Settings Section -->
+			<section v-if="activeSection === 'account' && isAccountOwner">
+				<div class="page-header">
+					<h2 class="heading heading--h2 page__title">
+						Account Settings
+					</h2>
+				</div>
+				<UButton
+					label="Delete My Account"
+					color="red"
+					@click="openConfirmDeleteAccountModal"
 				/>
-			</div>
-		</div>
-      </section>
-      
-      <!-- Account Settings Section -->
-      <section v-if="activeSection === 'account' && isAccountOwner">
-        <UButton
-          label="Delete My Account"
-          color="red"
-          @click="openConfirmDeleteAccountModal"
-        />
-      </section>
-    </main>
-    
-    <!-- All your existing modals remain the same -->
-  </div>
+			</section>
+		</main>
+
+		<!-- All your existing modals remain the same -->
+	</div>
 
 	<SubscriptionModal v-model="isSubscriptionModalOpen" />
 
@@ -146,14 +191,18 @@
 	/>
 
 	<!-- Delete ScoreApp Account Modal -->
-		<ConfirmDeleteModal
-			:is-open="isConfirmDeleteModalOpen"
-			:item-name="scoreappAccountToDelete ? scoreappAccountToDelete.account.scoreapp_id : ''"
-			@update:is-open="isConfirmDeleteModalOpen = $event"
-			@confirm="handleDeleteScoreAppAccountConfirmed"
-			@cancel="closeConfirmDeleteModal"
-			@close="closeConfirmDeleteModal"
-		/>
+	<ConfirmDeleteModal
+		:is-open="isConfirmDeleteModalOpen"
+		:item-name="
+			scoreappAccountToDelete
+				? scoreappAccountToDelete.account.scoreapp_id
+				: ''
+		"
+		@update:is-open="isConfirmDeleteModalOpen = $event"
+		@confirm="handleDeleteScoreAppAccountConfirmed"
+		@cancel="closeConfirmDeleteModal"
+		@close="closeConfirmDeleteModal"
+	/>
 
 	<!-- Add Prompt Modal -->
 	<AddPromptModal
@@ -198,11 +247,11 @@ import SubscriptionModal from '~/components/SubscriptionModal.vue';
 import WebhookCard from '~/components/WebhookCard.vue';
 import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue';
 import ScoreAppWebhookIntegration from '~/components/ScoreAppWebhookIntegration.vue';
-import AddScoreAppAccountModal from '~/components/AddScoreAppAccountModal.vue'
+import AddScoreAppAccountModal from '~/components/AddScoreAppAccountModal.vue';
 import AccountPromptCard from '~/components/AccountPromptCard.vue';
 import EditWebhookModal from '~/components/EditWebhookModal.vue';
 import EditPromptModal from '~/components/EditPromptModal.vue';
-import EditScoreAppAccountModal from '~/components/EditScoreAppAccountModal.vue'
+import EditScoreAppAccountModal from '~/components/EditScoreAppAccountModal.vue';
 import AddPromptModal from '~/components/AddPromptModal.vue';
 import RevertPromptModal from '~/components/RevertPromptModal.vue';
 import ConfirmDeleteAccountModal from '~/components/ConfirmDeleteAccountModal.vue';
@@ -216,22 +265,25 @@ definePageMeta({
 	layout: 'user-access',
 });
 
-const activeSection = ref('prompts') // Default section
+const activeSection = ref('prompts'); // Default section
 
 // Optional: Update URL to reflect current section
 watch(activeSection, (newSection) => {
-  // Update URL without page reload
-  window.history.replaceState({}, '', `?section=${newSection}`)
-})
+	// Update URL without page reload
+	window.history.replaceState({}, '', `?section=${newSection}`);
+});
 
 // Optional: Read initial section from URL
 onMounted(() => {
-  const urlParams = new URLSearchParams(window.location.search)
-  const section = urlParams.get('section')
-  if (section && ['prompts', 'webhooks', 'subscriptions', 'account'].includes(section)) {
-    activeSection.value = section
-  }
-})
+	const urlParams = new URLSearchParams(window.location.search);
+	const section = urlParams.get('section');
+	if (
+		section &&
+		['prompts', 'webhooks', 'subscriptions', 'account'].includes(section)
+	) {
+		activeSection.value = section;
+	}
+});
 
 const authStore = useAuthStore();
 const toast = useToast(); // For notifications
@@ -347,7 +399,6 @@ if (error.value) {
 	console.log('Stored Unique Account ID:', authStore.uniqueAccountId);
 }
 
-
 interface ScoreAppAccount {
 	id: number;
 	scoreapp_id: string;
@@ -358,17 +409,22 @@ const {
 	data: scoreapp_account,
 	error: scoreappAccountError,
 	refresh: refreshScoreAppAccount,
-} = await useFetch(`${config.public.apiBase}/score-app-account/${uniqueAccountId}`, {
-	method: 'GET',
-	headers: {
-		accept: 'application/json',
-		Authorization: `Bearer ${apiAuthorizationToken}`,
-	},
-});
-
+} = await useFetch(
+	`${config.public.apiBase}/score-app-account/${uniqueAccountId}`,
+	{
+		method: 'GET',
+		headers: {
+			accept: 'application/json',
+			Authorization: `Bearer ${apiAuthorizationToken}`,
+		},
+	}
+);
 
 if (error.value) {
-	console.error('Error fetching scoreapp account:', scoreappAccountError.value);
+	console.error(
+		'Error fetching scoreapp account:',
+		scoreappAccountError.value
+	);
 } else {
 	console.log('Stored Unique Account ID:', authStore.uniqueAccountId);
 }
@@ -376,7 +432,6 @@ if (error.value) {
 // --- State for Edit Webhook Modal ---
 const isEditWebhookModalOpen = ref(false);
 const webhookToEdit = ref<Webhook | null>(null);
-
 
 // --- State for Edit ScoreApp Account Modal ---
 const isEditScoreAppAccountModalOpen = ref(false);
@@ -401,7 +456,6 @@ const handleWebhookUpdated = async (updatedWebhook: Webhook) => {
 	await refreshWebhook();
 };
 
-
 const openEditScoreAppAccountModal = (scoreapp_account: ScoreAppAccount) => {
 	scoreappAccountToEdit.value = scoreapp_account;
 	isEditScoreAppAccountModalOpen.value = true;
@@ -412,7 +466,9 @@ const closeEditScoreAppAccountModal = () => {
 	scoreappAccountToEdit.value = null;
 };
 
-const handleScoreAppAccountUpdated = async (updatedScoreAppAccount: ScoreAppAccount) => {
+const handleScoreAppAccountUpdated = async (
+	updatedScoreAppAccount: ScoreAppAccount
+) => {
 	await refreshScoreAppAccount();
 };
 
@@ -424,10 +480,12 @@ const openAddScoreAppAccountModal = (scoreapp_account: ScoreAppAccount) => {
 
 const closeAddScoreAppAccountModal = () => {
 	isAddScoreAppAccountModalOpen.value = false;
-	scoreappAccountToAdd.value = null; 
+	scoreappAccountToAdd.value = null;
 };
 
-const handleScoreAppAccountAdded = async (scoreapp_account: ScoreAppAccount) => {
+const handleScoreAppAccountAdded = async (
+	scoreapp_account: ScoreAppAccount
+) => {
 	await refreshScoreAppAccount();
 };
 
@@ -473,7 +531,9 @@ const handleDeleteScoreAppAccountConfirmed = async () => {
 	} catch (err: any) {
 		console.error('Error deleting ScoreApp Integration:', err);
 		const errorMessage =
-			err.data?.detail || err.message || 'Could not delete ScoreApp Integration.';
+			err.data?.detail ||
+			err.message ||
+			'Could not delete ScoreApp Integration.';
 		toast.add({ title: 'Error', description: errorMessage, color: 'red' });
 	} finally {
 		isDeletingInProgress.value = false;
@@ -521,7 +581,7 @@ const openEditPromptModal = (prompt: Prompt) => {
 
 const closeEditPromptModal = () => {
 	isEditPromptModalOpen.value = false;
-	promptToEdit.value = null; 
+	promptToEdit.value = null;
 };
 
 const handlePromptUpdated = async (updatedPrompt: Prompt) => {
@@ -540,7 +600,7 @@ const openAddPromptModal = (prompt: Prompt) => {
 
 const closeAddPromptModal = () => {
 	isAddPromptModalOpen.value = false;
-	promptToAdd.value = null; 
+	promptToAdd.value = null;
 };
 
 const handlePromptAdded = async (addedPrompt: Prompt) => {
@@ -559,7 +619,7 @@ const openRevertPromptModal = (prompt: Prompt) => {
 
 const closeRevertPromptModal = () => {
 	isRevertPromptModalOpen.value = false;
-	promptToRevert.value = null; 
+	promptToRevert.value = null;
 };
 
 const handlePromptReverted = async (revertedPrompt: Prompt) => {
@@ -611,64 +671,63 @@ const handleDeleteAccountConfirmed = async () => {
 		});
 
 		router.push('/');
-		
 	} catch (err: any) {
 		console.error('Error deleting account:', err);
 		const errorMessage =
 			err.data?.detail || err.message || 'Could not delete account.';
-		
-		toast.add({ 
-			title: 'Error', 
-			description: errorMessage, 
-			color: 'red' 
+
+		toast.add({
+			title: 'Error',
+			description: errorMessage,
+			color: 'red',
 		});
-		
+
 		// Keep modal open on error so user can retry
 	}
 };
 </script>
 
 <style scoped>
-.account-page-layout {
-  display: flex;
-  min-height: 100vh;
-}
+/* .account-page-layout {
+	display: flex;
+	min-height: 100vh;
+} */
 
 .account-sidebar {
-  width: 250px;
-  background: #f8f9fa;
-  border-right: 1px solid #dee2e6;
-  padding: 1rem;
+	width: 250px;
+	background: #f8f9fa;
+	border-right: 1px solid #dee2e6;
+	padding: 1rem;
 }
 
 .account-content {
-  flex: 1;
-  padding: 2rem;
-  overflow-y: auto;
+	flex: 1;
+	padding: 2rem;
+	overflow-y: auto;
 }
 
 .account-sidebar nav ul {
-  list-style: none;
-  padding: 0;
+	list-style: none;
+	padding: 0;
 }
 
 .account-sidebar nav li {
-  margin-bottom: 0.5rem;
+	margin-bottom: 0.5rem;
 }
 
 .account-sidebar nav button {
-  width: 100%;
-  text-align: left;
-  padding: 0.75rem 1rem;
-  border: none;
-  background: transparent;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
+	width: 100%;
+	text-align: left;
+	padding: 0.75rem 1rem;
+	border: none;
+	background: transparent;
+	border-radius: 0.375rem;
+	cursor: pointer;
+	transition: background-color 0.2s;
 }
 
 .account-sidebar nav button:hover,
 .account-sidebar nav button.active {
-  background-color: #e9ecef;
+	background-color: #e9ecef;
 }
 </style>

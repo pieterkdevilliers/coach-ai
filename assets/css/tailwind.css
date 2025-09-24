@@ -703,6 +703,11 @@ to-purple-800;
 	.layout--text_page .form-component .message {
 		@apply text-slate-500 text-sm;
 	}
+
+	/* My Account */
+	.account__page-layout {
+		@apply flex min-h-screen;
+	}
 }
 
 @layer components {
