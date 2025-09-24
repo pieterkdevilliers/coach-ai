@@ -75,25 +75,29 @@
 					<h2 class="heading heading--h2 page__title">
 						Available Products - Under Construction
 					</h2>
+					<!-- Add Product button -->
+					<UButton
+						icon="i-heroicons:plus-circle-16-solid"
+						variant="solid"
+						label="Add Product"
+						@click="isAddAccountProductModalOpen = true"
+					/>
 				</div>
 				<div class="subscription-grid card-grid">
-					<div class="card__outer">
-						<WebhookCard
-							:webhook="webhook"
-							@edit-webhook-clicked="openEditWebhookModal"
-						/>
-					</div>
-					<div class="card__outer">
-						<ScoreAppWebhookIntegration
-							:scoreapp_account="scoreapp_account"
-							@edit-scoreapp-account-clicked="
-								openEditScoreAppAccountModal
+					<div
+						v-for="account_product in account_products.user_products"
+						class="card__outer"
+					>
+						<AccountProductCard
+							:account_product="account_product"
+							@edit-account-product-clicked="
+								openEditAccountProductModal
 							"
-							@add-scoreapp-account-clicked="
-								openAddScoreAppAccountModal
+							@add-account-product-clicked="
+								openAddAccountProductModal
 							"
-							@delete-scoreapp-account-clicked="
-								openDeleteConfirmation
+							@delete-account-product-clicked="
+								openConfirmDeleteAccountProductModal
 							"
 						/>
 					</div>
@@ -110,82 +114,52 @@
 					<h2 class="heading heading--h2 page__title">
 						My Subscriptions
 					</h2>
+					<div v-if="!activeSubscription" class="text-center">
+						<p>
+							To subscribe to a plan, please click the button
+							below.
+						</p>
+						<UButton
+							label="Subscribe Now"
+							icon="i-heroicons:plus-circle-16-solid"
+							variant="solid"
+							@click="openSubscriptionModal"
+							class="mt-3"
+						/>
+					</div>
 				</div>
-				<div v-if="!activeSubscription" class="text-center">
-					<p>
-						To subscribe to a plan, please click the button below.
-					</p>
-					<UButton
-						label="Subscribe Now"
-						icon="i-heroicons:plus-circle-16-solid"
-						variant="solid"
-						@click="openSubscriptionModal"
-						class="mt-3"
-					/>
-			</div>
-		</div>
-      </section>
-      
-      <!-- Webhooks Section -->
-      <section v-if="activeSection === 'webhooks'" class="my-subscriptions container--default mx-auto">
-        <!-- Your existing webhooks content -->
-		<h2 class="heading heading--h2 page__title">Integration Webhooks</h2>
-		<div class="subscription-grid card-grid">
-			<div class="card__outer">
-				<WebhookCard
-					:webhook="webhook"
-					@edit-webhook-clicked="openEditWebhookModal"
-				/>
-			</div>
-			<div class="card__outer">
-				<ScoreAppWebhookIntegration
-					:scoreapp_account="scoreapp_account"
-					@edit-scoreapp-account-clicked="openEditScoreAppAccountModal"
-					@add-scoreapp-account-clicked="openAddScoreAppAccountModal"
-					@delete-scoreapp-account-clicked="openDeleteConfirmation"
-				/>
-			</div>
-		</div>
-      </section>
+				<div class="search-pagination-container"></div>
+				<div class="subscription-grid card-grid">
+					<div
+						v-for="subscription in subscriptions?.subscriptions"
+						:key="subscription.id"
+						class="card__outer"
+					>
+						<SubscriptionCard
+							:subscription="subscription"
+							@subscription-canceled="handleSubscriptionCanceled"
+						/>
+					</div>
+				</div>
+			</section>
 
-	  <!-- Products Section -->
-      <section v-if="activeSection === 'products'" class="my-subscriptions container--default mx-auto">
-		<div>
-			<!-- Add Product button -->
-			<UButton
-			icon="i-heroicons-plus-circle"
-			class="bg-blue-600 text-white"
-			@click="isAddAccountProductModalOpen = true"
+			<!-- Account Settings Section -->
+			<section
+				v-if="activeSection === 'account' && isAccountOwner"
+				class="account-settings container--default mx-auto"
 			>
-			Add Product
-			</UButton>
-		</div>
-        <!-- Your existing products content -->
-		<h2 class="heading heading--h2 page__title">Available Products - Under Construction</h2>
-		<div class="subscription-grid card-grid">
-			<div v-for="account_product in account_products.user_products" class="card__outer">
-				<AccountProductCard
-					:account_product="account_product"
-					@edit-account-product-clicked="openEditAccountProductModal"
-					@add-account-product-clicked="openAddAccountProductModal"
-					@delete-account-product-clicked="openConfirmDeleteAccountProductModal"
-				/>
-			</div>
-		</div>
-      </section>
-      
-      <!-- Subscriptions Section -->
-      <section v-if="activeSection === 'subscriptions'" class="my-subscriptions container--default mx-auto">
-        <!-- Your existing subscriptions content -->
-		<div class="page-header">
-			<h2 class="heading heading--h2 page__title">My Subscriptions</h2>
-			<div v-if="!activeSubscription" class="text-center">
-				<p>To subscribe to a plan, please click the button below.</p>
-				<UButton
-					label="Delete My Account"
-					color="red"
-					@click="openConfirmDeleteAccountModal"
-				/>
+				<div class="page-header">
+					<h2 class="heading heading--h2 page__title">
+						Account Settings
+					</h2>
+					<UButton
+						icon="i-heroicons:exclamation-triangle-20-solid"
+						label="Delete My Account"
+						variant="solid"
+						color="red"
+						@click="openConfirmDeleteAccountModal"
+					/>
+				</div>
 			</section>
 		</main>
 
@@ -229,7 +203,11 @@
 	<!-- Delete ScoreApp Account Modal -->
 	<ConfirmDeleteModal
 		:is-open="isConfirmDeleteModalOpen"
-		:item-name="scoreappAccountToDelete ? scoreappAccountToDelete.account.scoreapp_id : ''"
+		:item-name="
+			scoreappAccountToDelete
+				? scoreappAccountToDelete.account.scoreapp_id
+				: ''
+		"
 		@update:is-open="isConfirmDeleteModalOpen = $event"
 		@confirm="handleDeleteScoreAppAccountConfirmed"
 		@cancel="closeConfirmDeleteModal"
@@ -288,7 +266,9 @@
 	<!-- Delete Account Product Modal -->
 	<ConfirmDeleteAccountProductModal
 		:is-open="isConfirmDeleteAccountProductModalOpen"
-		:item-name="accountProductToDelete ? accountProductToDelete.product_title : ''"
+		:item-name="
+			accountProductToDelete ? accountProductToDelete.product_title : ''
+		"
 		@update:is-open="isConfirmDeleteAccountProductModalOpen = $event"
 		@confirm="handleDeleteAccountProductConfirmed"
 		@cancel="handleCancelDeleteAccountProduct"
@@ -311,7 +291,7 @@ import AccountProductCard from '~/components/AccountProductCard.vue';
 import EditWebhookModal from '~/components/EditWebhookModal.vue';
 import EditPromptModal from '~/components/EditPromptModal.vue';
 import EditAccountProductModal from '~/components/EditAccountProductModal.vue';
-import EditScoreAppAccountModal from '~/components/EditScoreAppAccountModal.vue'
+import EditScoreAppAccountModal from '~/components/EditScoreAppAccountModal.vue';
 import AddPromptModal from '~/components/AddPromptModal.vue';
 import AddAccountProductModal from '~/components/AddAccountProductModal.vue';
 import RevertPromptModal from '~/components/RevertPromptModal.vue';
@@ -336,12 +316,21 @@ watch(activeSection, (newSection) => {
 
 // Optional: Read initial section from URL
 onMounted(() => {
-  const urlParams = new URLSearchParams(window.location.search)
-  const section = urlParams.get('section')
-  if (section && ['prompts', 'webhooks', 'products', 'subscriptions', 'account'].includes(section)) {
-    activeSection.value = section
-  }
-})
+	const urlParams = new URLSearchParams(window.location.search);
+	const section = urlParams.get('section');
+	if (
+		section &&
+		[
+			'prompts',
+			'webhooks',
+			'products',
+			'subscriptions',
+			'account',
+		].includes(section)
+	) {
+		activeSection.value = section;
+	}
+});
 
 const authStore = useAuthStore();
 const toast = useToast(); // For notifications
@@ -745,31 +734,36 @@ const handleDeleteAccountConfirmed = async () => {
 };
 
 interface AccountProduct {
-  id: number;
-  product_title: string;
-  product_description: string;
-  product_sale_url: string;
-  who_is_this_for: string;
-  is_active: boolean;
-  account_unique_id: string;
+	id: number;
+	product_title: string;
+	product_description: string;
+	product_sale_url: string;
+	who_is_this_for: string;
+	is_active: boolean;
+	account_unique_id: string;
 }
 
 const {
 	data: account_products,
 	error: accountProductError,
 	refresh: refreshAccountProducts,
-} = await useFetch(`${config.public.apiBase}/user-products/${uniqueAccountId}`, {
-	method: 'GET',
-	headers: {
-		accept: 'application/json',
-		Authorization: `Bearer ${apiAuthorizationToken}`,
-	},
-});
-console.log("Account Products in index file: ", account_products.value)
-
+} = await useFetch(
+	`${config.public.apiBase}/user-products/${uniqueAccountId}`,
+	{
+		method: 'GET',
+		headers: {
+			accept: 'application/json',
+			Authorization: `Bearer ${apiAuthorizationToken}`,
+		},
+	}
+);
+console.log('Account Products in index file: ', account_products.value);
 
 if (error.value) {
-	console.error('Error fetching scoreapp account:', accountProductError.value);
+	console.error(
+		'Error fetching scoreapp account:',
+		accountProductError.value
+	);
 } else {
 	console.log('Stored Unique Account ID:', authStore.uniqueAccountId);
 }
@@ -786,7 +780,7 @@ const openEditAccountProductModal = (account_product: AccountProduct) => {
 
 const closeEditAccountProductModal = () => {
 	isEditAccountProductModalOpen.value = false;
-	accountProductToEdit.value = null; 
+	accountProductToEdit.value = null;
 };
 
 const handleAccountProductUpdated = async (account_product: AccountProduct) => {
@@ -805,10 +799,12 @@ const openAddAccountProductModal = (account_product: AccountProduct) => {
 
 const closeAddAccountProductModal = () => {
 	isAddAccountProductModalOpen.value = false;
-	accountProductToAdd.value = null; 
+	accountProductToAdd.value = null;
 };
 
-const handleAccountProductAdded = async (addedAccountProduct: AccountProduct) => {
+const handleAccountProductAdded = async (
+	addedAccountProduct: AccountProduct
+) => {
 	await refreshAccountProducts();
 };
 
@@ -817,8 +813,9 @@ const handleAccountProductAdded = async (addedAccountProduct: AccountProduct) =>
 const accountProductToDelete = ref<AccountProduct | null>(null);
 const isConfirmDeleteAccountProductModalOpen = ref(false);
 
-
-const openConfirmDeleteAccountProductModal = (account_product: AccountProduct) => {
+const openConfirmDeleteAccountProductModal = (
+	account_product: AccountProduct
+) => {
 	accountProductToDelete.value = account_product;
 	isConfirmDeleteAccountProductModalOpen.value = true;
 };
@@ -857,28 +854,27 @@ const handleDeleteAccountProductConfirmed = async () => {
 			description: 'Product successfully deleted.',
 			color: 'green',
 		});
-		
 	} catch (err: any) {
 		console.error('Error deleting product:', err);
 		const errorMessage =
 			err.data?.detail || err.message || 'Could not delete product.';
-		
-		toast.add({ 
-			title: 'Error', 
-			description: errorMessage, 
-			color: 'red' 
+
+		toast.add({
+			title: 'Error',
+			description: errorMessage,
+			color: 'red',
 		});
-		
+
 		// Keep modal open on error so user can retry
 	}
 };
 </script>
 
 <style scoped>
-/* .account-page-layout {
+.account-page-layout {
 	display: flex;
 	min-height: 100vh;
-} */
+}
 
 .account-sidebar {
 	width: 250px;
@@ -887,11 +883,11 @@ const handleDeleteAccountProductConfirmed = async () => {
 	padding: 1rem;
 }
 
-.account-content {
+/* .account-content {
 	flex: 1;
 	padding: 2rem;
 	overflow-y: auto;
-}
+} */
 
 .account-sidebar nav ul {
 	list-style: none;
