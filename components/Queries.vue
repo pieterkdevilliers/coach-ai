@@ -122,7 +122,7 @@ onMounted(() => {
 	email.value = 'test@example.com'; 
 	
 	// Add welcome message
-	addMessage('Welcome! How can I help you today?', 'bot');
+	addMessage('Welcome! You can run test queries here and see how you might want to improve your main prompt.', 'bot');
 });
 
 const addMessage = (text: string, type: 'user' | 'bot' | 'loading' | 'error', sources?: ProcessedSource[]) => {
