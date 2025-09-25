@@ -1,5 +1,6 @@
 <template>
 	<UCard>
+		<UIcon name="i-lucide:webhook" size="32" class="card-figure--right" />
 		<p class="paragraph-label-text block">
 			<strong class="paragraph-label-text__label"
 				>Contact Us Webhook Destination URL:</strong
@@ -46,7 +47,7 @@ const { webhook } = defineProps<{
 		// The object passed from the parent has an 'account' key
 		account: {
 			webhook_url: string;
-			opt_in_webhook_url: string
+			opt_in_webhook_url: string;
 		};
 	};
 }>();

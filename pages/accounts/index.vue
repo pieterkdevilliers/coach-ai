@@ -18,6 +18,12 @@
 						Account Prompts
 					</h2>
 				</div>
+				<div class="heading--meta">
+					<p>
+						Manage your account prompts here. You can add, edit, or
+						revert to previous prompts as needed.
+					</p>
+				</div>
 				<div>
 					<div v-if="account_prompt" class="card__outer">
 						<AccountPromptCard
@@ -40,6 +46,12 @@
 					<h2 class="heading heading--h2 page__title">
 						Integration Webhooks
 					</h2>
+				</div>
+				<div class="heading--meta">
+					<p>
+						Manage your webhook integrations here. You can add,
+						edit, or delete webhooks as needed.
+					</p>
 				</div>
 				<div class="subscription-grid card-grid">
 					<div class="card__outer">
@@ -82,6 +94,12 @@
 						label="Add Product"
 						@click="isAddAccountProductModalOpen = true"
 					/>
+				</div>
+				<div class="heading--meta">
+					<p>
+						Manage your account products here. You can add, edit, or
+						delete products as needed.
+					</p>
 				</div>
 				<div class="subscription-grid card-grid">
 					<div
@@ -128,6 +146,12 @@
 						/>
 					</div>
 				</div>
+				<div v-if="activeSubscription" class="heading--meta">
+					<p>
+						You have an active subscription. Manage your
+						subscription below.
+					</p>
+				</div>
 				<div class="search-pagination-container"></div>
 				<div class="subscription-grid card-grid">
 					<div
@@ -159,6 +183,12 @@
 						color="red"
 						@click="openConfirmDeleteAccountModal"
 					/>
+				</div>
+				<div class="heading--meta">
+					<p>
+						Manage your account settings here. You can delete your
+						account if needed.
+					</p>
 				</div>
 			</section>
 		</main>
@@ -870,47 +900,4 @@ const handleDeleteAccountProductConfirmed = async () => {
 };
 </script>
 
-<style scoped>
-.account-page-layout {
-	display: flex;
-	min-height: 100vh;
-}
-
-.account-sidebar {
-	width: 250px;
-	background: #f8f9fa;
-	border-right: 1px solid #dee2e6;
-	padding: 1rem;
-}
-
-/* .account-content {
-	flex: 1;
-	padding: 2rem;
-	overflow-y: auto;
-} */
-
-.account-sidebar nav ul {
-	list-style: none;
-	padding: 0;
-}
-
-.account-sidebar nav li {
-	margin-bottom: 0.5rem;
-}
-
-.account-sidebar nav button {
-	width: 100%;
-	text-align: left;
-	padding: 0.75rem 1rem;
-	border: none;
-	background: transparent;
-	border-radius: 0.375rem;
-	cursor: pointer;
-	transition: background-color 0.2s;
-}
-
-.account-sidebar nav button:hover,
-.account-sidebar nav button.active {
-	background-color: #e9ecef;
-}
-</style>
+<style scoped></style>

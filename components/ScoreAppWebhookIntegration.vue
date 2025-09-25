@@ -1,5 +1,10 @@
 <template>
 	<UCard>
+		<img
+			src="/assets/images/score-app-logo.webp"
+			alt="ScoreApp Logo"
+			class="card-figure--right score-app-logo"
+		/>
 		<!-- Display when scoreapp_account exists -->
 		<div v-if="scoreapp_account && scoreapp_account.account.id">
 			<p class="paragraph-label-text block">
@@ -29,7 +34,7 @@
 				</UTooltip>
 			</p>
 		</div>
-		
+
 		<!-- Display when no scoreapp_account -->
 		<div v-else class="text-center py-4">
 			<p class="text-gray-500">No ScoreApp account configured</p>
@@ -39,7 +44,10 @@
 		</div>
 
 		<template #footer>
-			<div v-if="scoreapp_account && scoreapp_account.account.scoreapp_id" class="flex gap-2">
+			<div
+				v-if="scoreapp_account && scoreapp_account.account.scoreapp_id"
+				class="flex gap-2"
+			>
 				<UTooltip text="Edit ScoreApp Account Integration">
 					<UButton
 						icon="i-heroicons:pencil-square"
@@ -68,17 +76,21 @@
 <script setup lang="ts">
 const config = useRuntimeConfig();
 const { scoreapp_account } = defineProps<{
-		scoreapp_account: {
-			account: {
-				account_unique_id: string;
-				scoreapp_id: string;
-				id: number;
-			};
-			widget_key: string
+	scoreapp_account: {
+		account: {
+			account_unique_id: string;
+			scoreapp_id: string;
+			id: number;
 		};
+		widget_key: string;
+	};
 }>();
 
-const emit = defineEmits(['edit-scoreapp-account-clicked', 'add-scoreapp-account-clicked', 'delete-scoreapp-account-clicked']);
+const emit = defineEmits([
+	'edit-scoreapp-account-clicked',
+	'add-scoreapp-account-clicked',
+	'delete-scoreapp-account-clicked',
+]);
 console.log('ScoreApp Account: ', scoreapp_account);
 const toast = useToast(); // For notifications
 const authStore = useAuthStore();
