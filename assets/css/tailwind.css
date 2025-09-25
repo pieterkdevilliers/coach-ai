@@ -706,20 +706,37 @@ to-purple-800;
 
 	/* My Account */
 	.account__page-layout {
-		@apply flex min-h-screen;
+		@apply flex min-h-96;
 	}
 
 	.account__page-layout .account-content {
 		@apply flex-1 px-8 pb-8 overflow-y-auto;
 	}
+	.account__page-layout .page-header {
+		@apply mb-0;
+	}
+	.heading--meta {
+		@apply text-base mb-6;
+	}
 
 	/* My Account - Sidebar */
-	/* .account__sidebar button {
-		@apply font-normal;
+	.account__sidebar {
+		@apply bg-purple-50/75 min-w-48;
 	}
-	.account__sidebar button.active {
-		@apply text-gradient font-semibold;
-	} */
+	.account__sidebar a.vertical-nav-inactive-class * {
+		@apply text-purple-800;
+	}
+	.account__sidebar a.vertical-nav-active-class::before {
+		@apply bg-purple-100/75;
+	}
+
+	/* My Account - Webhooks */
+	.card-figure--right {
+		@apply flex justify-self-end self-start text-purple-500;
+	}
+	.score-app-logo {
+		@apply w-36 h-auto;
+	}
 
 	/* My Account - Subscriptions */
 	.my-subscriptions .search-pagination-container:empty {
