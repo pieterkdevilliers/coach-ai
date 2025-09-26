@@ -190,6 +190,14 @@
 						account if needed.
 					</p>
 				</div>
+				<div>
+					<div class="card__outer">
+						<LLMVarsCard
+							:llm_vars="llm_vars"
+							@edit-llmvars-clicked="openEditLLMVarsModal"
+						/>
+					</div>
+				</div>
 			</section>
 		</main>
 
@@ -197,6 +205,14 @@
 	</div>
 
 	<SubscriptionModal v-model="isSubscriptionModalOpen" />
+
+	<!-- Edit LLM Vars Modal -->
+	<EditLLMVarsModal
+		:is-open="isEditLLMVarsModalOpen"
+		:llm_vars="llmVarsToEdit"
+		@close="closeEditLLMVarsModal"
+		@llmvars-updated="handleLLMVarsUpdated"
+	/>
 
 	<!-- Edit Webook Modal -->
 	<EditWebhookModal
@@ -313,6 +329,8 @@ const config = useRuntimeConfig();
 import SubscriptionCard from '~/components/SubscriptionCard.vue';
 import SubscriptionModal from '~/components/SubscriptionModal.vue';
 import WebhookCard from '~/components/WebhookCard.vue';
+import LLMVarsCard from '~/components/LLMVarsCard.vue';
+import EditLLMVarsModal from '~/components/EditLLMVarsModal.vue';
 import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue';
 import ScoreAppWebhookIntegration from '~/components/ScoreAppWebhookIntegration.vue';
 import AddScoreAppAccountModal from '~/components/AddScoreAppAccountModal.vue';
@@ -898,6 +916,70 @@ const handleDeleteAccountProductConfirmed = async () => {
 		// Keep modal open on error so user can retry
 	}
 };
+
+// --- State for Edit LLM Vars Modals ---
+interface AccountLLMVars {
+  id: number;
+  relevance_score: number;
+  temperature: number;
+  k_value: number;
+  sources_returned: number;
+  chunk_size: number;
+  chunk_overlap: number;
+}
+
+interface AccountResponse {
+  account: AccountLLMVars;
+}
+
+interface LLMVars {
+  account: {
+    id: number;
+    relevance_score: number;
+    temperature: number;
+    k_value: number;
+    sources_returned: number;
+    chunk_size: number;
+    chunk_overlap: number;
+  };
+}
+
+const {
+	data: llm_vars,
+	error: llmVarsError,
+	refresh: refreshLLMVars,
+} = await useFetch<AccountResponse>(`${config.public.apiBase}/accounts/${uniqueAccountId}`, {
+	method: 'GET',
+	headers: {
+		accept: 'application/json',
+		Authorization: `Bearer ${apiAuthorizationToken}`,
+	},
+});
+
+if (error.value) {
+	console.error('Error fetching llm vars:', llmVarsError.value);
+} else {
+	console.log('Stored Unique Account ID:', authStore.uniqueAccountId);
+}
+
+const llmVarsToEdit = ref<LLMVars | null>(null);
+const isEditLLMVarsModalOpen = ref(false);
+
+const openEditLLMVarsModal = (llm_vars: LLMVars) => {
+	llmVarsToEdit.value = llm_vars;
+	isEditLLMVarsModalOpen.value = true;
+};
+
+const closeEditLLMVarsModal = () => {
+	isEditLLMVarsModalOpen.value = false;
+	llmVarsToEdit.value = null;
+};
+
+const handleLLMVarsUpdated = async () => {
+	console.log("Refreshing LLM Vars")
+  await refreshLLMVars(); // will trigger reactivity automatically
+};
+
 </script>
 
 <style scoped></style>
