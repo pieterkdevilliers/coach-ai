@@ -228,7 +228,7 @@ const handleSendMessage = async () => {
     });
 
     // Get AI response from internal query endpoint
-    const response = await fetch(`${config.public.apiBase}/internal/widget/query`, {
+    const response = await fetch(`${config.public.apiBase}/internal/widget/agent-query`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
