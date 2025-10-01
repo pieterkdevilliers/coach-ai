@@ -226,6 +226,16 @@
 				align-self: flex-start;
 				border-bottom-left-radius: 4px;
 			}
+			.ai-chat-message.bot-streaming {
+				background-color: #f0f4f8; /* light gray / choose any color */
+				color: #111;               /* text color */
+				padding: 12px 16px;
+				border-radius: 12px;
+				margin: 6px 0;
+				max-width: 80%;
+				word-wrap: break-word;
+				white-space: pre-wrap;     /* preserves line breaks from Markdown */
+			}
 			/* Add this rule to give paragraphs some breathing room */
 			.ai-chat-message.bot p {
 				margin: 0 0 0.75em 0; /* Add some margin to the bottom of each paragraph */
@@ -901,204 +911,218 @@
 		});
 	}
 
-	function displayMessage(responseText, processedSourcesArray, type) {
-		const messageElement = document.createElement('div');
-		messageElement.classList.add('ai-chat-message', type);
+function displayMessage(responseText, processedSourcesArray, type, isStreaming = false) {
+	const messageElement = document.createElement('div');
+	messageElement.classList.add('ai-chat-message', type);
 
-		const p = document.createElement('p');
-		
-		if (type === 'bot') {
-			p.innerHTML = renderMarkdown(responseText);
-		} else {
-			p.innerHTML = linkifyText(responseText);
-		}
-		messageElement.appendChild(p);
+	const p = document.createElement('p');
+	p.classList.add('ai-chat-text');
 
-		if (
-			type === 'bot' &&
-			processedSourcesArray &&
-			processedSourcesArray.length > 0
-		) {
-			const sourcesWrapper = document.createElement('div');
-			sourcesWrapper.className = 'ai-chat-message-sources';
-			const sourcesTitle = document.createElement('strong');
-			sourcesTitle.textContent =
-				'Sources - For more information, click on the source links below:';
-			sourcesWrapper.appendChild(sourcesTitle);
-			const sourcesList = document.createElement('ul');
-			processedSourcesArray.forEach((source) => {
-				const listItem = document.createElement('li');
-				const link = document.createElement('a');
-				link.href = '#';
-				link.textContent = source.displayName;
-				link.style.color = config.themeColor || '#db2777';
-				link.style.textDecoration = 'underline';
-				link.style.cursor = 'pointer';
-				link.onclick = (e) => {
-					e.preventDefault();
-					console.log(
-						'Opening source:',
-						source.displayName,
-						source.viewUrl
-					);
-					showPdfInIframeModal(source.displayName, source.viewUrl);
-				};
-				listItem.appendChild(link);
-				sourcesList.appendChild(listItem);
-			});
-			sourcesWrapper.appendChild(sourcesList);
-			messageElement.appendChild(sourcesWrapper);
-		}
-		messagesContainer.appendChild(messageElement);
-		messagesContainer.scrollTop = messagesContainer.scrollHeight;
-		return messageElement;
+	if (type === 'bot' && !isStreaming) {
+		p.innerHTML = renderMarkdown(responseText);
+	} else if (type === 'bot-streaming') {
+		p.textContent = responseText;
+	} else {
+		p.innerHTML = linkifyText(responseText);
 	}
 
-	async function handleSendMessage() {
-		const question = messageInput.value.trim();
-		if (!question) return;
-		displayMessage(question, [], 'user');
-		messageInput.value = '';
-		messageInput.disabled = true;
-		sendButton.disabled = true;
-		const loadingElement = displayMessage('Thinking...', [], 'loading');
-		try {
-			console.log(
-				'Sending chat message to API for accountId:',
-				accountId
-			);
-			console.log(
-				'Inside handleSendMessage USER Chat session ID:',
-				sessionId,
-				'Visitor UUID:',
-				visitorUuid,
-				'Visitor email:',
-				email,
-			);
-			await fetch(chatMessageApiEndpoint, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'X-API-Key': apiKey,
-				},
-				body: JSON.stringify({
-					message_text: question,
-					sender_type: 'user',
-					accountId: accountId,
-					chat_session_id: sessionId,
-					visitor_uuid: visitorUuid,
-					email: email,
-					sources: [],
-				}),
-			});
-		} catch (error) {
-			console.error('Chat Message API Call Error:', error);
-			// We don't want to block the chat response on this call, so we log it but don't display an error message
-		}
-		try {
-			console.log(
-				'Sending query to API:',
-				question,
-				'for accountId:',
+	messageElement.appendChild(p);
+
+	if (
+		type === 'bot' &&
+		processedSourcesArray &&
+		processedSourcesArray.length > 0
+	) {
+		const sourcesWrapper = document.createElement('div');
+		sourcesWrapper.className = 'ai-chat-message-sources';
+
+		const sourcesTitle = document.createElement('strong');
+		sourcesTitle.textContent =
+			'Sources - For more information, click on the source links below:';
+		sourcesWrapper.appendChild(sourcesTitle);
+
+		const sourcesList = document.createElement('ul');
+		processedSourcesArray.forEach((source) => {
+			const listItem = document.createElement('li');
+			const link = document.createElement('a');
+			link.href = '#';
+			link.textContent = source.displayName;
+			link.style.color = config.themeColor || '#db2777';
+			link.style.textDecoration = 'underline';
+			link.style.cursor = 'pointer';
+			link.onclick = (e) => {
+				e.preventDefault();
+				showPdfInIframeModal(source.displayName, source.viewUrl);
+			};
+			listItem.appendChild(link);
+			sourcesList.appendChild(listItem);
+		});
+		sourcesWrapper.appendChild(sourcesList);
+		messageElement.appendChild(sourcesWrapper);
+	}
+
+	messagesContainer.appendChild(messageElement);
+	messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+	return messageElement;
+}
+
+async function handleSendMessage() {
+	const question = messageInput.value.trim();
+	if (!question) return;
+
+	displayMessage(question, [], 'user');
+	messageInput.value = '';
+	messageInput.disabled = true;
+	sendButton.disabled = true;
+
+	const loadingElement = displayMessage('Thinking...', [], 'loading');
+
+	// Fire-and-forget: save user message
+	try {
+		await fetch(chatMessageApiEndpoint, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', 'X-API-Key': apiKey },
+			body: JSON.stringify({
+				message_text: question,
+				sender_type: 'user',
 				accountId,
-				'with apiKey:',
-				apiKey.substring(0, 8) + '...',
-				'with chat_session_id:',
-				sessionId,
-				'Visitor UUID:',
-				visitorUuid,
-				'Visitor email:',
+				chat_session_id: sessionId,
+				visitor_uuid: visitorUuid,
 				email,
-			);
-			const response = await fetch(widgetApiEndpoint, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'X-API-Key': apiKey,
-				},
-				body: JSON.stringify({
-					query: question,
-					chat_session_id: sessionId,
-					visitor_uuid: visitorUuid,
-					email: email,
-				}),
-			});
-			messagesContainer.removeChild(loadingElement);
-			if (!response.ok) {
-				const errorData = await response.json().catch(() => ({
-					detail: 'Server returned an unparsable error.',
-				}));
-				console.error('API Error Response:', errorData);
-				throw new Error(
-					errorData.detail || `API Error: ${response.status}`
-				);
-			}
-			const data = await response.json();
-			console.log('API Success Response:', data);
-			if (data && data.response && data.response.response_text) {
-				const rawSources = data.response.sources || [];
-				const displayableSources = processSourcesForDisplay(
-					rawSources,
-					accountId
-				);
-				displayMessage(
-					data.response.response_text,
-					displayableSources,
-					'bot'
-				);
-				try {
-					console.log(
-						'Sending chat message to API for accountId:',
-						accountId
-					);
-					console.log(
-						'Inside handleSendMessage BOT Chat session ID:',
-						sessionId,
-						'Visitor UUID:',
-						visitorUuid
-					);
-					await fetch(chatMessageApiEndpoint, {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json',
-							'X-API-Key': apiKey,
-						},
-						body: JSON.stringify({
-							message_text: data.response.response_text,
-							sender_type: 'bot',
-							accountId: accountId,
-							chat_session_id: sessionId,
-							visitor_uuid: visitorUuid,
-							sources: data.response.sources,
-						}),
-					});
-				} catch (error) {
-					console.error('Chat Message API Call Error:', error);
-					// We don't want to block the chat response on this call, so we log it but don't display an error message
-				}
-			} else {
-				console.error(
-					'API response structure unexpected. Expected data.response.response_text.',
-					data
-				);
-				displayMessage(
-					'Sorry, I received an unexpected response from the server.',
-					[],
-					'error'
-				);
-			}
-		} catch (error) {
-			console.error('Widget API Call Error:', error);
-			if (loadingElement && messagesContainer.contains(loadingElement)) {
-				messagesContainer.removeChild(loadingElement);
-			}
-			displayMessage(`Error: ${error.message}`, [], 'error');
-		} finally {
-			messageInput.disabled = false;
-			sendButton.disabled = false;
-			messageInput.focus();
-		}
+				sources: [],
+			}),
+		});
+	} catch (error) {
+		console.error('Chat Message API Call Error:', error);
 	}
+
+	try {
+		const response = await fetch(widgetApiEndpoint, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', 'X-API-Key': apiKey },
+			body: JSON.stringify({
+				query: question,
+				chat_session_id: sessionId,
+				visitor_uuid: visitorUuid,
+				email,
+			}),
+		});
+
+		if (loadingElement && messagesContainer.contains(loadingElement)) {
+			messagesContainer.removeChild(loadingElement);
+		}
+
+		if (!response.ok) {
+			const errorData = await response.json().catch(() => ({
+				detail: 'Server returned an unparsable error.',
+			}));
+			throw new Error(errorData.detail || `API Error: ${response.status}`);
+		}
+
+		const reader = response.body.getReader();
+		const decoder = new TextDecoder("utf-8");
+		let buffer = "";
+		let botMessage = "";
+		let sources = [];
+
+		// Persistent streaming bubble
+		const streamingElement = displayMessage("", [], 'bot-streaming', true);
+		const streamingTextEl = streamingElement.querySelector(".ai-chat-text");
+
+		while (true) {
+			const { done, value } = await reader.read();
+			if (done) break;
+
+			buffer += decoder.decode(value, { stream: true });
+			const parts = buffer.split("\n\n");
+			buffer = parts.pop();
+
+			for (const part of parts) {
+				if (!part.startsWith("data:")) continue;
+				try {
+					const chunk = JSON.parse(part.replace("data: ", ""));
+					if (chunk.type === "chunk") {
+						// Append directly to the existing textContent
+						botMessage += chunk.content;
+						for (const char of chunk.content) {
+							streamingTextEl.textContent += char;
+							messagesContainer.scrollTop = messagesContainer.scrollHeight;
+							await new Promise(r => setTimeout(r, 25)); // typing effect
+						}
+					} else if (chunk.type === "sources") {
+						sources = chunk.content || [];
+					} else if (chunk.type === "done") {
+						// Render final markdown and append sources
+						streamingTextEl.innerHTML = renderMarkdown(botMessage);
+
+						if (sources.length > 0) {
+							const displayableSources = processSourcesForDisplay(sources, accountId);
+							const sourcesWrapper = document.createElement('div');
+							sourcesWrapper.className = 'ai-chat-message-sources';
+
+							const sourcesTitle = document.createElement('strong');
+							sourcesTitle.textContent =
+								'Sources - For more information, click on the source links below:';
+							sourcesWrapper.appendChild(sourcesTitle);
+
+							const sourcesList = document.createElement('ul');
+							displayableSources.forEach((source) => {
+								const listItem = document.createElement('li');
+								const link = document.createElement('a');
+								link.href = '#';
+								link.textContent = source.displayName;
+								link.style.color = config.themeColor || '#db2777';
+								link.style.textDecoration = 'underline';
+								link.style.cursor = 'pointer';
+								link.onclick = (e) => {
+									e.preventDefault();
+									showPdfInIframeModal(source.displayName, source.viewUrl);
+								};
+								listItem.appendChild(link);
+								sourcesList.appendChild(listItem);
+							});
+							sourcesWrapper.appendChild(sourcesList);
+							streamingElement.appendChild(sourcesWrapper);
+						}
+
+						// Save final bot message
+						try {
+							await fetch(chatMessageApiEndpoint, {
+								method: 'POST',
+								headers: { 'Content-Type': 'application/json', 'X-API-Key': apiKey },
+								body: JSON.stringify({
+									message_text: botMessage,
+									sender_type: 'bot',
+									accountId,
+									chat_session_id: sessionId,
+									visitor_uuid: visitorUuid,
+									sources,
+								}),
+							});
+						} catch (error) {
+							console.error('Chat Message API Call Error:', error);
+						}
+					} else if (chunk.type === "error") {
+						displayMessage(`Error: ${chunk.content}`, [], 'error');
+					}
+				} catch (err) {
+					console.error("Failed to parse SSE chunk:", err, part);
+				}
+			}
+		}
+	} catch (error) {
+		console.error('Widget API Call Error:', error);
+		if (loadingElement && messagesContainer.contains(loadingElement)) {
+			messagesContainer.removeChild(loadingElement);
+		}
+		displayMessage(`Error: ${error.message}`, [], 'error');
+	} finally {
+		messageInput.disabled = false;
+		sendButton.disabled = false;
+		messageInput.focus();
+	}
+}
 
 	async function handleSendEmail() {
 		clearEmailFormStatus();
