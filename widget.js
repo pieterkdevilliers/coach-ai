@@ -533,7 +533,45 @@
 		console.log(config.buttonText || 'Widget styles injected.');
 	}
 
-	// --- [ Rest of your JavaScript code remains unchanged ] ---
+	function linkifyText(text) {
+    // Regex to match URLs (http, https, www)
+    const urlRegex = /((https?:\/\/|www\.)[^\s]+)/g;
+    return text.replace(urlRegex, (url) => {
+        const href = url.startsWith('http') ? url : `https://${url}`;
+        return `<a href="${href}" target="_blank" rel="noopener noreferrer" style="color:${config.themeColor || '#db2777'};text-decoration:underline;">${url}</a>`;
+    });
+}
+
+	// --- Simple Markdown Renderer ---
+	function renderMarkdown(text) {
+		if (!text) return '';
+		let html = text
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;');
+
+		// Convert headings
+		html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+		html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+		html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+
+		// Bold and italics
+		html = html.replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>');
+		html = html.replace(/\*(.*?)\*/gim, '<em>$1</em>');
+
+		// Links
+		html = html.replace(
+			/\[([^\]]+)\]\(([^)]+)\)/gim,
+			'<a href="$2" target="_blank" rel="noopener noreferrer" style="color:' +
+				(config.themeColor || '#db2777') +
+				';text-decoration:underline;">$1</a>'
+		);
+
+		// Line breaks
+		html = html.replace(/\n$/gim, '<br />');
+		return html;
+	}
+
 	// --- UI Creation Functions ---
 	function createChatToggleButton() {
 		chatToggleButton = document.createElement('button');
@@ -867,27 +905,14 @@
 		const messageElement = document.createElement('div');
 		messageElement.classList.add('ai-chat-message', type);
 
-		// Check if the message is from the bot before trying to split it
-		if (type === 'bot' && responseText) {
-			// This regex splits the text after a period, question mark, or exclamation mark
-			// that is followed by a space. It keeps the punctuation.
-			// This is a heuristic to create paragraphs from a single block of text.
-			const sentences = responseText.split(/(?<=[.?!])\s+/);
-
-			sentences.forEach((sentence) => {
-				// Ensure we don't create empty <p> tags
-				if (sentence.trim()) {
-					const p = document.createElement('p');
-					p.textContent = sentence;
-					messageElement.appendChild(p);
-				}
-			});
+		const p = document.createElement('p');
+		
+		if (type === 'bot') {
+			p.innerHTML = renderMarkdown(responseText);
 		} else {
-			// For user messages, errors, or loading text, use a single paragraph
-			const p = document.createElement('p');
-			p.textContent = responseText;
-			messageElement.appendChild(p);
+			p.innerHTML = linkifyText(responseText);
 		}
+		messageElement.appendChild(p);
 
 		if (
 			type === 'bot' &&
