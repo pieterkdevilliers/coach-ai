@@ -16,7 +16,7 @@
 	const { accountId, apiKey } = config;
 	const apiBaseUrl =
 		config.apiBaseUrl || 'https://fastapi-rag-2705cfd4c41a.herokuapp.com';
-	const widgetApiEndpoint = `${apiBaseUrl}/api/v1/widget/query`;
+	const widgetApiEndpoint = `${apiBaseUrl}/api/v1/widget/query-agent`;
 	const contactApiEndpoint = `${apiBaseUrl}/api/v1/widget/contact-us`;
 	const chatMessageApiEndpoint = `${apiBaseUrl}/api/v1/widget/messages`;
 	const widgetOptInApiEndpoint = `${apiBaseUrl}/api/v1/widget/opt-in`;
