@@ -240,29 +240,11 @@ const handleSendMessage = async () => {
   loading.value = true;
   errorMessage.value = '';
 
-  // Add loading message and store its index correctly
-  addMessage('Thinking...', 'loading');
-  const loadingMessageIndex = chatMessages.value.length - 1;
+  // Add placeholder bot message
+  addMessage('', 'bot');
+  const botMessageIndex = chatMessages.value.length - 1;
 
   try {
-    // Send user message to internal API
-    await fetch(`${config.public.apiBase}/internal/widget/messages`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiAuthorizationToken}`,
-      },
-      body: JSON.stringify({
-        message_text: question,
-        sender_type: 'user',
-        chat_session_id: sessionId.value, // send as string
-        visitor_uuid: visitorUuid.value,
-        email: email.value,
-        sources: [],
-      }),
-    });
-
-    // Get AI response from internal query endpoint
     const response = await fetch(`${config.public.apiBase}/internal/widget/agent-query`, {
       method: 'POST',
       headers: {
@@ -277,55 +259,63 @@ const handleSendMessage = async () => {
       }),
     });
 
-    // Remove loading message
-    if (chatMessages.value[loadingMessageIndex]?.type === 'loading') {
-      chatMessages.value.splice(loadingMessageIndex, 1);
-    }
-
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({
-        detail: 'Server returned an unparsable error.',
-      }));
-      throw new Error(errorData.detail || `API Error: ${response.status}`);
+      throw new Error(`API Error: ${response.status}`);
     }
 
-    const data = await response.json();
+    const reader = response.body?.getReader();
+    if (!reader) throw new Error('No readable stream available from server');
 
-    if (data?.response?.response_text) {
-      // Process sources consistently
-      const rawSources = data.response.sources || [];
-      const displayableSources = processSourcesForDisplay(rawSources);
+    let decoder = new TextDecoder();
+    let botText = '';
+    let tempSources: ProcessedSource[] = []; // store sources temporarily
 
-      // Add bot response
-      addMessage(data.response.response_text, 'bot', displayableSources);
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunkStr = decoder.decode(value, { stream: true });
 
-      // Send bot message to internal messages API
-      await fetch(`${config.public.apiBase}/internal/widget/messages`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiAuthorizationToken}`,
-        },
-        body: JSON.stringify({
-          message_text: data.response.response_text,
-          sender_type: 'bot',
-          chat_session_id: sessionId.value,
-          visitor_uuid: visitorUuid.value,
-          sources: displayableSources.map(s => s.fileIdentifier),
-        }),
-      });
-    } else {
-      addMessage('Sorry, I received an unexpected response from the server.', 'error');
+      const lines = chunkStr.split('\n');
+      for (const line of lines) {
+        if (!line.startsWith('data:')) continue;
+        const jsonStr = line.replace(/^data:\s*/, '');
+        if (!jsonStr.trim()) continue;
+
+        const eventData = JSON.parse(jsonStr);
+
+        switch (eventData.type) {
+          case 'chunk':
+            for (const char of eventData.content) {
+              botText += char;
+              chatMessages.value[botMessageIndex].text = botText;
+              await nextTick();
+              scrollToBottom();
+              await new Promise(resolve => setTimeout(resolve, 5));
+            }
+            break;
+
+          case 'sources':
+            // store temporarily, do NOT display yet
+            tempSources = processSourcesForDisplay(eventData.content || []);
+            break;
+
+          case 'error':
+            chatMessages.value[botMessageIndex].type = 'error';
+            chatMessages.value[botMessageIndex].text = eventData.content;
+            break;
+
+          case 'done':
+            // Assign sources **after typing finished**
+            chatMessages.value[botMessageIndex].sources = tempSources;
+            break;
+        }
+      }
     }
   } catch (error: any) {
     console.error('Chat API Error:', error);
-    addMessage(`Error: ${error.message}`, 'error');
+    chatMessages.value[botMessageIndex].type = 'error';
+    chatMessages.value[botMessageIndex].text = `Error: ${error.message}`;
     errorMessage.value = error.message;
-
-    // Remove loading message if still present
-    if (chatMessages.value[loadingMessageIndex]?.type === 'loading') {
-      chatMessages.value.splice(loadingMessageIndex, 1);
-    }
   } finally {
     loading.value = false;
     await nextTick();
