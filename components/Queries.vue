@@ -8,36 +8,34 @@
 			<!-- Chat Messages Container -->
 			<div class="chat-messages-container" ref="messagesContainer">
 				<div
-					v-for="(message, index) in chatMessages"
-					:key="index"
-					:class="['chat-message', message.type]"
+				v-for="(message, index) in chatMessages"
+				:key="index"
+				:class="['chat-message', message.type]"
 				>
-					<div v-if="message.type === 'bot' && message.text">
-						<p v-for="(sentence, sentenceIndex) in splitIntoSentences(message.text)" 
-						   :key="sentenceIndex" 
-						   class="message-paragraph">
-							{{ sentence }}
-						</p>
-					</div>
-					<div v-else class="message-paragraph">
-						{{ message.text }}
-					</div>
-					
-					<!-- Sources display for bot messages -->
-					<div v-if="message.type === 'bot' && message.sources && message.sources.length > 0" 
-						 class="message-sources">
-						<strong>Sources - For more information, click on the source links below:</strong>
-						<ul>
-							<li v-for="source in message.sources" :key="source.fileIdentifier">
-								<UButton
-									variant="link"
-									:label="source.displayName"
-									@click.prevent="prepareToOpenDocument(source.fileIdentifier)"
-									class="source-link"
-								/>
-							</li>
-						</ul>
-					</div>
+				<!-- Bot message with Markdown -->
+				<div v-if="message.type === 'bot' && message.text" class="message-paragraph" v-html="renderMarkdown(message.text)">
+				</div>
+
+				<!-- User message or other types -->
+				<div v-else class="message-paragraph">
+					{{ message.text }}
+				</div>
+
+				<!-- Sources display for bot messages -->
+				<div v-if="message.type === 'bot' && message.sources && message.sources.length > 0" 
+					class="message-sources">
+					<strong>Sources - For more information, click on the source links below:</strong>
+					<ul>
+					<li v-for="source in message.sources" :key="source.fileIdentifier">
+						<UButton
+						variant="link"
+						:label="source.displayName"
+						@click.prevent="prepareToOpenDocument(source.fileIdentifier)"
+						class="source-link"
+						/>
+					</li>
+					</ul>
+				</div>
 				</div>
 			</div>
 
@@ -82,6 +80,43 @@
 </template>
 
 <script setup lang="ts">
+
+import MarkdownIt from 'markdown-it';
+
+const md = new MarkdownIt({
+  linkify: true,
+  breaks: true,
+});
+
+// Add default Tailwind classes to links
+md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
+  const aIndex = tokens[idx].attrIndex('class');
+
+  const classes = 'text-blue-700 underline font-semibold hover:opacity-80';
+
+  if (aIndex < 0) {
+    tokens[idx].attrPush(['class', classes]);
+  } else {
+    tokens[idx].attrs![aIndex][1] += ' ' + classes;
+  }
+
+  // Open in new tab
+  const targetIndex = tokens[idx].attrIndex('target');
+  if (targetIndex < 0) {
+    tokens[idx].attrPush(['target', '_blank']);
+  } else {
+    tokens[idx].attrs![targetIndex][1] = '_blank';
+  }
+
+  return self.renderToken(tokens, idx, options);
+};
+
+
+const renderMarkdown = (text: string) => {
+  if (!text) return '';
+  return md.render(text); // Converts Markdown/URLs into HTML
+};
+
 const config = useRuntimeConfig();
 import { ref, computed, onMounted, nextTick } from 'vue';
 import { useAuthStore } from '~/stores/auth';
@@ -312,7 +347,6 @@ const closeDocumentModal = () => {
 	selectedFileToView.value = null;
 };
 </script>
-
 <style scoped>
 .chat-messages-container {
 	height: 400px;
@@ -347,6 +381,17 @@ const closeDocumentModal = () => {
 	color: #333;
 	align-self: flex-start;
 	border-bottom-left-radius: 4px;
+}
+
+.chat-message.bot a {
+	color: #1d4ed8;          /* blue color for links */
+	text-decoration: underline; /* always underlined */
+	cursor: pointer;
+}
+
+.chat-message.bot a:hover {
+	text-decoration: underline;
+	opacity: 0.8;             /* optional hover effect */
 }
 
 .chat-message.error {
