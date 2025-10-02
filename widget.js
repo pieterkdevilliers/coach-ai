@@ -976,8 +976,6 @@ async function handleSendMessage() {
 	messageInput.disabled = true;
 	sendButton.disabled = true;
 
-	const loadingElement = displayMessage('Thinking...', [], 'loading');
-
 	// Fire-and-forget: save user message
 	try {
 		await fetch(chatMessageApiEndpoint, {
@@ -1009,10 +1007,6 @@ async function handleSendMessage() {
 			}),
 		});
 
-		if (loadingElement && messagesContainer.contains(loadingElement)) {
-			messagesContainer.removeChild(loadingElement);
-		}
-
 		if (!response.ok) {
 			const errorData = await response.json().catch(() => ({
 				detail: 'Server returned an unparsable error.',
@@ -1025,9 +1019,10 @@ async function handleSendMessage() {
 		let buffer = "";
 		let botMessage = "";
 		let sources = [];
+		let placeholderCleared = false;
 
-		// Persistent streaming bubble
-		const streamingElement = displayMessage("", [], 'bot-streaming', true);
+		// Persistent streaming bubble (starts with "Thinking...")
+		const streamingElement = displayMessage("Thinking...", [], 'bot-streaming', true);
 		const streamingTextEl = streamingElement.querySelector(".ai-chat-text");
 
 		while (true) {
@@ -1043,8 +1038,14 @@ async function handleSendMessage() {
 				try {
 					const chunk = JSON.parse(part.replace("data: ", ""));
 					if (chunk.type === "chunk") {
-						// Append directly to the existing textContent
+						// First time real content arrives → clear placeholder
+						if (!placeholderCleared) {
+							streamingTextEl.textContent = "";
+							placeholderCleared = true;
+						}
+
 						botMessage += chunk.content;
+
 						for (const char of chunk.content) {
 							streamingTextEl.textContent += char;
 							messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -1113,9 +1114,6 @@ async function handleSendMessage() {
 		}
 	} catch (error) {
 		console.error('Widget API Call Error:', error);
-		if (loadingElement && messagesContainer.contains(loadingElement)) {
-			messagesContainer.removeChild(loadingElement);
-		}
 		displayMessage(`Error: ${error.message}`, [], 'error');
 	} finally {
 		messageInput.disabled = false;
@@ -1234,6 +1232,7 @@ async function handleSendMessage() {
 	function createOptInForm() {
 		optInFormContainer = document.createElement('div');
 		optInFormContainer.className = 'ai-chat-opt-in-form-container';
+		optInFormContainer.id = 'ai-chat-opt-in-form';
 
 		const optInFormTitle = document.createElement('h2');
 		optInFormTitle.className = 'ai-chat-opt-in-form-title';
@@ -1291,102 +1290,118 @@ async function handleSendMessage() {
 	}
 
 	// Handle Opt-In Submission
-	async function handleOptInSubmission() {
-		clearOptInFormStatus();
-		const name = optInFormNameInput.value.trim();
-		const userEmail = optInFormEmailInput.value.trim();
+// Handle Opt-In Submission
+async function handleOptInSubmission() {
+	clearOptInFormStatus();
+	const name = optInFormNameInput.value.trim();
+	const userEmail = optInFormEmailInput.value.trim();
 
-		if (!name) {
-			displayOptInFormStatus(
-				config.optInFormErrorNameRequired || 'Please enter your name.',
-				false
+	if (!name) {
+		displayOptInFormStatus(
+			config.optInFormErrorNameRequired || 'Please enter your name.',
+			false
+		);
+		optInFormNameInput.focus();
+		return;
+	}
+	if (!userEmail) {
+		displayOptInFormStatus(
+			config.optInFormErrorEmailRequired ||
+				'Please enter your email address.',
+			false
+		);
+		optInFormEmailInput.focus();
+		return;
+	}
+	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	if (!emailRegex.test(userEmail)) {
+		displayOptInFormStatus(
+			config.optInFormErrorEmailInvalid ||
+				'Please enter a valid email address.',
+			false
+		);
+		optInFormEmailInput.focus();
+		return;
+	}
+
+	optInFormSendButton.disabled = true;
+	optInFormCancelButton.disabled = true;
+	optInFormSendButton.textContent =
+		config.optInFormSendingText || 'Sending...';
+
+	try {
+		console.log(
+			'Sending opt-in form data to API for accountId:',
+			accountId
+		);
+		const response = await fetch(widgetOptInApiEndpoint, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-API-Key': apiKey,
+			},
+			body: JSON.stringify({
+				name: name,
+				email: userEmail,
+				sessionId: sessionId,
+				visitorUuid: visitorUuid,
+			}),
+		});
+
+		if (!response.ok) {
+			const errorData = await response.json().catch(() => ({
+				detail: 'Failed to process opt-in. Server error.',
+			}));
+			throw new Error(
+				errorData.detail || `API Error: ${response.status}`
 			);
-			optInFormNameInput.focus();
-			return;
 		}
-		if (!userEmail) {
-			displayOptInFormStatus(
-				config.optInFormErrorEmailRequired ||
-					'Please enter your email address.',
-				false
-			);
-			optInFormEmailInput.focus();
-			return;
-		}
-		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		if (!emailRegex.test(userEmail)) {
-			displayOptInFormStatus(
-				config.optInFormErrorEmailInvalid ||
-					'Please enter a valid email address.',
-				false
-			);
-			optInFormEmailInput.focus();
-			return;
+
+		console.log('Opt-In form submitted successfully.');
+
+		// Show success message
+		displayOptInFormStatus(
+			config.optInFormSuccessMessage ||
+				'Thank you! You will be directed to the chat now.',
+			true
+		);
+
+		// Hide the entire form (inputs + buttons), keep only the message visible
+		const optInFormContainer = document.getElementById("ai-chat-opt-in-form");
+		if (optInFormContainer) {
+			optInFormContainer.style.display = "none";
 		}
 
-		optInFormSendButton.disabled = true;
-		optInFormCancelButton.disabled = true;
-		optInFormSendButton.textContent =
-			config.optInFormSendingText || 'Sending...';
+		// Continue to chat after short delay
+		setTimeout(() => {
+			if (isOptInFormVisible) switchToChatView();
+			messagesContainer.innerHTML = ''; // Clear existing messages
+			optInCompleted = true;
+			email = userEmail;
+			displayMessage(config.welcomeMessage, [], 'bot');
+		}, 800);
 
-		try {
-			console.log(
-				'Sending opt-in form data to API for accountId:',
-				accountId
-			);
-			const response = await fetch(widgetOptInApiEndpoint, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'X-API-Key': apiKey,
-				},
-				body: JSON.stringify({
-					name: name,
-					email: userEmail,
-					sessionId: sessionId,
-					visitorUuid: visitorUuid,
-				}),
-			});
-
-			if (!response.ok) {
-				const errorData = await response.json().catch(() => ({
-					detail: 'Failed to process opt-in. Server error.',
-				}));
-				throw new Error(
-					errorData.detail || `API Error: ${response.status}`
-				);
-			}
-
-			console.log('Opt-In form submitted successfully.');
-
-			displayOptInFormStatus(
-				config.optInFormSuccessMessage ||
-					'Thank you! You will be directed to the chat now.',
-				true
-			);
-			clearOptInForm();
-			setTimeout(() => {
-				if (isOptInFormVisible) switchToChatView();
-				messagesContainer.innerHTML = ''; // Clear existing messages
-				optInCompleted = true;
-				email = userEmail;
-				displayMessage(config.welcomeMessage, [], 'bot');
-			}, 3000);
-		} catch (error) {
-			console.error('Opt-In Form API Call Error:', error);
-			displayOptInFormStatus(
-				error.message ||
-					config.optInFormGenericError ||
-					'An error occurred. Please try again.',
-				false
-			);
-		} finally {
+	} catch (error) {
+		console.error('Opt-In Form API Call Error:', error);
+		displayOptInFormStatus(
+			error.message ||
+				config.optInFormGenericError ||
+				'An error occurred. Please try again.',
+			false
+		);
+	} finally {
+		// Re-enable buttons only if the form is still visible
+		const optInFormContainer = document.getElementById("ai-chat-opt-in-form");
+		if (optInFormContainer && optInFormContainer.style.display !== "none") {
 			optInFormSendButton.disabled = false;
 			optInFormCancelButton.disabled = false;
 			optInFormSendButton.textContent =
 				config.optInFormSendButtonText || 'Opt In';
 		}
 	}
+}
+
+
 
 	// Opt-In Form Helpers
 	function clearOptInFormStatus() {

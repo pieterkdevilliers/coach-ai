@@ -241,7 +241,7 @@ const handleSendMessage = async () => {
   errorMessage.value = '';
 
   // Add placeholder bot message
-  addMessage('', 'bot');
+  addMessage('Thinking...', 'bot');
   const botMessageIndex = chatMessages.value.length - 1;
 
   try {
@@ -285,6 +285,10 @@ const handleSendMessage = async () => {
 
         switch (eventData.type) {
           case 'chunk':
+			// if it's still the placeholder, clear it
+			if (chatMessages.value[botMessageIndex].text === 'Thinking...') {
+				chatMessages.value[botMessageIndex].text = '';
+			}
             for (const char of eventData.content) {
               botText += char;
               chatMessages.value[botMessageIndex].text = botText;
