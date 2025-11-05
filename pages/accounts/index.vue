@@ -326,6 +326,7 @@
 
 <script setup lang="ts">
 const config = useRuntimeConfig();
+const { request } = useApi()
 import SubscriptionCard from '~/components/SubscriptionCard.vue';
 import SubscriptionModal from '~/components/SubscriptionModal.vue';
 import WebhookCard from '~/components/WebhookCard.vue';
@@ -639,7 +640,7 @@ const {
 	data: account_prompt,
 	error: accountPromptError,
 	refresh: refreshAccountPrompt,
-} = await useFetch(
+} = request(
 	`${config.public.apiBase}/most-recent-prompt/${uniqueAccountId}`,
 	{
 		method: 'GET',

@@ -73,168 +73,160 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed, watch } from 'vue';
+import { useAuthStore } from '~/stores/auth';
+import AddFolderForm from '~/components/AddFolderForm.vue';
+const { request } = useApi();
 const config = useRuntimeConfig();
+
 definePageMeta({
-	middleware: 'auth',
-	layout: 'user-access',
+  middleware: 'auth',
+  layout: 'user-access',
 });
 
+// -------------------------
+// Interfaces
+// -------------------------
 interface Folder {
-	id: number;
-	folder_name: string;
+  id: number;
+  folder_name: string;
 }
 
-import { ref } from 'vue';
-import { useAuthStore } from '~/stores/auth';
-import AddFolderForm from '~/components/AddFolderForm.vue'; // Import modal component
+// -------------------------
+// Stores & Utilities
+// -------------------------
 const authStore = useAuthStore();
 const toast = useToast();
 const account_unique_id = authStore.uniqueAccountId;
 const apiAuthorizationToken = authStore.access_token;
 
-// Fetch folders data with headers
-const {
-	data: folders,
-	error,
-	refresh,
-} = await useFetch(`${config.public.apiBase}/folders/${account_unique_id}`, {
-	method: 'GET',
-	headers: {
-		accept: 'application/json',
-		Authorization: `Bearer ${apiAuthorizationToken}`,
-	},
+// -------------------------
+// Fetch folders
+// -------------------------
+const { data: rawFolders, error, refresh } = request(
+  `${config.public.apiBase}/folders/${account_unique_id}`,
+  {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${apiAuthorizationToken}`,
+    },
+    default: () => null, // initially null
+  }
+);
+
+// Extract folders array safely
+const folders = computed<Folder[]>(() => {
+  if (!rawFolders.value) return [];
+  const arr = rawFolders.value?.folders ?? [];
+  return Array.isArray(arr) ? arr : [];
 });
 
-const handleFolderRemoved = (deletedFolderId: number) => {
-	console.log(
-		`Folder with ID ${deletedFolderId} was reported as deleted. Triggering refresh.`
-	);
-	refreshFolders();
-};
+// Optional: processed docs count
+const processedDocsCount = computed(() => rawFolders.value?.processed_docs_count ?? 0);
 
-// Check for errors
-if (error.value) {
-	console.error('Error fetching folders:', error.value);
-} else {
-	// Check if the response has the expected structure
-	if (folders.value) {
-		authStore.setProcessedDocsCount(folders.value.processed_docs_count);
-		console.log('Folders:', folders.value);
-		console.log('Stored Unique Account ID:', authStore.uniqueAccountId);
-	} else {
-		console.error('Unexpected response format:', folders.value);
-	}
-}
+// Error handling
+watch(error, (err) => {
+  if (err) {
+    console.error('Error fetching folders:', err);
+    toast.add({
+      title: 'Error',
+      description: err.message || 'Could not fetch folders.',
+      color: 'red',
+    });
+  }
+});
 
+// -------------------------
+// Filtering
+// -------------------------
 const q = ref('');
-
 const filteredFolders = computed(() => {
-	if (!q.value) {
-		return folders.value.folders;
-	}
-	return folders.value.folders.filter((folder) => {
-		return Object.values(folder).some((value) => {
-			return String(value).toLowerCase().includes(q.value.toLowerCase());
-		});
-	});
+  if (!q.value) return folders.value;
+  return folders.value.filter((folder) =>
+    Object.values(folder).some((v) =>
+      String(v).toLowerCase().includes(q.value.toLowerCase())
+    )
+  );
 });
 
-// Modal state
+// -------------------------
+// Modals
+// -------------------------
 const isModalOpen = ref(false);
+const openModal = () => { isModalOpen.value = true; };
+const closeModal = () => { isModalOpen.value = false; };
 
-const openModal = () => {
-	isModalOpen.value = true;
-	console.log('Modal opened');
-};
-
-const closeModal = () => {
-	isModalOpen.value = false;
-	console.log('Modal closed');
-};
-
-const refreshFolders = async () => {
-	console.log('Refreshing folders...');
-	await refresh();
-};
-
-// --- State for Edit Folder Modal ---
 const isEditModalOpen = ref(false);
 const folderToEdit = ref<Folder | null>(null);
-
 const openEditFolderModal = (folder: Folder) => {
-	folderToEdit.value = folder;
-	isEditModalOpen.value = true;
+  folderToEdit.value = folder;
+  isEditModalOpen.value = true;
+};
+const closeEditFolderModal = () => {
+  folderToEdit.value = null;
+  isEditModalOpen.value = false;
 };
 
-const closeEditFolderModal = () => {
-	isEditModalOpen.value = false;
-	folderToEdit.value = null; // Clear the selected folder
+// -------------------------
+// Refresh AI DB Modal
+// -------------------------
+const isRefreshDBModalOpen = ref(false);
+const isDbUpdating = ref(false);
+const openRefreshDBModal = () => { isRefreshDBModalOpen.value = true; };
+const closeRefreshDBModal = () => { isRefreshDBModalOpen.value = false; };
+
+const handleConfirmRefreshDB = async (replace: boolean) => {
+  isDbUpdating.value = true;
+  closeRefreshDBModal();
+
+  try {
+    toast.add({
+      title: 'Database Update Started',
+      description: 'The AI database update process has been initiated. This may take some time.',
+      color: 'green',
+      timeout: 5000,
+    });
+
+    const response = await $fetch(
+      `${config.public.apiBase}/generate-chroma-db/${account_unique_id}?replace=${replace}`,
+      {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          Authorization: `Bearer ${apiAuthorizationToken}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    console.log('AI Database refresh initiated:', response);
+  } catch (err: any) {
+    console.error('Error initiating AI Database refresh:', err);
+    toast.add({
+      title: 'Error',
+      description: err.data?.detail || err.message || 'Could not start database update.',
+      color: 'red',
+    });
+  } finally {
+    isDbUpdating.value = false;
+  }
+};
+
+// -------------------------
+// Folder Actions
+// -------------------------
+const handleFolderRemoved = async (deletedFolderId: number) => {
+  console.log(`Folder with ID ${deletedFolderId} removed. Refreshing list.`);
+  await refreshFolders();
 };
 
 const handleFolderUpdated = async (updatedFolder: Folder) => {
-	// Option 1: Refresh the whole list (simpler)
-	await refreshFolders();
+  console.log('Folder updated. Refreshing list.');
+  await refreshFolders();
 };
 
-// Refresh AI DB Modal state
-const isRefreshDBModalOpen = ref(false);
-const isDbUpdating = ref(false);
-
-const openRefreshDBModal = () => {
-	isRefreshDBModalOpen.value = true;
-	console.log('Modal opened');
-};
-
-const closeRefreshDBModal = () => {
-	isRefreshDBModalOpen.value = false;
-	console.log('Modal closed');
-};
-
-const handleConfirmRefreshDB = async (replace: boolean) => {
-	isDbUpdating.value = true; // Start loading indicator
-	closeRefreshDBModal(); // Close the modal immediately
-
-	console.log('Replace value received from modal:', replace); // For debugging
-
-	try {
-		toast.add({
-			title: 'Database Update Started',
-			description:
-				'The AI database update process has been initiated. This may take some time.',
-			color: 'green',
-			timeout: 5000, // Keep message for 5 seconds
-		});
-
-		const response = await $fetch(
-			`${config.public.apiBase}/generate-chroma-db/${account_unique_id}?replace=${replace}`,
-			{
-				method: 'GET',
-				headers: {
-					accept: 'application/json',
-					Authorization: `Bearer ${apiAuthorizationToken}`,
-					'Content-Type': 'application/json',
-				},
-			}
-		);
-
-		// Optionally, you might want to refresh some data or navigate,
-		// depending on what the API call does and returns.
-		// For example, if it updates some status you display:
-		// await refreshSomeStatusData();
-		console.log('AI Database refresh initiated:', response);
-	} catch (err: any) {
-		console.error('Error initiating AI Database refresh:', err);
-		const errorMessage =
-			err.data?.detail ||
-			err.message ||
-			'Could not start database update.';
-		toast.add({
-			title: 'Error',
-			description: errorMessage,
-			color: 'red',
-		});
-	} finally {
-		isDbUpdating.value = false; // Stop loading indicator
-	}
+const refreshFolders = async () => {
+  console.log('Refreshing folders...');
+  await refresh();
 };
 </script>

@@ -12,7 +12,7 @@
 			<div class="pagination pagination--top">
 				<UPagination
 					v-model="page"
-					:page-count="pageCount"
+					:page-count="totalPages.value"
 					:total="filteredRows.length"
 				/>
 			</div>
@@ -51,7 +51,7 @@
 		<div class="pagination pagination--bottom">
 			<UPagination
 				v-model="page"
-				:page-count="pageCount"
+				:page-count="totalPages.value"
 				:total="filteredRows.length"
 			/>
 		</div>
@@ -74,6 +74,7 @@ const config = useRuntimeConfig();
 import { useAuthStore } from '~/stores/auth';
 import { computed, ref, watch } from 'vue'; // [!code ++]
 import { format, parseISO } from 'date-fns';
+const { request } = useApi()
 
 // Helper function
 function formatDateTime(isoString: string | null | undefined): string {
@@ -105,20 +106,30 @@ const account_unique_id = authStore.uniqueAccountId;
 const apiAuthorizationToken = authStore.access_token;
 
 // Data Fetching (unchanged)
-const { data: chatSessions, error } = await useFetch(
-	`${config.public.apiBase}/chat-sessions/${account_unique_id}`,
-	{
-		method: 'GET',
-		headers: {
-			accept: 'application/json',
-			Authorization: `Bearer ${apiAuthorizationToken}`,
-		},
-		transform: (response: any): ChatSession[] => {
-			return response?.chat_sessions || [];
-		},
-		default: () => [], // Provide a default empty array
-	}
+const { data: rawData, error } = request(
+  `${config.public.apiBase}/chat-sessions/${account_unique_id}`,
+  {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${apiAuthorizationToken}`,
+    },
+    default: () => null, // initially null
+  }
 );
+
+// 2️⃣ Extract the array into a computed ref
+const chatSessions = computed<ChatSession[]>(() => {
+  // If no data yet, return empty array
+  if (!rawData.value) return [];
+
+  // API response might have chat_sessions array
+  const sessions = rawData.value?.chat_sessions ?? [];
+
+  return Array.isArray(sessions) ? sessions : [];
+});
+console.log('Fetched Chat Sessions:', chatSessions);
+console.log('Fetched Chat Sessions:', chatSessions.value);
 
 if (error.value) {
 	console.error('Error fetching chat sessions:', error.value);
@@ -143,27 +154,34 @@ const columns = [
 
 // --- Pagination and Filtering Logic ---
 
-// [!code-start++]
-// 1. State for pagination
+// Pagination setup
 const page = ref(1);
-const pageCount = 10; // Number of items per page
-// [!code-end++]
+const itemsPerPage = 10;
 
 // State for filtering
 const q = ref('');
 
 // Filtered rows (unchanged, but now feeds into pagination)
 const filteredRows = computed(() => {
-	if (!chatSessions.value) return [];
-	if (!q.value) {
-		return chatSessions.value;
-	}
-	return chatSessions.value.filter((session) => {
-		return Object.values(session).some((value) => {
-			return String(value).toLowerCase().includes(q.value.toLowerCase());
-		});
-	});
+  if (!chatSessions.value || !Array.isArray(chatSessions.value)) return [];
+
+  if (!q.value) return chatSessions.value;
+
+  return chatSessions.value.filter((session) => {
+    return Object.values(session).some((value) =>
+      String(value).toLowerCase().includes(q.value.toLowerCase())
+    );
+  });
 });
+console.log('Filtered Rows:', filteredRows.value);
+
+// Total number of pages (computed dynamically)
+const totalPages = computed(() => {
+	if (!filteredRows.value.length) return 1;
+	return Math.ceil(filteredRows.value.length / itemsPerPage);
+});
+
+
 
 // [!code-start++]
 // 2. Reset page to 1 when filter changes
@@ -173,8 +191,8 @@ watch(q, () => {
 
 // 3. New computed property to get the rows for the current page
 const paginatedRows = computed(() => {
-	const startIndex = (page.value - 1) * pageCount;
-	const endIndex = startIndex + pageCount;
+	const startIndex = (page.value - 1) * itemsPerPage;
+	const endIndex = startIndex + itemsPerPage;
 	return filteredRows.value.slice(startIndex, endIndex);
 });
 // [!code-end++]

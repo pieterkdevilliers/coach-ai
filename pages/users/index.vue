@@ -48,6 +48,7 @@ const config = useRuntimeConfig();
 import { ref } from 'vue';
 import { useAuthStore } from '~/stores/auth';
 import AddUserForm from '~/components/AddUserForm.vue'; // Import modal component
+const { request } = useApi()
 
 definePageMeta({
 	middleware: 'auth',
@@ -68,7 +69,7 @@ const {
 	data: users,
 	error,
 	refresh,
-} = await useFetch(`${config.public.apiBase}/users`, {
+} = request(`${config.public.apiBase}/users`, {
 	method: 'GET',
 	headers: {
 		accept: 'application/json',

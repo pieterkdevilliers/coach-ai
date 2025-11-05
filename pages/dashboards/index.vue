@@ -55,6 +55,7 @@
 </template>
 
 <script setup lang="ts">
+const { request } = useApi()
 const config = useRuntimeConfig();
 const authStore = useAuthStore();
 const uniqueAccountId = authStore.uniqueAccountId;
@@ -66,22 +67,18 @@ definePageMeta({
 });
 
 // This is the complete and corrected useFetch call.
-const { data, pending, error } = useFetch(
-	// The URL is wrapped in a getter `()` to make it reactive.
-	() => `${config.public.apiBase}/get-dashboard-data/${uniqueAccountId}`,
-	{
-		method: 'GET',
-		headers: {
-			accept: 'application/json',
+const url = `${config.public.apiBase}/get-dashboard-data/${uniqueAccountId}`;
 
-			Authorization: `Bearer ${apiAuthorizationToken}`,
-		},
-
-		// 'lazy: true' lets the page render instantly while data loads in the background.
-		// This provides a much better user experience than a blank loading screen.
-		lazy: true,
-	}
-);
+const { data, error, pending } = request(url, {
+  method: 'GET',
+  headers: {
+    accept: 'application/json',
+    Authorization: `Bearer ${apiAuthorizationToken}`,
+  },
+  transform: (res) => res, // unwrap the response
+  lazy: false, // fetch immediately
+});
+console.log('Dashboard data:', data, error, pending);
 
 // Optional: You can watch for errors to log them or show a notification.
 watch(error, (newError) => {

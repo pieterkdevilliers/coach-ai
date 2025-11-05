@@ -64,6 +64,7 @@
 
 <script setup lang="ts">
 const config = useRuntimeConfig();
+const { request } = useApi()
 import { ref, computed } from 'vue';
 import { useAuthStore } from '~/stores/auth';
 import AddWidgetForm from '~/components/AddWidgetForm.vue'; // Import modal component
@@ -102,7 +103,7 @@ const {
 	data: widgets,
 	error,
 	refresh,
-} = await useFetch(
+} = request(
 	`${config.public.apiBase}/list-api-keys/${uniqueAccountId}`,
 	{
 		method: 'GET',
