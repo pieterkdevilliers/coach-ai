@@ -15,10 +15,10 @@
 					transforms your website into a 24/7 expert that knows your business inside out.
 				</p>
 				<p>
-					Upload your FAQs, books, courses, programs, and materials — and ExpertEcho instantly learns from them.
+					Upload your FAQs, books, courses, programs, and materials - and ExpertEcho instantly learns from them.
 				</p>
 				<p>
-					Visitors ask, and your AI expert responds with accurate, trustworthy answers — straight from your content. It can even point them to the exact document for more detail.
+					Visitors ask, and your AI expert responds with accurate, trustworthy answers - straight from your content. It can even point them to the exact document for more detail.
 				</p>
 				<p>
 					The result: faster answers, fewer support requests, and more sales closed on the spot.

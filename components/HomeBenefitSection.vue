@@ -4,7 +4,7 @@
 			<h2 class="text-gradient heading heading__h2">
 				For Coaches, Consultants & Authors
 				<span class="heading__span--block"
-							>Convert curiosity into clients—without typing a word.</span
+							>Convert curiosity into clients - without typing a word.</span
 						>
 			</h2>
 		</div>
@@ -66,13 +66,13 @@ const benefits = ref<Benefit[]>([
 		icon: shallowRef(ClockIcon),
 		title: 'Pre-Sales Assistant',
 		description:
-			'Let ExpertEcho qualify leads, answer objections, and pitch your services—on autopilot.',
+			'Let ExpertEcho qualify leads, answer objections, and pitch your services - on autopilot.',
 	},
 	{
 		icon: shallowRef(ArrowPathIcon),
 		title: 'Authority at Scale',
 		description:
-			'Your expertise works harder—while you coach, write, or consult.',
+			'Your expertise works harder - while you coach, write, or consult.',
 	},
 	{
 		icon: shallowRef(CursorArrowRaysIcon),

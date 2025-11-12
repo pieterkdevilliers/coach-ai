@@ -2,7 +2,7 @@
 	<!-- This outer div is the single root element -->
 	<div class="home-cta-section container--default">
 		<div class="text-center">
-			<h2 class="heading heading__h2 mb-6">Stop just supporting—start selling through your wisdom.
+			<h2 class="heading heading__h2 mb-6">Stop just supporting - start selling through your wisdom.
 				<span class="heading__span--block font-extrabold"
 					>With ExpertEcho, your expertise meets every visitor, every time.</span
 				>

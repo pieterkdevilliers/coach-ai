@@ -54,7 +54,7 @@ const reasons = ref<Reason[]>([
 		icon: shallowRef(FolderIcon),
 		title: 'Be Everywhere at Once',
 		description:
-			'ExpertEcho turns your content into a living digital replica of your expertise—engaging prospects while you sleep.',
+			'ExpertEcho turns your content into a living digital replica of your expertise - engaging prospects while you sleep.',
 	},
 	{
 		icon: shallowRef(DocumentCheckIcon),
@@ -64,12 +64,12 @@ const reasons = ref<Reason[]>([
 	{
 		icon: shallowRef(SparklesIcon),
 		title: 'Always on Brand, Always Accurate',
-		description: 'Powered exclusively by your books, courses, and IP. No fluff, no hallucinations—just your knowledge.',
+		description: 'Powered exclusively by your books, courses, and IP. No fluff, no hallucinations - just your knowledge.',
 	},
 	{
 		icon: shallowRef(ClockIcon),
 		title: 'Effortless Setup',
-		description: "Upload, embed, and you're live—no coding or developers needed.",
+		description: "Upload, embed, and you're live - no coding or developers needed.",
 	},
 ]);
 

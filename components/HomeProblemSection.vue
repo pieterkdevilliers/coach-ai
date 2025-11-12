@@ -69,7 +69,7 @@ const problems = ref<Problem[]>([
 	},
 	{
 		icon: shallowRef(InformationCircleIcon),
-		description: 'Providing 24/7 coverage usually means hiring more staff — until now.',
+		description: 'Providing 24/7 coverage usually means hiring more staff - until now.',
 	},
 ]);
 </script>
