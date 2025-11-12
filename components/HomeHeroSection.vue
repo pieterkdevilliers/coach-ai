@@ -11,14 +11,14 @@
 							>ExpertEcho</span
 						>
 						<span class="heading__span--block"
-							>Your expertise, amplified — 24/7.</span
+							>Your expertise, amplified - 24/7.</span
 						>
 					</h1>
 					<p>
 						Turn your knowledge into a 24/7 digital presence that drives sales.
-						Upload your books, courses, programs, and materials—then let
+						Upload your books, courses, programs, and materials - then let
 						ExpertEcho engage visitors, answer questions,
-						and nurture leads—all with your voice and insights.
+						and nurture leads - all with your voice and insights.
 					</p>
 				</div>
 				<div class="form-container">

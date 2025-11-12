@@ -45,7 +45,7 @@ const steps = ref<Step[]>([
 		number: 1,
 		title: 'Upload Your Expert Content',
 		description:
-			'Share your books, programs, transcripts, blog posts—anything that defines your authority.',
+			'Share your books, programs, transcripts, blog posts - anything that defines your authority.',
 	},
 	{
 		number: 2,
@@ -57,7 +57,7 @@ const steps = ref<Step[]>([
 		number: 3,
 		title: 'Engage & Convert ',
 		description:
-			'People ask. ExpertEcho answers — always with your voice, guiding them toward what matters next.',
+			'People ask. ExpertEcho answers - always with your voice, guiding them toward what matters next.',
 	},
 ]);
 </script>

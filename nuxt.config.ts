@@ -26,7 +26,7 @@ export default defineNuxtConfig({
 				{
 					name: 'description',
 					content:
-						'For Coaches, Consultants & Authors - Convert curiosity into clients—without typing a word.',
+						'For Coaches, Consultants & Authors - Convert curiosity into clients - without typing a word.',
 				},
 			],
 			link: [{}],
