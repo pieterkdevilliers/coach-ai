@@ -50,20 +50,20 @@ export default defineNuxtConfig({
 					content: 'https://expertecho.ai/expert-echo-preview.png',
 				},
 				{
-					property: 'twitter:card',
+					name: 'twitter:card',
 					content: 'summary_large_image',
 				},
 				{
-					property: 'twitter:title',
+					name: 'twitter:title',
 					content: 'ExpertEcho',
 				},
 				{
-					property: 'twitter:description',
+					name: 'twitter:description',
 					content:
 						'For Coaches, Consultants & Authors - Convert curiosity into clients - without typing a word.',
 				},
 				{
-					property: 'twitter:image',
+					name: 'twitter:image',
 					content: 'https://expertecho.ai/expert-echo-preview.png',
 				},
 			],
