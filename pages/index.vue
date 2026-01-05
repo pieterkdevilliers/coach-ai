@@ -47,7 +47,8 @@ onMounted(() => {
 		themeColour: null,
 		buttonText: 'Try ExpertEcho Here',
 		widgetTitle: 'Ask questions about ExpertEcho',
-		welcomeMessage: "Hi there, I'm your ExpertEcho agent. I'll help answer questions you might have about ExpertEcho.",
+		welcomeMessage:
+			"Hi there, I'm your ExpertEcho agent. I'll help answer questions you might have about ExpertEcho.",
 		optInRequired: true,
 	};
 

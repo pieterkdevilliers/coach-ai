@@ -28,6 +28,44 @@ export default defineNuxtConfig({
 					content:
 						'For Coaches, Consultants & Authors - Convert curiosity into clients - without typing a word.',
 				},
+				{
+					property: 'og:title',
+					content: 'ExpertEcho',
+				},
+				{
+					property: 'og:description',
+					content:
+						'For Coaches, Consultants & Authors - Convert curiosity into clients - without typing a word.',
+				},
+				{
+					property: 'og:type',
+					content: 'website',
+				},
+				{
+					property: 'og:url',
+					content: 'https://expertecho.ai/',
+				},
+				{
+					property: 'og:image',
+					content: 'https://expertecho.ai/expert-echo-preview.png',
+				},
+				{
+					property: 'twitter:card',
+					content: 'summary_large_image',
+				},
+				{
+					property: 'twitter:title',
+					content: 'ExpertEcho',
+				},
+				{
+					property: 'twitter:description',
+					content:
+						'For Coaches, Consultants & Authors - Convert curiosity into clients - without typing a word.',
+				},
+				{
+					property: 'twitter:image',
+					content: 'https://expertecho.ai/expert-echo-preview.png',
+				},
 			],
 			link: [{}],
 			script: [
