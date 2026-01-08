@@ -44,7 +44,7 @@
 						class="chat-item__icon"
 					/>
 					<div
-						class="chat-item__container flex flex-col w-full max-w-[320px] leading-1.5 p-3 border-gray-200 bg-gray-100 dark:bg-gray-700 rounded-e-xl rounded-es-xl"
+						class="chat-item__container flex flex-col w-full max-w-[320px] lg:max-w-full leading-1.5 p-3 border-gray-200 bg-gray-100 dark:bg-gray-700 rounded-e-xl rounded-es-xl"
 					>
 						<div
 							class="flex items-center space-x-2 rtl:space-x-reverse"

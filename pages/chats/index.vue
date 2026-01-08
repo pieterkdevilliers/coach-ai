@@ -58,7 +58,7 @@
 	</section>
 
 	<!-- View Chat Modal -->
-	<UModal v-model="isViewChatModalOpen">
+	<UModal v-model="isViewChatModalOpen" class="modal--wide">
 		<div class="p-5">
 			<ViewChatModal
 				@close="closeViewChatModal"
@@ -74,7 +74,7 @@ const config = useRuntimeConfig();
 import { useAuthStore } from '~/stores/auth';
 import { computed, ref, watch } from 'vue'; // [!code ++]
 import { format, parseISO } from 'date-fns';
-const { request } = useApi()
+const { request } = useApi();
 
 // Helper function
 function formatDateTime(isoString: string | null | undefined): string {
@@ -107,26 +107,26 @@ const apiAuthorizationToken = authStore.access_token;
 
 // Data Fetching (unchanged)
 const { data: rawData, error } = request(
-  `${config.public.apiBase}/chat-sessions/${account_unique_id}`,
-  {
-    method: 'GET',
-    headers: {
-      accept: 'application/json',
-      Authorization: `Bearer ${apiAuthorizationToken}`,
-    },
-    default: () => null, // initially null
-  }
+	`${config.public.apiBase}/chat-sessions/${account_unique_id}`,
+	{
+		method: 'GET',
+		headers: {
+			accept: 'application/json',
+			Authorization: `Bearer ${apiAuthorizationToken}`,
+		},
+		default: () => null, // initially null
+	}
 );
 
 // 2️⃣ Extract the array into a computed ref
 const chatSessions = computed<ChatSession[]>(() => {
-  // If no data yet, return empty array
-  if (!rawData.value) return [];
+	// If no data yet, return empty array
+	if (!rawData.value) return [];
 
-  // API response might have chat_sessions array
-  const sessions = rawData.value?.chat_sessions ?? [];
+	// API response might have chat_sessions array
+	const sessions = rawData.value?.chat_sessions ?? [];
 
-  return Array.isArray(sessions) ? sessions : [];
+	return Array.isArray(sessions) ? sessions : [];
 });
 console.log('Fetched Chat Sessions:', chatSessions);
 console.log('Fetched Chat Sessions:', chatSessions.value);
@@ -144,8 +144,8 @@ if (error.value) {
 
 const columns = [
 	{ key: 'id', label: 'ID' },
-	{ key: 'visitor_name', label: 'Name'},
-	{ key: 'visitor_email', label: 'Email'},
+	{ key: 'visitor_name', label: 'Name' },
+	{ key: 'visitor_email', label: 'Email' },
 	{ key: 'visitor_uuid', label: 'Visitor ID' },
 	{ key: 'start_time', label: 'Start Time' },
 	{ key: 'end_time', label: 'End Time' },
@@ -163,15 +163,15 @@ const q = ref('');
 
 // Filtered rows (unchanged, but now feeds into pagination)
 const filteredRows = computed(() => {
-  if (!chatSessions.value || !Array.isArray(chatSessions.value)) return [];
+	if (!chatSessions.value || !Array.isArray(chatSessions.value)) return [];
 
-  if (!q.value) return chatSessions.value;
+	if (!q.value) return chatSessions.value;
 
-  return chatSessions.value.filter((session) => {
-    return Object.values(session).some((value) =>
-      String(value).toLowerCase().includes(q.value.toLowerCase())
-    );
-  });
+	return chatSessions.value.filter((session) => {
+		return Object.values(session).some((value) =>
+			String(value).toLowerCase().includes(q.value.toLowerCase())
+		);
+	});
 });
 console.log('Filtered Rows:', filteredRows.value);
 
@@ -180,8 +180,6 @@ const totalPages = computed(() => {
 	if (!filteredRows.value.length) return 1;
 	return Math.ceil(filteredRows.value.length / itemsPerPage);
 });
-
-
 
 // [!code-start++]
 // 2. Reset page to 1 when filter changes
