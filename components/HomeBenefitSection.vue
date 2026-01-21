@@ -3,9 +3,10 @@
 		<div class="text-center mb-10 md:mb-12">
 			<h2 class="text-gradient heading heading__h2">
 				For Small and Medium Businesses
-				<span class="heading__span--block"
-							>Handle customer queries efficiently - without expanding your team.</span
-						>
+				<span class="heading__span--block md:max-w-lg mx-auto"
+					>Handle customer queries efficiently - without expanding
+					your team.</span
+				>
 			</h2>
 		</div>
 
@@ -46,12 +47,8 @@
 import { ref, shallowRef, type Component } from 'vue';
 import {
 	ClockIcon,
-	ArrowPathIcon,
-	CursorArrowRippleIcon,
-	CursorArrowRaysIcon,
-	CheckCircleIcon,
-	SparklesIcon,
-	TicketIcon,
+	ArrowTrendingUpIcon,
+	UserGroupIcon,
 } from '@heroicons/vue/24/outline';
 import PlainCard from '~/components/PlainCard.vue';
 
@@ -69,13 +66,13 @@ const benefits = ref<Benefit[]>([
 			'Our setup service configures ExpertEcho to resolve common inquiries, escalate complex ones via email, and provide source-linked answers - all automated for your business.',
 	},
 	{
-		icon: shallowRef(ArrowPathIcon),
+		icon: shallowRef(ArrowTrendingUpIcon),
 		title: 'Efficiency at Scale',
 		description:
 			'Your business knowledge works round-the-clock - freeing you to focus on operations, growth, and serving customers.',
 	},
 	{
-		icon: shallowRef(CursorArrowRaysIcon),
+		icon: shallowRef(UserGroupIcon),
 		title: 'Closer to Customers',
 		description:
 			'Deliver instant, accurate responses to keep visitors engaged and convert more inquiries into sales.',
