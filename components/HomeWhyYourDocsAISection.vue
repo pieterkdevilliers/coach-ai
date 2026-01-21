@@ -4,8 +4,9 @@
 			<h2 class="text-gradient heading heading--2">
 				Why ExpertEcho?
 				<span class="heading__span--block"
-							>Scale your support. Automate answers. Grow your business.</span
-						>
+					>Scale your support. Automate answers. Grow your
+					business.</span
+				>
 			</h2>
 		</div>
 		<div class="reason-grid">
@@ -40,6 +41,8 @@ import {
 	SparklesIcon,
 	ClockIcon,
 	CheckBadgeIcon,
+	CursorArrowRippleIcon,
+	ClipboardDocumentCheckIcon,
 } from '@heroicons/vue/24/outline';
 import PlainCard from './PlainCard.vue';
 
@@ -51,7 +54,7 @@ interface Reason {
 
 const reasons = ref<Reason[]>([
 	{
-		icon: shallowRef(FolderIcon),
+		icon: shallowRef(ClockIcon),
 		title: 'Available 24/7',
 		description:
 			'ExpertEcho handles queries anytime, reducing after-hours work and keeping customers satisfied.',
@@ -59,17 +62,20 @@ const reasons = ref<Reason[]>([
 	{
 		icon: shallowRef(DocumentCheckIcon),
 		title: 'Conversational Efficiency',
-		description: 'Turn your docs into interactive support chats that resolve issues fast, with email escalations for the rest.',
+		description:
+			'Turn your docs into interactive support chats that resolve issues fast, with email escalations for the rest.',
 	},
 	{
-		icon: shallowRef(SparklesIcon),
+		icon: shallowRef(CursorArrowRippleIcon),
 		title: 'Accurate & Secure',
-		description: 'PUses only your uploaded content - no external data or risks - ensuring GDPR compliance and brand consistency.',
+		description:
+			'PUses only your uploaded content - no external data or risks - ensuring GDPR compliance and brand consistency.',
 	},
 	{
-		icon: shallowRef(ClockIcon),
+		icon: shallowRef(ClipboardDocumentCheckIcon),
 		title: 'Hands-On Setup',
-		description: "Our setup and consulting makes it effortless: we optimise everything so you're live and effective from day one, no tech expertise required.",
+		description:
+			"Our setup and consulting makes it effortless: we optimise everything so you're live and effective from day one, no tech expertise required.",
 	},
 ]);
 
