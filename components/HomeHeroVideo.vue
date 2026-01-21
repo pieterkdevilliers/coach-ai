@@ -2,7 +2,6 @@
   <video
     class="yt-embed"
     controls
-	muted
     playsinline
 	controlsList="nodownload"      
     preload="metadata" 
