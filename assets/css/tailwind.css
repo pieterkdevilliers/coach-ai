@@ -545,9 +545,13 @@
 	.page--landing #hero p:not(.error-message) {
 		@apply text-lg;
 	}
+	.page--landing .video-container,
 	.page--landing .form-container,
 	.access-page .form-container {
 		@apply bg-white/50 backdrop-blur-md rounded-lg shadow-lg p-3 md:p-6 max-w-3xl;
+	}
+	.page--landing .video-container {
+		@apply p-1;
 	}
 	.page--landing #hero .form-component {
 		@apply shadow-none p-3 md:p-6;

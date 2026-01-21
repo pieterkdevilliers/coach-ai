@@ -176,6 +176,7 @@ const { data, status, error } = await useFetch(
 
 			// Map over each raw message to transform it
 			return rawMessages.map((message) => {
+				console.log(message.message_text);
 				// Use your existing logic to process the source_files for this message
 				const processedSources = (message.source_files || []).map(
 					(sourceString: string) => {
