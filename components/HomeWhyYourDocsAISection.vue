@@ -69,7 +69,7 @@ const reasons = ref<Reason[]>([
 		icon: shallowRef(CursorArrowRippleIcon),
 		title: 'Accurate & Secure',
 		description:
-			'PUses only your uploaded content - no external data or risks - ensuring GDPR compliance and brand consistency.',
+			'Uses only your uploaded content - no external data or risks - ensuring GDPR compliance and brand consistency.',
 	},
 	{
 		icon: shallowRef(ClipboardDocumentCheckIcon),
