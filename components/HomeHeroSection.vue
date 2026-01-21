@@ -11,14 +11,11 @@
 							>ExpertEcho</span
 						>
 						<span class="heading__span--block"
-							>Your expertise, amplified - 24/7.</span
+							>AI Chat Support for Small Businesses - Expertly Set Up and Optimized.</span
 						>
 					</h1>
 					<p>
-						Turn your knowledge into a 24/7 digital presence that drives sales.
-						Upload your books, courses, programs, and materials - then let
-						ExpertEcho engage visitors, answer questions,
-						and nurture leads - all with your voice and insights.
+						Transform your website into a 24/7 customer support powerhouse. Our experts handle the setup, prompt optimisation and website integration seamlessly. You enjoy ongoing AI-powered customer support chats, answering queries from your knowledge base to boost satisfaction and sales.
 					</p>
 				</div>
 				<div class="form-container">

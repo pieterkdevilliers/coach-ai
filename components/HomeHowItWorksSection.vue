@@ -3,7 +3,7 @@
 		<div class="text-center mb-10 md:mb-12">
 			<h2 class="text-gradient heading heading--2">How It Works
 				<span class="heading__span--block"
-							>From Your Content to Real Conversions in 3 Steps</span
+							>From Business Docs to Optimised Support in 3 Steps</span
 						>
 			</h2>
 		</div>
@@ -43,21 +43,21 @@ interface Step {
 const steps = ref<Step[]>([
 	{
 		number: 1,
-		title: 'Upload Your Expert Content',
+		title: 'Expert-Led Setup',
 		description:
-			'Share your books, programs, transcripts, blog posts - anything that defines your authority.',
+			'We collaborate to upload your docs (.pdf, .doc, etc.), structure them for best results, optimise your main prompt, and configure the account - all with 30 days of guidance.',
 	},
 	{
 		number: 2,
-		title: 'Brand & Embed',
+		title: 'Embed & Launch',
 		description:
-			'Seamlessly match ExpertEcho to your site’s look and feel. Place it wherever prospects engage most.',
+			'Generate your secure widget code (like Google Tag Manager) and add it to your site. Customise appearance to match your brand.',
 	},
 	{
 		number: 3,
-		title: 'Engage & Convert ',
+		title: 'Support & Insights',
 		description:
-			'People ask. ExpertEcho answers - always with your voice, guiding them toward what matters next.',
+			'Customers chat; ExpertEcho responds accurately from your database, links sources, and stores anonymised sessions for review. Use insights to refine your content and operations.',
 	},
 ]);
 </script>

@@ -2,9 +2,9 @@
 	<div class="benefits-section container--default mx-auto">
 		<div class="text-center mb-10 md:mb-12">
 			<h2 class="text-gradient heading heading__h2">
-				For Coaches, Consultants & Authors
+				For Small and Medium Businesses
 				<span class="heading__span--block"
-							>Convert curiosity into clients - without typing a word.</span
+							>Handle customer queries efficiently - without expanding your team.</span
 						>
 			</h2>
 		</div>
@@ -64,21 +64,21 @@ interface Benefit {
 const benefits = ref<Benefit[]>([
 	{
 		icon: shallowRef(ClockIcon),
-		title: 'Pre-Sales Assistant',
+		title: '24/7 Support Assistant',
 		description:
-			'Let ExpertEcho qualify leads, answer objections, and pitch your services - on autopilot.',
+			'Our setup service configures ExpertEcho to resolve common inquiries, escalate complex ones via email, and provide source-linked answers - all automated for your business.',
 	},
 	{
 		icon: shallowRef(ArrowPathIcon),
-		title: 'Authority at Scale',
+		title: 'Efficiency at Scale',
 		description:
-			'Your expertise works harder - while you coach, write, or consult.',
+			'Your business knowledge works round-the-clock - freeing you to focus on operations, growth, and serving customers.',
 	},
 	{
 		icon: shallowRef(CursorArrowRaysIcon),
-		title: 'Closer to Clients',
+		title: 'Closer to Customers',
 		description:
-			'Instantly give prospects the clarity they need (and deserve), when they need it.',
+			'Deliver instant, accurate responses to keep visitors engaged and convert more inquiries into sales.',
 	},
 ]);
 </script>
