@@ -3,7 +3,8 @@
 		<div class="container__inner">
 			<h2 class="mb-8">
 				<span class="text-gradient heading__span--block"
-					>Is Your Business Losing Customers to Unanswered Questions?</span
+					>Is Your Business Losing Customers to Unanswered
+					Questions?</span
 				>
 			</h2>
 		</div>
@@ -41,6 +42,8 @@ import {
 	ClockIcon,
 	BanknotesIcon,
 	InformationCircleIcon,
+	FaceFrownIcon,
+	LockClosedIcon,
 } from '@heroicons/vue/24/outline';
 
 interface Problem {
@@ -50,7 +53,7 @@ interface Problem {
 
 const problems = ref<Problem[]>([
 	{
-		icon: shallowRef(DocumentMagnifyingGlassIcon),
+		icon: shallowRef(FaceFrownIcon),
 		description:
 			"Visitors abandon your site when they can't get quick answers to their queries.",
 	},
@@ -60,13 +63,14 @@ const problems = ref<Problem[]>([
 			'Your team wastes time on repetitive support emails and calls, pulling focus from core operations.',
 	},
 	{
-		icon: shallowRef(BanknotesIcon),
+		icon: shallowRef(LockClosedIcon),
 		description:
-			"Opportunities slip away when potential customers need info outside business hours.",
+			'Opportunities slip away when potential customers need info outside business hours.',
 	},
 	{
-		icon: shallowRef(InformationCircleIcon),
-		description: 'Scaling support typically requires more hires or expensive tools - until now.',
+		icon: shallowRef(BanknotesIcon),
+		description:
+			'Scaling support typically requires more hires or expensive tools - until now.',
 	},
 ]);
 </script>
