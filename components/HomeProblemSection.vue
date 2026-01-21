@@ -3,10 +3,7 @@
 		<div class="container__inner">
 			<h2 class="mb-8">
 				<span class="text-gradient heading__span--block"
-					>Are Your Website Visitors Getting Frustrated?</span
-				>
-				<span class="text-gradient heading__span--block"
-					>Are You Losing Time?</span
+					>Is Your Business Losing Customers to Unanswered Questions?</span
 				>
 			</h2>
 		</div>
@@ -55,21 +52,21 @@ const problems = ref<Problem[]>([
 	{
 		icon: shallowRef(DocumentMagnifyingGlassIcon),
 		description:
-			"Prospects leave when they can’t instantly find the answers they need.",
+			"Visitors abandon your site when they can't get quick answers to their queries.",
 	},
 	{
 		icon: shallowRef(ClockIcon),
 		description:
-			'You’re stuck answering the same questions again and again instead of focusing on growth.',
+			'Your team wastes time on repetitive support emails and calls, pulling focus from core operations.',
 	},
 	{
 		icon: shallowRef(BanknotesIcon),
 		description:
-			"Sales slip away when buyers can’t get information right when they’re ready to act.",
+			"Opportunities slip away when potential customers need info outside business hours.",
 	},
 	{
 		icon: shallowRef(InformationCircleIcon),
-		description: 'Providing 24/7 coverage usually means hiring more staff - until now.',
+		description: 'Scaling support typically requires more hires or expensive tools - until now.',
 	},
 ]);
 </script>

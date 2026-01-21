@@ -4,7 +4,7 @@
 			<h2 class="text-gradient heading heading--2">
 				Why ExpertEcho?
 				<span class="heading__span--block"
-							>Scale your authority. Automate your expertise. Convert more.</span
+							>Scale your support. Automate answers. Grow your business.</span
 						>
 			</h2>
 		</div>
@@ -52,24 +52,24 @@ interface Reason {
 const reasons = ref<Reason[]>([
 	{
 		icon: shallowRef(FolderIcon),
-		title: 'Be Everywhere at Once',
+		title: 'Available 24/7',
 		description:
-			'ExpertEcho turns your content into a living digital replica of your expertise - engaging prospects while you sleep.',
+			'ExpertEcho handles queries anytime, reducing after-hours work and keeping customers satisfied.',
 	},
 	{
 		icon: shallowRef(DocumentCheckIcon),
-		title: 'Sell Through Conversation',
-		description: 'Transform static documents into dynamic, personalized sales conversations, not just FAQ responses.',
+		title: 'Conversational Efficiency',
+		description: 'Turn your docs into interactive support chats that resolve issues fast, with email escalations for the rest.',
 	},
 	{
 		icon: shallowRef(SparklesIcon),
-		title: 'Always on Brand, Always Accurate',
-		description: 'Powered exclusively by your books, courses, and IP. No fluff, no hallucinations - just your knowledge.',
+		title: 'Accurate & Secure',
+		description: 'PUses only your uploaded content - no external data or risks - ensuring GDPR compliance and brand consistency.',
 	},
 	{
 		icon: shallowRef(ClockIcon),
-		title: 'Effortless Setup',
-		description: "Upload, embed, and you're live - no coding or developers needed.",
+		title: 'Hands-On Setup',
+		description: "Our setup and consulting makes it effortless: we optimise everything so you're live and effective from day one, no tech expertise required.",
 	},
 ]);
 

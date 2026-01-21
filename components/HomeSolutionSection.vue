@@ -6,22 +6,22 @@
 					>Introducing ExpertEcho:</span
 				>
 				<span class="heading__span--block font-normal"
-					>Your Digital Expert, Always On.</span
+					>Custom AI Chat Support for SMBs, Set Up by Experts.</span
 				>
 			</h2>
 			<div class="text-block text-block--wide text-block--center">
 				<p>
 					<strong>ExpertEcho</strong>
-					transforms your website into a 24/7 expert that knows your business inside out.
+					turns your website into a reliable 24/7 support system tailored to your business.
 				</p>
 				<p>
-					Upload your FAQs, books, courses, programs, and materials - and ExpertEcho instantly learns from them.
+					Our setup service includes expert assistance: we upload and optimise your FAQs, product docs, policies, and other materials into a secure AI database.
 				</p>
 				<p>
-					Visitors ask, and your AI expert responds with accurate, trustworthy answers - straight from your content. It can even point them to the exact document for more detail.
+					Visitors chat, and the widget delivers precise answers based solely on your content - with links to sources for deeper details. If no answer fits, it prompts an email escalation with full context.
 				</p>
 				<p>
-					The result: faster answers, fewer support requests, and more sales closed on the spot.
+					The result: happier customers, fewer support tickets, actionable chat insights, and more conversions
 				</p>
 			</div>
 		</div>

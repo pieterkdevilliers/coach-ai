@@ -48,20 +48,20 @@ interface Step {
 const steps = ref<Step[]>([
 	{
 		icon: shallowRef(BeakerIcon),
-		title: 'Start For Free',
+		title: 'Expert Setup: £499 One-Time Fee',
 		description:
-			'<strong>Securely upload</strong> up to 10 documents and run test queries - completely free.',
+			'Our consulting team handles everything: document uploads, prompt optimisation for 30 days, and widget integration - getting you to value fast.',
 	},
 	{
 		icon: shallowRef(CurrencyDollarIcon),
-		title: '£59/m or £590/year',
-		description: '<strong>Save</strong> by signing up for an annual plan.',
+		title: 'Ongoing Subscription: £59/month or £590/year',
+		description: 'Access the AI chat platform, unlimited queries, chat storage, and basic support. Save with annual billing.',
 	},
 	{
 		icon: shallowRef(ArchiveBoxXMarkIcon),
-		title: 'Cancel anytime',
+		title: 'Cancel anytime: No lock-in',
 		description:
-			'No <strong>lock in.</strong> If it doesn not work for you, cancel without any hassle.',
+			"No contracts - if it's not a fit, walk away hassle-free.",
 	},
 ]);
 </script>
