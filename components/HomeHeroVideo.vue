@@ -3,7 +3,7 @@
 		class="yt-embed"
 		width="560"
 		height="315"
-		src="https://www.youtube.com/embed/pp3B2S-QI0k?si=KEaH0ChcghDZXFN0"
+		src="https://d31env5c5sjhq3.cloudfront.net/static/welcome_to_expertecho.mp4"
 		title="YouTube video player"
 		frameborder="0"
 		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -21,3 +21,4 @@
 	border-radius: 0.5em;
 }
 </style>
+
