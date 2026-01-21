@@ -24,6 +24,9 @@
 					<h3 class="text-xl mb-2">
 						{{ step.title }}
 					</h3>
+					<h3 class="text-lg mb-2">
+						{{ step.subtitle }}
+					</h3>
 					<p class="text-base" v-html="step.description"></p>
 				</div>
 			</div>
@@ -37,31 +40,37 @@ import {
 	BeakerIcon,
 	CurrencyDollarIcon,
 	ArchiveBoxXMarkIcon,
+	SparklesIcon,
+	CreditCardIcon,
 } from '@heroicons/vue/24/outline';
 
 interface Step {
 	icon?: Component;
 	title: string;
+	subtitle: string;
 	description: string;
 }
 
 const steps = ref<Step[]>([
 	{
-		icon: shallowRef(BeakerIcon),
-		title: 'Expert Setup: £499 One-Time Fee',
+		icon: shallowRef(SparklesIcon),
+		title: 'Expert Setup',
+		subtitle: '£499 One-Time Fee',
 		description:
 			'Our consulting team handles everything: document uploads, prompt optimisation for 30 days, and widget integration - getting you to value fast.',
 	},
 	{
-		icon: shallowRef(CurrencyDollarIcon),
-		title: 'Ongoing Subscription: £59/month or £590/year',
-		description: 'Access the AI chat platform, unlimited queries, chat storage, and basic support. Save with annual billing.',
+		icon: shallowRef(CreditCardIcon),
+		title: 'Ongoing Subscription',
+		subtitle: '£59/month or £590/year',
+		description:
+			'Access the AI chat platform, unlimited queries, chat storage, and basic support. Save with annual billing.',
 	},
 	{
 		icon: shallowRef(ArchiveBoxXMarkIcon),
-		title: 'Cancel anytime: No lock-in',
-		description:
-			"No contracts - if it's not a fit, walk away hassle-free.",
+		title: 'Cancel anytime',
+		subtitle: 'No Lock-In',
+		description: "No contracts - if it's not a fit, walk away hassle-free.",
 	},
 ]);
 </script>
