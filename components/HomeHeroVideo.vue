@@ -4,7 +4,8 @@
     controls
     playsinline
 	controlsList="nodownload"      
-    preload="metadata" 
+    preload="metadata"
+	poster="https://d31env5c5sjhq3.cloudfront.net/static/welcome_thumbnail.png"
     width="560"
     height="315"
   >
