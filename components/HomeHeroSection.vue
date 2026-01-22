@@ -28,6 +28,7 @@
 				</div>
 				<div class="video-container order-1 md:order-2">
 					<HomeHeroVideo />
+					<LetsChatButton class="bg-purple-800 mt-3" />
 				</div>
 			</div>
 		</div>
@@ -36,6 +37,7 @@
 
 <script setup lang="ts">
 import HomeHeroVideo from './HomeHeroVideo.vue';
+import LetsChatButton from './LetsChatButton.vue';
 </script>
 
 <style scoped>
