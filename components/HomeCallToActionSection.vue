@@ -13,12 +13,9 @@
 			<LetsChatButton
 				icon="i-heroicons:calendar-days-20-solid"
 				size="xl"
-				class="bg-purple-800 max-w-lg mt-10 mb-12 text-sm md:text-xl lg:text-2xl"
+				class="bg-purple-800 max-w-lg mt-10 mb-2 text-sm md:text-xl lg:text-2xl"
 				>Book Your Setup Consultation Today</LetsChatButton
 			>
-		</div>
-		<div class="form-container">
-			<SignupForm />
 		</div>
 	</div>
 </template>
