@@ -1,10 +1,14 @@
 <template>
 	<!-- Mobile -->
-	<div class="lg:hidden mobile-navbar__container" ref="mobileNavbar">
+	<div
+		class="xl:hidden mobile-navbar__container flex gap-4 md:gap-8 items-center"
+		ref="mobileNavbar"
+	>
+		<LetsChatButton class="bg-accent py-1 text-sm md:text-lg" />
 		<UButton
 			@click="toggleNav"
 			:icon="navOpen ? 'i-heroicons:x-mark' : 'i-heroicons:bars-3'"
-			:class="['lg:hidden', 'navbar__toggle']"
+			:class="['xl:hidden', 'navbar__toggle']"
 		>
 		</UButton>
 		<UVerticalNavigation
@@ -16,7 +20,7 @@
 		/>
 	</div>
 
-	<div class="navbar hidden lg:block">
+	<div class="navbar hidden xl:block">
 		<nav class="navbar nav--horizontal">
 			<ul class="flex items-center min-w-0 gap-4">
 				<li v-for="link in desktopLinks" :key="link.to || link.label">
@@ -40,6 +44,7 @@
 						</span>
 					</NuxtLink>
 				</li>
+				<li><LetsChatButton class="bg-accent py-1 xl:text-lg" /></li>
 			</ul>
 		</nav>
 	</div>
