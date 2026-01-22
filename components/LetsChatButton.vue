@@ -5,8 +5,13 @@
 		target="_blank"
 		rel="noopener noreferrer"
 		variant="solid"
-		class="lets-chat-button px-4 py-2 rounded-2xl flex mx-auto justify-center font-semibold transition-all"
+		class="lets-chat-button px-4 py-2 rounded-full flex mx-auto justify-center text-xl font-medium transition-all shadow-xl hover:shadow-none border-2"
 	>
-		Let's Chat
+		<slot> {{ label || "Let's Chat" }}</slot>
 	</UButton>
 </template>
+<script setup lang="ts">
+defineProps<{
+	label?: string;
+}>();
+</script>
