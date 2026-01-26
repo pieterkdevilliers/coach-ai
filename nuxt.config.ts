@@ -47,7 +47,8 @@ export default defineNuxtConfig({
 				},
 				{
 					property: 'og:image',
-					content: 'https://expertecho.ai/expert-echo-preview.png',
+					content:
+						'https://expertecho.ai/expert-echo-preview.png?v=20260126',
 				},
 				{
 					name: 'twitter:card',
@@ -64,7 +65,8 @@ export default defineNuxtConfig({
 				},
 				{
 					name: 'twitter:image',
-					content: 'https://expertecho.ai/expert-echo-preview.png',
+					content:
+						'https://expertecho.ai/expert-echo-preview.png?v=20260126',
 				},
 			],
 			link: [{}],
