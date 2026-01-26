@@ -26,7 +26,7 @@ export default defineNuxtConfig({
 				{
 					name: 'description',
 					content:
-						'For Coaches, Consultants & Authors - Convert curiosity into clients - without typing a word.',
+						'AI Chat Support for Small Businesses - Expertly Set Up and Optimized.',
 				},
 				{
 					property: 'og:title',
@@ -35,7 +35,7 @@ export default defineNuxtConfig({
 				{
 					property: 'og:description',
 					content:
-						'For Coaches, Consultants & Authors - Convert curiosity into clients - without typing a word.',
+						'AI Chat Support for Small Businesses - Expertly Set Up and Optimized.',
 				},
 				{
 					property: 'og:type',
@@ -60,7 +60,7 @@ export default defineNuxtConfig({
 				{
 					name: 'twitter:description',
 					content:
-						'For Coaches, Consultants & Authors - Convert curiosity into clients - without typing a word.',
+						'AI Chat Support for Small Businesses - Expertly Set Up and Optimized.',
 				},
 				{
 					name: 'twitter:image',
