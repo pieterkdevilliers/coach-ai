@@ -29,10 +29,10 @@
 		<div class="container mx-auto p-4">
 			<slot />
 			<div
-				class="container container--default word-cloud__section hidden"
+				v-if="isDashboardPage"
+				class="container container--default word-cloud__section"
 			>
-				Wordcloud Section - Hidden When Empty
-				<WordCloud />
+				<LazyWordCloud />
 			</div>
 			<div class="container container--default mt-6">
 				<Queries />
@@ -54,7 +54,6 @@ import { useAuthStore } from '~/stores/auth';
 import { useHead, useRoute } from '#imports';
 import Navbar from '~/components/Navbar.vue';
 import Footer from '~/components/Footer.vue';
-import WordCloud from '~/components/WordCloud.vue';
 
 type TourStep = DriveStep & {
 	customWidth?: string;
@@ -67,6 +66,12 @@ const authStore = useAuthStore();
 const account_unique_id = computed(() => authStore.uniqueAccountId || null);
 const account_organisation = ref('');
 const showTour = computed(() => authStore.docs_count === 0);
+const route = useRoute();
+
+const isDashboardPage = computed(() => {
+	return route.path === '/dashboards' || route.path === '/dashboards/';
+});
+console.log(`Is Dashboard Page: ${isDashboardPage.value}`);
 
 // Watch for changes in `account_unique_id` and fetch details
 watchEffect(async () => {
@@ -198,8 +203,7 @@ onMounted(() => {
 	}, 100);
 });
 
-// Add current page as a class to the body tag
-const route = useRoute();
+// Add current page as a class to the body ta
 
 // This computed property will generate a class name like:
 // - /         -> 'page-home'
