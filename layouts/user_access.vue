@@ -28,6 +28,9 @@
 		</header>
 		<div class="container mx-auto p-4">
 			<slot />
+			<div class="container word-cloud">
+				Wordcloud Section - Hidden When Empty
+			</div>
 			<div class="container container--default mt-6">
 				<Queries />
 			</div>

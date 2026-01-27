@@ -55,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-const { request } = useApi()
+const { request } = useApi();
 const config = useRuntimeConfig();
 const authStore = useAuthStore();
 const uniqueAccountId = authStore.uniqueAccountId;
@@ -70,13 +70,13 @@ definePageMeta({
 const url = `${config.public.apiBase}/get-dashboard-data/${uniqueAccountId}`;
 
 const { data, error, pending } = request(url, {
-  method: 'GET',
-  headers: {
-    accept: 'application/json',
-    Authorization: `Bearer ${apiAuthorizationToken}`,
-  },
-  transform: (res) => res, // unwrap the response
-  lazy: false, // fetch immediately
+	method: 'GET',
+	headers: {
+		accept: 'application/json',
+		Authorization: `Bearer ${apiAuthorizationToken}`,
+	},
+	transform: (res) => res, // unwrap the response
+	lazy: false, // fetch immediately
 });
 console.log('Dashboard data:', data, error, pending);
 
