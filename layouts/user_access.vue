@@ -28,8 +28,11 @@
 		</header>
 		<div class="container mx-auto p-4">
 			<slot />
-			<div class="container word-cloud">
+			<div
+				class="container container--default word-cloud__section hidden"
+			>
 				Wordcloud Section - Hidden When Empty
+				<WordCloud />
 			</div>
 			<div class="container container--default mt-6">
 				<Queries />
@@ -51,6 +54,7 @@ import { useAuthStore } from '~/stores/auth';
 import { useHead, useRoute } from '#imports';
 import Navbar from '~/components/Navbar.vue';
 import Footer from '~/components/Footer.vue';
+import WordCloud from '~/components/WordCloud.vue';
 
 type TourStep = DriveStep & {
 	customWidth?: string;
