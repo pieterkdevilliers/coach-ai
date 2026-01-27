@@ -9,10 +9,6 @@
 		alt="Word Cloud"
 		class="block mx-auto max-w-full h-auto"
 	/>
-
-	<div v-else-if="error">
-		Error loading image: {{ error.statusMessage || 'Not Found' }}
-	</div>
 </template>
 
 <script setup lang="ts">
