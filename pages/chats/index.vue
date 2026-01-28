@@ -26,15 +26,30 @@
 			:sticky="true"
 			class="content-table chat-sessions__table"
 		>
+			<template #visitor_email-data="{ row }">
+				<UTooltip :text="row.visitor_email">
+					<span class="restricted-width">
+						{{ row.visitor_email }}
+					</span>
+				</UTooltip>
+			</template>
 			<template #file_name-data="{ row }">
 				<span>{{ row.file_name }}</span>
 			</template>
 			<template #start_time-data="{ row }">
-				<span>{{ formatDateTime(row.start_time) }}</span>
+				<UTooltip :text="formatDateTime(row.start_time)">
+					<span class="restricted-width">{{
+						formatDateTime(row.start_time)
+					}}</span>
+				</UTooltip>
 			</template>
 
 			<template #end_time-data="{ row }">
-				<span>{{ formatDateTime(row.end_time) }}</span>
+				<UTooltip :text="formatDateTime(row.end_time)">
+					<span class="restricted-width">{{
+						formatDateTime(row.end_time)
+					}}</span>
+				</UTooltip>
 			</template>
 			<template #view-data="{ row }">
 				<UTooltip text="View Chat Session">
@@ -44,6 +59,100 @@
 						@click="openViewChatModal(row)"
 					/>
 				</UTooltip>
+			</template>
+			<template #sentiment_analysis-data="{ row }">
+				<div class="flex items-center justify-between gap-4">
+					<!-- Popover 1: Initial Query -->
+					<UPopover
+						mode="hover"
+						:open-delay="100"
+						:close-delay="100"
+						:disabled="!row.initial_query_sentiment_explanation"
+						:popper="{
+							placement: 'top',
+							strategy: 'fixed',
+						}"
+					>
+						<UButton
+							variant="ghost"
+							icon="i-heroicons-question-mark-circle"
+							class="popover-trigger"
+							:class="[
+								!row.initial_query_sentiment_explanation &&
+									'opacity-50 cursor-not-allowed text-slate-500',
+							]"
+						/>
+						<template #panel>
+							<div
+								class="p-4 max-w-xs text-sm leading-relaxed bg-white dark:bg-gray-900 shadow-xl rounded-lg popover-content"
+							>
+								<h4>Initial Query</h4>
+								<p>
+									{{
+										row.initial_query_sentiment_explanation
+									}}
+								</p>
+							</div>
+						</template>
+					</UPopover>
+
+					<!-- Popover 2: Conversation -->
+					<UPopover
+						mode="hover"
+						:open-delay="100"
+						:close-delay="500"
+						:disabled="!row.conversation_sentiment_explanation"
+						:popper="{ placement: 'top', strategy: 'fixed' }"
+					>
+						<UButton
+							variant="ghost"
+							icon="i-heroicons-chat-bubble-left-right-solid"
+							class="popover-trigger"
+							:class="[
+								// 1. Handle disabled/empty state
+								!row.conversation_sentiment_explanation
+									? 'opacity-50 cursor-not-allowed text-slate-400'
+									: '',
+
+								// 2. Map sentiment values to your CSS classes
+								row.conversation_sentiment === 'positive'
+									? 'sentiment-positive'
+									: '',
+								row.conversation_sentiment === 'neutral'
+									? 'sentiment-neutral'
+									: '',
+								row.conversation_sentiment === 'negative'
+									? 'sentiment-negative'
+									: '',
+							]"
+						/>
+						<template #panel>
+							<div
+								class="p-4 max-w-xs text-sm leading-relaxed bg-white dark:bg-gray-900 shadow-xl rounded-lg popover-content"
+							>
+								<h4
+									:class="{
+										'text-green-700':
+											row.conversation_sentiment ===
+											'positive',
+										'text-yellow-500':
+											row.conversation_sentiment ===
+											'neutral',
+										'text-red-700':
+											row.conversation_sentiment ===
+											'negative',
+									}"
+								>
+									Full Conversation -
+									{{ row.conversation_sentiment }}
+								</h4>
+								<p>
+									{{ row.conversation_sentiment_explanation }}
+								</p>
+							</div>
+						</template>
+					</UPopover>
+				</div>
 			</template>
 		</UTable>
 
@@ -72,9 +181,11 @@
 <script setup lang="ts">
 const config = useRuntimeConfig();
 import { useAuthStore } from '~/stores/auth';
-import { computed, ref, watch } from 'vue'; // [!code ++]
+import { computed, ref, stop, watch } from 'vue'; // [!code ++]
 import { format, parseISO } from 'date-fns';
 const { request } = useApi();
+
+const visibleTooltips = ref<Record<number, boolean>>({});
 
 // Helper function
 function formatDateTime(isoString: string | null | undefined): string {
@@ -96,6 +207,8 @@ interface ChatSession {
 	account_unique_id: string;
 	visitor_name: string;
 	visitor_email: string;
+	initial_query_sentiment_explanation: string | null;
+	conversation_sentiment_explanation: string | null;
 }
 
 const toast = useToast();
@@ -125,7 +238,6 @@ const chatSessions = computed<ChatSession[]>(() => {
 
 	// API response might have chat_sessions array
 	const sessions = rawData.value?.chat_sessions ?? [];
-
 	return Array.isArray(sessions) ? sessions : [];
 });
 console.log('Fetched Chat Sessions:', chatSessions);
@@ -150,6 +262,10 @@ const columns = [
 	{ key: 'start_time', label: 'Start Time' },
 	{ key: 'end_time', label: 'End Time' },
 	{ key: 'view', label: 'View Chat' },
+	{
+		key: 'sentiment_analysis', // Changed key to reflect combined content
+		label: 'Sentiment',
+	},
 ];
 
 // --- Pagination and Filtering Logic ---
@@ -205,3 +321,34 @@ const closeViewChatModal = () => {
 	selectedSessionId.value = null;
 };
 </script>
+
+<style scoped>
+.restricted-width {
+	max-width: 150px;
+	display: inline-block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.popover-trigger {
+	@apply transition-colors duration-200;
+}
+
+.sentiment-positive {
+	@apply text-green-600 hover:text-green-700 hover:bg-green-50;
+}
+.sentiment-neutral {
+	@apply text-yellow-500 hover:text-yellow-700 hover:bg-yellow-50;
+}
+.sentiment-negative {
+	@apply text-red-600 hover:text-red-700 hover:bg-red-50;
+}
+
+.popover-content h4 {
+	@apply font-bold text-lg border-b pb-1 mb-2 capitalize;
+}
+.popover-content p {
+	@apply max-w-full whitespace-normal;
+}
+</style>
