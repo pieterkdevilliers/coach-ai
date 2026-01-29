@@ -73,7 +73,7 @@
 					<!-- Case A: Data exists -> Show Popover -->
 					<UPopover
 						v-if="row.initial_query_sentiment_explanation"
-						mode="hover"
+						:mode="isMobile ? 'click' : 'hover'"
 						:open-delay="100"
 						:close-delay="100"
 						:popper="{ placement: 'top', strategy: 'fixed' }"
@@ -138,7 +138,7 @@
 					<!-- Case A: Data exists -> Show Popover -->
 					<UPopover
 						v-if="row.conversation_sentiment_explanation"
-						mode="hover"
+						:mode="isMobile ? 'click' : 'hover'"
 						:open-delay="100"
 						:close-delay="500"
 						:popper="{ placement: 'top', strategy: 'fixed' }"
@@ -223,11 +223,29 @@
 <script setup lang="ts">
 const config = useRuntimeConfig();
 import { useAuthStore } from '~/stores/auth';
-import { computed, ref, stop, watch } from 'vue'; // [!code ++]
+import { computed, ref, stop, watch, onMounted, onUnmounted } from 'vue';
 import { format, parseISO } from 'date-fns';
 const { request } = useApi();
 
-const visibleTooltips = ref<Record<number, boolean>>({});
+// mobile detection
+
+const isMobile = ref(false);
+
+// Function to update the state
+const updateBreakpoint = () => {
+	if (import.meta.client) {
+		isMobile.value = window.innerWidth < 768;
+	}
+};
+
+onMounted(() => {
+	updateBreakpoint();
+	window.addEventListener('resize', updateBreakpoint);
+});
+
+onUnmounted(() => {
+	window.removeEventListener('resize', updateBreakpoint);
+});
 
 // Helper function
 function formatDateTime(isoString: string | null | undefined): string {
