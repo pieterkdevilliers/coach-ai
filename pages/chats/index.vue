@@ -26,6 +26,13 @@
 			:sticky="true"
 			class="content-table chat-sessions__table"
 		>
+			<template #visitor_uuid-data="{ row }">
+				<UTooltip :text="row.visitor_uuid">
+					<span class="restricted-width">
+						{{ row.visitor_uuid }}
+					</span>
+				</UTooltip>
+			</template>
 			<template #visitor_email-data="{ row }">
 				<UTooltip :text="row.visitor_email">
 					<span class="restricted-width">
@@ -61,32 +68,59 @@
 				</UTooltip>
 			</template>
 			<template #sentiment_analysis-data="{ row }">
-				<div class="flex items-center justify-between gap-4">
+				<div class="flex items-center justify-center gap-4 w-full">
 					<!-- Popover 1: Initial Query -->
 					<UPopover
 						mode="hover"
 						:open-delay="100"
 						:close-delay="100"
 						:disabled="!row.initial_query_sentiment_explanation"
-						:popper="{
-							placement: 'top',
-							strategy: 'fixed',
-						}"
+						:popper="{ placement: 'top', strategy: 'fixed' }"
 					>
 						<UButton
 							variant="ghost"
-							icon="i-heroicons-question-mark-circle"
+							icon="i-heroicons-question-mark-circle-solid"
 							class="popover-trigger"
 							:class="[
-								!row.initial_query_sentiment_explanation &&
-									'opacity-50 cursor-not-allowed text-slate-500',
+								// 1. Handle disabled/empty state
+								!row.initial_query_sentiment_explanation
+									? 'opacity-50 text-slate-400 cursor-not-allowed'
+									: '',
+
+								// 2. Map sentiment values
+								row.initial_query_sentiment === 'positive'
+									? 'sentiment-positive'
+									: '',
+								row.initial_query_sentiment === 'neutral'
+									? 'sentiment-neutral'
+									: '',
+								row.initial_query_sentiment === 'negative'
+									? 'sentiment-negative'
+									: '',
 							]"
 						/>
 						<template #panel>
 							<div
 								class="p-4 max-w-xs text-sm leading-relaxed bg-white dark:bg-gray-900 shadow-xl rounded-lg popover-content"
 							>
-								<h4>Initial Query</h4>
+								<h4
+									:class="{
+										'text-green-700':
+											row.initial_query_sentiment ===
+											'positive',
+										'text-yellow-500':
+											row.initial_query_sentiment ===
+											'neutral',
+										'text-red-700':
+											row.initial_query_sentiment ===
+											'negative',
+										'text-purple-800':
+											!row.initial_query_sentiment, // Fallback if sentiment is missing but explanation exists
+									}"
+								>
+									Initial Query -
+									{{ row.initial_query_sentiment }}
+								</h4>
 								<p>
 									{{
 										row.initial_query_sentiment_explanation
@@ -109,12 +143,10 @@
 							icon="i-heroicons-chat-bubble-left-right-solid"
 							class="popover-trigger"
 							:class="[
-								// 1. Handle disabled/empty state
 								!row.conversation_sentiment_explanation
-									? 'opacity-50 cursor-not-allowed text-slate-400'
+									? 'opacity-50 text-slate-400 cursor-not-allowed'
 									: '',
 
-								// 2. Map sentiment values to your CSS classes
 								row.conversation_sentiment === 'positive'
 									? 'sentiment-positive'
 									: '',
@@ -135,7 +167,7 @@
 										'text-green-700':
 											row.conversation_sentiment ===
 											'positive',
-										'text-yellow-500':
+										'text-yellow-600':
 											row.conversation_sentiment ===
 											'neutral',
 										'text-red-700':
@@ -207,7 +239,9 @@ interface ChatSession {
 	account_unique_id: string;
 	visitor_name: string;
 	visitor_email: string;
+	initial_query_sentiment: 'positive' | 'neutral' | 'negative' | null;
 	initial_query_sentiment_explanation: string | null;
+	conversation_sentiment: 'positive' | 'neutral' | 'negative' | null;
 	conversation_sentiment_explanation: string | null;
 }
 
@@ -339,7 +373,7 @@ const closeViewChatModal = () => {
 	@apply text-green-600 hover:text-green-700 hover:bg-green-50;
 }
 .sentiment-neutral {
-	@apply text-yellow-500 hover:text-yellow-700 hover:bg-yellow-50;
+	@apply text-yellow-400 hover:text-yellow-700 hover:bg-yellow-50;
 }
 .sentiment-negative {
 	@apply text-red-600 hover:text-red-700 hover:bg-red-50;
@@ -347,6 +381,9 @@ const closeViewChatModal = () => {
 
 .popover-content h4 {
 	@apply font-bold text-lg border-b pb-1 mb-2 capitalize;
+}
+.popover-content.query h4 {
+	@apply text-purple-800;
 }
 .popover-content p {
 	@apply max-w-full whitespace-normal;
