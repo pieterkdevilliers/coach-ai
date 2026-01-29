@@ -69,25 +69,20 @@
 			</template>
 			<template #sentiment_analysis-data="{ row }">
 				<div class="flex items-center justify-center gap-4 w-full">
-					<!-- Popover 1: Initial Query -->
+					<!-- --- ITEM 1: INITIAL QUERY --- -->
+					<!-- Case A: Data exists -> Show Popover -->
 					<UPopover
+						v-if="row.initial_query_sentiment_explanation"
 						mode="hover"
 						:open-delay="100"
 						:close-delay="100"
-						:disabled="!row.initial_query_sentiment_explanation"
 						:popper="{ placement: 'top', strategy: 'fixed' }"
 					>
 						<UButton
 							variant="ghost"
 							icon="i-heroicons-question-mark-circle-solid"
-							class="popover-trigger"
+							class="popover-trigger cursor-pointer"
 							:class="[
-								// 1. Handle disabled/empty state
-								!row.initial_query_sentiment_explanation
-									? 'opacity-50 text-slate-400 cursor-not-allowed'
-									: '',
-
-								// 2. Map sentiment values
 								row.initial_query_sentiment === 'positive'
 									? 'sentiment-positive'
 									: '',
@@ -115,7 +110,7 @@
 											row.initial_query_sentiment ===
 											'negative',
 										'text-purple-800':
-											!row.initial_query_sentiment, // Fallback if sentiment is missing but explanation exists
+											!row.initial_query_sentiment,
 									}"
 								>
 									Initial Query -
@@ -130,23 +125,29 @@
 						</template>
 					</UPopover>
 
-					<!-- Popover 2: Conversation -->
+					<!-- Case B: No Data -> Show Tooltip -->
+					<UTooltip v-else text="No sentiment available">
+						<UButton
+							variant="ghost"
+							icon="i-heroicons-question-mark-circle-solid"
+							class="text-slate-400 opacity-50 cursor-default p-1"
+						/>
+					</UTooltip>
+
+					<!-- --- ITEM 2: CONVERSATION --- -->
+					<!-- Case A: Data exists -> Show Popover -->
 					<UPopover
+						v-if="row.conversation_sentiment_explanation"
 						mode="hover"
 						:open-delay="100"
 						:close-delay="500"
-						:disabled="!row.conversation_sentiment_explanation"
 						:popper="{ placement: 'top', strategy: 'fixed' }"
 					>
 						<UButton
 							variant="ghost"
 							icon="i-heroicons-chat-bubble-left-right-solid"
-							class="popover-trigger"
+							class="popover-trigger cursor-pointer"
 							:class="[
-								!row.conversation_sentiment_explanation
-									? 'opacity-50 text-slate-400 cursor-not-allowed'
-									: '',
-
 								row.conversation_sentiment === 'positive'
 									? 'sentiment-positive'
 									: '',
@@ -167,7 +168,7 @@
 										'text-green-700':
 											row.conversation_sentiment ===
 											'positive',
-										'text-yellow-600':
+										'text-yellow-500':
 											row.conversation_sentiment ===
 											'neutral',
 										'text-red-700':
@@ -184,6 +185,15 @@
 							</div>
 						</template>
 					</UPopover>
+
+					<!-- Case B: No Data -> Show Tooltip -->
+					<UTooltip v-else text="No sentiment available">
+						<UButton
+							variant="ghost"
+							icon="i-heroicons-chat-bubble-left-right-solid"
+							class="text-slate-400 opacity-50 cursor-default p-1"
+						/>
+					</UTooltip>
 				</div>
 			</template>
 		</UTable>
