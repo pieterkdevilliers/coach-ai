@@ -25,6 +25,7 @@
 			:loading-text="'Loading chat sessions...'"
 			:sticky="true"
 			class="content-table chat-sessions__table"
+			:ui="{ base: 'chat-sessions__table--base' }"
 		>
 			<template #visitor_uuid-data="{ row }">
 				<UTooltip :text="row.visitor_uuid">
@@ -59,7 +60,10 @@
 				</UTooltip>
 			</template>
 			<template #view-data="{ row }">
-				<UTooltip text="View Chat Session">
+				<UTooltip
+					text="View Chat Session"
+					:ui="{ wrapper: 'flex justify-center' }"
+				>
 					<UButton
 						variant="ghost"
 						icon="i-heroicons-eye-20-solid"
@@ -68,7 +72,9 @@
 				</UTooltip>
 			</template>
 			<template #sentiment_analysis-data="{ row }">
-				<div class="flex items-center justify-center gap-4 w-full">
+				<div
+					class="flex items-center justify-center gap-4 w-fit mx-auto"
+				>
 					<!-- --- ITEM 1: INITIAL QUERY --- -->
 					<!-- Case A: Data exists -> Show Popover -->
 					<UPopover

@@ -337,10 +337,10 @@
 		@apply font-roboto-condensed font-medium;
 	}
 	.chat-sessions__table th:last-child {
-		@apply text-end;
+		@apply text-center;
 	}
 	.chat-sessions__table td:last-child {
-		@apply me-5;
+		@apply text-center;
 	}
 
 	/* Dashboard */
