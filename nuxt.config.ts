@@ -76,6 +76,13 @@ export default defineNuxtConfig({
 					type: 'module',
 					defer: true,
 				},
+				{
+					src: 'https://checkanalytic.com/js/script.js',
+					'data-host': 'https://checkanalytic.com',
+					id: 'ZwSg9rf6GA',
+					async: true,
+					defer: true,
+				},
 			],
 		},
 	},
